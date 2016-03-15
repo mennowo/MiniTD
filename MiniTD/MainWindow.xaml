@@ -1,0 +1,94 @@
+﻿<!--
+Copyright(c) 2016 Menno van der Woude
+
+Permission is hereby granted, free of charge, to any person obtaining a 
+copy of this software and associated documentation files (the "Software"), 
+to deal in the Software without restriction, including without limitation 
+the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+and/or sell copies of the Software, and to permit persons to whom the 
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included 
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+DEALINGS IN THE SOFTWARE.
+-->
+<Window x:Class="MiniTD.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MiniTD"
+        xmlns:vw="clr-namespace:MiniTD.Views"
+        xmlns:vm="clr-namespace:MiniTD.ViewModels"
+        mc:Ignorable="d"
+        Icon="pack://application:,,,/Resources/AppIcon.ico"
+        DataContext="{DynamicResource MainWindowViewModel}"
+        Title="MiniTD" Height="596.64" Width="634.776" >
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Resources/Resources.xaml" />
+                <ResourceDictionary>
+                    <vm:MainWindowViewModel x:Key="MainWindowViewModel" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding Path=NewFileCommand}" Gesture="Ctrl+N" />
+        <KeyBinding Command="{Binding Path=OpenFileCommand}" Gesture="Ctrl+O" />
+        <KeyBinding Command="{Binding Path=SaveFileCommand}" Gesture="Ctrl+S" />
+        <KeyBinding Command="{Binding Path=SaveAsFileCommand}" Gesture="Ctrl+Shift+S" />
+        <KeyBinding Command="{Binding Path=CloseFileCommand}" Gesture="Ctrl+F4" />
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" Command="{Binding Path=NewFileCommand}" InputGestureText="Ctrl+N">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource NewFileIconDrawingImage}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Open" Command="{Binding Path=OpenFileCommand}" InputGestureText="Ctrl+O" >
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource OpenFileIconDrawingImage}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Save" Command="{Binding Path=SaveFileCommand}" InputGestureText="Ctrl+S">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource SaveFileIconDrawingImage}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save _As" Command="{Binding Path=SaveAsFileCommand}" InputGestureText="Ctrl+Shift+S" >
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource SaveAsFileIconDrawingImage}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Background="Transparent" Header="Close" Command="{Binding Path=CloseFileCommand}" InputGestureText="Ctrl+F4" >
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource CloseFileIconDrawingImage}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Background="Transparent" Header="Exit" Command="{Binding Path=ExitApplicationCommand}" InputGestureText="Alt+F4" >
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource ExitApplicationIconDrawingImage}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Row="1" IsEnabled="{Binding HasOrganizer}">
+            <vw:MiniOrganizerView DataContext="{Binding OrganizerVM}" />
+        </Grid>
+    </Grid>
+</Window>

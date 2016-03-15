@@ -1,0 +1,4 @@
+source https://www.nuget.org/api/v2
+
+nuget Extended.Wpf.Toolkit
+nuget gong-wpf-dragdrop

@@ -1,0 +1,129 @@
+﻿<!--
+Copyright(c) 2016 Menno van der Woude
+
+Permission is hereby granted, free of charge, to any person obtaining a 
+copy of this software and associated documentation files (the "Software"), 
+to deal in the Software without restriction, including without limitation 
+the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+and/or sell copies of the Software, and to permit persons to whom the 
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included 
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+DEALINGS IN THE SOFTWARE.
+-->
+<UserControl x:Class="MiniTD.Views.TaskGatherView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MiniTD.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Resources/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="AliceBlue">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Label Content="Task:" />
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="2" Text="{Binding Path=NewTaskTitle,UpdateSourceTrigger=PropertyChanged}" />
+        <Label Grid.Row="1" Grid.Column="0" Content="Topic:" />
+        <ComboBox Grid.Row="1" 
+                  Grid.Column="2" 
+                  ItemsSource="{Binding Path=Topics}" 
+                  SelectedValue="{Binding Path=NewTaskTopic}"
+                  Margin="2" >
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid Margin="2" Background="{Binding Path=TopicColor,Converter={StaticResource ColorToSolidColorBrush_ValueConverter}}" />
+                        <TextBlock Grid.Column="1" Margin="2" Text="{Binding Path=Title}" />
+                    </Grid>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Button 
+            Grid.Row="2" 
+            Grid.Column="0" 
+            Grid.ColumnSpan="2" 
+            Content="Add task" 
+            IsDefault="True" 
+            Margin="2" 
+            Command="{Binding Path=AddTaskCommand}"
+            HorizontalAlignment="Left" />
+        <Label 
+            Grid.Row="3" 
+            Grid.Column="0" 
+            Grid.ColumnSpan="2" 
+            Content="Gathered tasks" />
+        <DataGrid 
+            ItemsSource="{Binding Path=GatheredTasks}" 
+            SelectedItem="{Binding Path=SelectedTask}"
+            CanUserAddRows="False" 
+            AutoGenerateColumns="False"
+            Margin="2"
+            Grid.Row="4" 
+            Grid.Column="0" 
+            Grid.ColumnSpan="2" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=Title}" Header="Title" Width="*" />
+                <!--<DataGridTextColumn Binding="{Binding Path=Topic.Title}" Header="Title" Width="*" >
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" Value="{Binding Path=Topic.TopicColor,Converter={StaticResource ColorToSolidColorBrush_ValueConverter}}" />
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>-->
+                <DataGridTemplateColumn Header="Topic" MinWidth="100" >
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ComboBox 
+                                DisplayMemberPath="Title"
+                                SelectedItem="{Binding Path=Topic,UpdateSourceTrigger=PropertyChanged}"
+                                ItemsSource="{Binding Path=DataContext.Topics,RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid Margin="2" Background="{Binding Path=Topic.TopicColor,Converter={StaticResource ColorToSolidColorBrush_ValueConverter}}" />
+                                <TextBlock Grid.Column="1" Margin="2" Text="{Binding Path=Topic.Title}" />
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn> 
+            </DataGrid.Columns>
+        </DataGrid>
+        <local:MiniTaskNoteCollectionView Margin="2" Grid.Row="6" Grid.ColumnSpan="2" DataContext="{Binding SelectedTask}" />
+    </Grid>
+</UserControl>
