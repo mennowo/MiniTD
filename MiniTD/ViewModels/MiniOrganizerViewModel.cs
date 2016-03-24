@@ -47,6 +47,8 @@ namespace MiniTD.ViewModels
         private ObservableCollection<MiniTaskViewModel> _AllTasks;
         private ObservableCollection<MiniTopicViewModel> _Topics;
 
+        private bool _HasChanged;
+
         #endregion // Fields
 
         #region Properties
@@ -54,6 +56,16 @@ namespace MiniTD.ViewModels
         public MiniOrganizer Organizer
         {
             get { return _Organizer; }
+        }
+
+        public bool HasChanged
+        {
+            get { return _HasChanged; }
+            set
+            {
+                _HasChanged = value;
+                OnPropertyChanged("HasChanged");
+            }
         }
 
         public ObservableCollection<MiniTaskViewModel> GatheredTasks
@@ -217,6 +229,7 @@ namespace MiniTD.ViewModels
                     _Organizer.Topics.Remove(tvm.Topic);
                 }
             }
+            HasChanged = true;
         }
 
         private void GatheredTasks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -237,6 +250,7 @@ namespace MiniTD.ViewModels
                     _Organizer.TaskInbox.Remove(tvm.Task);
                 }
             }
+            HasChanged = true;
         }
 
         private void AllTasks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -255,6 +269,8 @@ namespace MiniTD.ViewModels
                     _Organizer.AllTasks.Remove(tvm.Task);
                 }
             }
+            OnTasksChanged();
+            HasChanged = true;
         }
 
         #endregion // Collection Changed
@@ -268,7 +284,7 @@ namespace MiniTD.ViewModels
             
             foreach (MiniTopic t in Organizer.Topics)
             {
-                MiniTopicViewModel tvm = new MiniTopicViewModel(t);
+                MiniTopicViewModel tvm = new MiniTopicViewModel(t, this);
                 Topics.Add(tvm);
             }
             foreach (MiniTask t in Organizer.TaskInbox)

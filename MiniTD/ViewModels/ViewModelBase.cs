@@ -91,5 +91,17 @@ namespace MiniTD.ViewModels
         }
 
         #endregion // INotifyPropertyChanged Members
+
+        /// <summary>
+        /// Custom PropertyChanged method that also notifies the main VM
+        /// of changes.
+        /// </summary>
+        /// <param name="propertyName">The property that has a new value.</param>
+        /// <param name="ovm">A reference to the main MiniOrganizer viewmodel</param>
+        public void OnMonitoredPropertyChanged(string propertyName, MiniOrganizerViewModel ovm)
+        {
+            ovm.HasChanged = true;
+            OnPropertyChanged(propertyName);
+        }
     }
 }

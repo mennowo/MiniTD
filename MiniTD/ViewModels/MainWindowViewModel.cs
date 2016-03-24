@@ -26,9 +26,11 @@ using MiniTD.DataTypes;
 using MiniTD.Helpers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MiniTD.ViewModels
@@ -152,11 +154,13 @@ namespace MiniTD.ViewModels
 
         #region Command functionality
 
-
         void NewFileCommand_Executed(object prm)
         {
-            DataProvider.NewOrganizer();
-            OrganizerVM = new MiniOrganizerViewModel(DataProvider);
+            if (!OrganizerHasChanged())
+            {
+                DataProvider.NewOrganizer();
+                OrganizerVM = new MiniOrganizerViewModel(DataProvider);
+            }
         }
         
         bool NewFileCommand_CanExecute(object prm)
@@ -166,14 +170,17 @@ namespace MiniTD.ViewModels
 
         void OpenFileCommand_Executed(object prm)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.CheckFileExists = true;
-            openFileDialog.Filter = "MiniTD files|*.mtd";
-            if (openFileDialog.ShowDialog() == true)
+            if (!OrganizerHasChanged())
             {
-                DataProvider.FileName = openFileDialog.FileName;
-                DataProvider.LoadOrganizer();
-                OrganizerVM = new MiniOrganizerViewModel(DataProvider);
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.CheckFileExists = true;
+                openFileDialog.Filter = "MiniTD files|*.mtd";
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    DataProvider.FileName = openFileDialog.FileName;
+                    DataProvider.LoadOrganizer();
+                    OrganizerVM = new MiniOrganizerViewModel(DataProvider);
+                }
             }
         }
 
@@ -187,7 +194,10 @@ namespace MiniTD.ViewModels
             if (string.IsNullOrWhiteSpace(DataProvider.FileName))
                 SaveAsFileCommand.Execute(null);
             else
+            {
                 DataProvider.SaveOrganizer();
+                OrganizerVM.HasChanged = false;
+            }
         }
 
         bool SaveFileCommand_CanExecute(object prm)
@@ -206,6 +216,7 @@ namespace MiniTD.ViewModels
             {
                 DataProvider.FileName = saveFileDialog.FileName;
                 DataProvider.SaveOrganizer();
+                OrganizerVM.HasChanged = false;
             }
         }
 
@@ -216,8 +227,11 @@ namespace MiniTD.ViewModels
         
         void CloseFileCommand_Executed(object prm)
         {
-            DataProvider.CloseOrganizer();
-            OrganizerVM = null;
+            if (!OrganizerHasChanged())
+            {
+                DataProvider.CloseOrganizer();
+                OrganizerVM = null;
+            }
         }
         
         bool CloseFileCommand_CanExecute(object prm)
@@ -239,6 +253,25 @@ namespace MiniTD.ViewModels
 
         #region Private methods
 
+        bool OrganizerHasChanged()
+        {
+            if (OrganizerVM != null && OrganizerVM.HasChanged)
+            {
+                System.Windows.MessageBoxResult r = System.Windows.MessageBox.Show("Save changes?", "There are unsaved changes. Save first?", System.Windows.MessageBoxButton.YesNoCancel);
+                if (r == System.Windows.MessageBoxResult.Yes)
+                {
+                    SaveFileCommand.Execute(null);
+                    if (OrganizerVM.HasChanged)
+                        return true;
+                }
+                else if (r == System.Windows.MessageBoxResult.Cancel)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         #endregion // Private methods
 
         #region Public methods
@@ -250,6 +283,17 @@ namespace MiniTD.ViewModels
         public MainWindowViewModel()
         {
             _DataProvider = new MiniDataProvider();
+
+            Application.Current.MainWindow.Closing += new CancelEventHandler(MainWindow_Closing);
+
+        }
+
+        void MainWindow_Closing(object sender, CancelEventArgs e)
+        {
+            if(OrganizerHasChanged())
+            {
+                e.Cancel = true;
+            }
         }
 
         #endregion // Constructor

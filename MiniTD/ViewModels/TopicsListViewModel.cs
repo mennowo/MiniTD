@@ -91,7 +91,7 @@ namespace MiniTD.ViewModels
             Random r = new Random(DateTime.Now.GetHashCode());
             t.Color = System.Windows.Media.Color.FromRgb((byte)r.Next(255), (byte)r.Next(255), (byte)r.Next(255));
             t.Title = NewTopicTitle;
-            MiniTopicViewModel tvm = new MiniTopicViewModel(t);
+            MiniTopicViewModel tvm = new MiniTopicViewModel(t, _OrganizerVM);
             Topics.Add(tvm);
 
             NewTopicTitle = "";

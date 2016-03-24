@@ -53,7 +53,7 @@ DEALINGS IN THE SOFTWARE.
         <TextBox Grid.Row="0" Grid.Column="1" Margin="2" Text="{Binding Path=Title,UpdateSourceTrigger=PropertyChanged}" />
         <Label Grid.Row="1" Grid.Column="0" Content="Outcome:" />
         <TextBox Grid.Row="1" Grid.Column="1" Margin="2" Text="{Binding Path=Outcome,UpdateSourceTrigger=PropertyChanged}" />
-        <Label Grid.Row="2" Grid.Column="0" Content="Status:" />
+        <Label Grid.Row="2" Grid.Column="0" Content="Status:"  />
 
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
             <ComboBox IsEditable="False" 

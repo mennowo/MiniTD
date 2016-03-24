@@ -26,6 +26,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace MiniTD.ViewModels
 {
@@ -34,8 +35,9 @@ namespace MiniTD.ViewModels
         #region Fields
          
         private MiniOrganizerViewModel _OrganizerVM;
-
         private ObservableCollection<MiniTaskViewModel> _CurrentTasks;
+        private MiniTaskViewModel _SelectedTask;
+        Timer _UpdateClockTimer; 
 
         #endregion // Fields
 
@@ -51,6 +53,24 @@ namespace MiniTD.ViewModels
                     OnPropertyChanged("CurrentTasks");
                 }
                 return _CurrentTasks;
+            }
+        }
+
+        public DateTime CurrentTime
+        {
+            get
+            {
+                return DateTime.Now;
+            }
+        }
+
+        public MiniTaskViewModel SelectedTask
+        {
+            get { return _SelectedTask; }
+            set
+            {
+                _SelectedTask = value;
+                OnPropertyChanged("SelectedTask");
             }
         }
 
@@ -72,31 +92,24 @@ namespace MiniTD.ViewModels
 
         #endregion // Public methods
 
-        #region Constructor
-
-        public CurrentTasksViewModel(MiniOrganizerViewModel _organizervm)
-        {
-            _OrganizerVM = _organizervm;
-            _OrganizerVM.TasksChanged += _OrganizerVM_TasksChanged;
-            
-        }
+        #region Tasks Changed
 
         private void _OrganizerVM_TasksChanged(EventArgs e)
         {
             CurrentTasks.Clear();
             foreach(MiniTaskViewModel tvm in _OrganizerVM.AllTasks)
             {
-                if (tvm.Type == DataTypes.MiniTaskType.Task)
+                if (tvm.Type == DataTypes.MiniTaskType.Task && !tvm.Done && tvm.IsCurrent)
                 {
-                    if (!tvm.Done &&
-                        (tvm.Status == DataTypes.MiniTaskStatus.ASAP || tvm.DateDue <= DateTime.Now && !(tvm.Status == DataTypes.MiniTaskStatus.Inactive)))
-                        CurrentTasks.Add(tvm);
+                    CurrentTasks.Add(tvm);
+                    tvm.DoneChanged += Tttvm_DoneChanged;
                 }
                 else
                 {
                     foreach (MiniTaskViewModel ttvm in GetAllCurrentProjectTasks(tvm))
                     {
                         CurrentTasks.Add(ttvm);
+                        ttvm.DoneChanged += Tttvm_DoneChanged;
                     }
                 }
             }
@@ -113,12 +126,13 @@ namespace MiniTD.ViewModels
                 foreach (MiniTaskViewModel ttvm in tvm.AllTasks)
                 {
                     // if a task is not done or inactive
-                    if (!ttvm.Done &&
-                        (ttvm.Status == DataTypes.MiniTaskStatus.ASAP || ttvm.DateDue <= DateTime.Now && !(ttvm.Status == DataTypes.MiniTaskStatus.Inactive)))
+                    if (!ttvm.Done && ttvm.IsCurrent)
                     {
                         // if type is task, add it
                         if (ttvm.Type == DataTypes.MiniTaskType.Task)
+                        {
                             currentTasks.Add(ttvm);
+                        }
                         // if type is project, add all current tasks
                         else if (ttvm.AllTasks != null && ttvm.AllTasks.Count > 0)
                         {
@@ -131,6 +145,35 @@ namespace MiniTD.ViewModels
                 }
             }
             return currentTasks;
+        }
+
+        private void Tttvm_DoneChanged(object sender, MiniTaskViewModel.DoneChangedEventArgs e)
+        {
+            if(e.tvm.Done || !e.tvm.IsCurrent)
+            {
+                CurrentTasks.Remove(e.tvm);
+            }
+        }
+
+        #endregion Tasks Changed
+
+        #region Constructor
+
+        public CurrentTasksViewModel(MiniOrganizerViewModel _organizervm)
+        {
+            _OrganizerVM = _organizervm;
+            _OrganizerVM.TasksChanged += _OrganizerVM_TasksChanged;
+            _UpdateClockTimer = new Timer();
+            _UpdateClockTimer.Interval = 1000;
+            _UpdateClockTimer.AutoReset = true;
+            _UpdateClockTimer.Elapsed += _UpdateClockTimer_Elapsed;
+            _UpdateClockTimer.Start();
+
+        }
+
+        private void _UpdateClockTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            OnPropertyChanged("CurrentTime");
         }
 
         #endregion // Constructor

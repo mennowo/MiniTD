@@ -26,19 +26,6 @@ namespace MiniTD.Views
         {
             InitializeComponent();
         }
-
-        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            //var Tree = sender as TreeView;
-            //var selected = Tree.SelectedItem as ProjectManagerItem;
-            //
-            //if (selected != null)
-            //{
-            //    selected.IsExpanded = true;
-            //}
-            //
-            //e.Handled = true;
-        }
     }
 
     // from here: https://gong-wpf-dragdrop.googlecode.com/svn-history/r29/branches/jon/GongSolutions.Wpf.DragDrop/Utilities/VisualTreeExtensions.cs

@@ -37,26 +37,32 @@ namespace MiniTD.ViewModels
         #region Fields
 
         private MiniTopic _Topic;
+        private MiniOrganizerViewModel _OrganizerVM;
 
         #endregion // Fields
 
         #region Properties
 
-        public static class Colors
+        public MiniOrganizerViewModel OrganizerVM
         {
-            private static readonly Dictionary<string, Color> dictionary =
-                typeof(Color).GetProperties(BindingFlags.Public |
-                                            BindingFlags.Static)
-                             .Where(prop => prop.PropertyType == typeof(Color))
-                             .ToDictionary(prop => prop.Name,
-                                           prop => (Color)prop.GetValue(null, null));
-
-            public static Color FromName(string name)
-            {
-                // Adjust behaviour for lookup failure etc
-                return dictionary[name];
-            }
+            get { return _OrganizerVM; }
         }
+
+        //public static class Colors
+        //{
+        //    private static readonly Dictionary<string, Color> dictionary =
+        //        typeof(Color).GetProperties(BindingFlags.Public |
+        //                                    BindingFlags.Static)
+        //                     .Where(prop => prop.PropertyType == typeof(Color))
+        //                     .ToDictionary(prop => prop.Name,
+        //                                   prop => (Color)prop.GetValue(null, null));
+
+        //    public static Color FromName(string name)
+        //    {
+        //        // Adjust behaviour for lookup failure etc
+        //        return dictionary[name];
+        //    }
+        //}
 
         public MiniTopic Topic
         {
@@ -79,7 +85,7 @@ namespace MiniTD.ViewModels
             set
             {
                 _Topic.Title = value;
-                OnPropertyChanged("Title");
+                OnMonitoredPropertyChanged("Title", OrganizerVM);
             }
         }
 
@@ -89,7 +95,7 @@ namespace MiniTD.ViewModels
             set
             {
                 _Topic.Color = value;
-                OnPropertyChanged("TopicColor");
+                OnMonitoredPropertyChanged("TopicColor", OrganizerVM);
             }
         }
 
@@ -113,8 +119,9 @@ namespace MiniTD.ViewModels
 
         #region Constructor
 
-        public MiniTopicViewModel(MiniTopic _topic)
+        public MiniTopicViewModel(MiniTopic _topic, MiniOrganizerViewModel organizervm)
         {
+            _OrganizerVM = organizervm;
             _Topic = _topic;
         }
 

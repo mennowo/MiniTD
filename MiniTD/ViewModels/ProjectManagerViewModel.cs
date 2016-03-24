@@ -26,6 +26,7 @@ using MiniTD.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -42,6 +43,8 @@ namespace MiniTD.ViewModels
         #region Fields
 
         private MiniOrganizerViewModel _OrganizerVM;
+        private object _SelectedItem;
+        private bool _ShowDone;
 
         #endregion // Fields
 
@@ -55,7 +58,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        private object _SelectedItem;
         public object SelectedItem
         {
             get { return _SelectedItem; }
@@ -63,6 +65,17 @@ namespace MiniTD.ViewModels
             {
                 _SelectedItem = value;
                 OnPropertyChanged("SelectedItem");
+            }
+        }
+
+        public bool ShowDone
+        {
+            get { return _ShowDone; }
+            set
+            {
+                _ShowDone = value;
+                SetAllFilterDone();
+                OnPropertyChanged("ShowDone");
             }
         }
 
@@ -105,6 +118,34 @@ namespace MiniTD.ViewModels
 
         #region Private methods
 
+        private void SetAllFilterDone()
+        {
+            if (!ShowDone)
+            {
+                ICollectionView iv = CollectionViewSource.GetDefaultView(AllTasks);
+                iv.Filter = FilterDone;
+                foreach (MiniTaskViewModel t in AllTasks)
+                {
+                    t.SetFilterDone(FilterDone);
+                }
+            }
+            else
+            {
+                ICollectionView iv = CollectionViewSource.GetDefaultView(AllTasks);
+                iv.Filter = null;
+                foreach (MiniTaskViewModel t in AllTasks)
+                {
+                    t.SetFilterDone(null);
+                }
+            }
+        }
+
+        private bool FilterDone(object item)
+        {
+            MiniTaskViewModel mtv = item as MiniTaskViewModel;
+            return mtv.Done == false;
+        }
+
         #endregion // Private methods
 
         #region Public methods
@@ -116,9 +157,28 @@ namespace MiniTD.ViewModels
         public ProjectManagerViewModel(MiniOrganizerViewModel _organizervm)
         {
             _OrganizerVM = _organizervm;
+            SetAllFilterDone();
         }
 
         #endregion // Constructor
+    }
+
+    public class currentToItalicConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((bool)value)
+            {
+                return FontStyles.Italic;
+            }
+            else
+                return FontStyles.Normal;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class DoneToTextDecorationsConverter : IValueConverter

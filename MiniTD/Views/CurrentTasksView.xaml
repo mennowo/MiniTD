@@ -28,6 +28,14 @@ DEALINGS IN THE SOFTWARE.
              xmlns:local="clr-namespace:MiniTD.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Resources/Resources.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Resources/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -35,20 +43,62 @@ DEALINGS IN THE SOFTWARE.
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock Margin="5" Text="{Binding Source={x:Static sys:DateTime.Now},StringFormat='Now: {0:dddd, MMMM dd, yyyy hh:mm:ss}'}" />
+        <TextBlock Margin="5" Text="{Binding Path=CurrentTime,StringFormat='Now: {0:dddd, MMMM dd, yyyy hh:mm:ss}'}" />
         <DataGrid
             Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="2"
             AutoGenerateColumns="False"
             CanUserAddRows="False"
+            SelectedItem="{Binding Path=SelectedTask}"
             ItemsSource="{Binding Path=CurrentTasks}">
             <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Topic">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="17" Height="17" Margin="1" Fill="{Binding Path=Topic.TopicColor,Converter={StaticResource ColorToSolidColorBrush_ValueConverter}}" />
+                                <TextBlock Text="{Binding Path=Topic.Title}" Margin="2" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Status">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Image Width="17" Height="17" Margin="1">
+                                    <Image.Style>
+                                        <Style TargetType="{x:Type Image}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=IsASAP}" Value="True">
+                                                    <Setter Property="Source" Value="{StaticResource ASAPIconDrawingImage}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=IsDelegated}" Value="True">
+                                                    <Setter Property="Source" Value="{StaticResource DelegatedIconDrawingImage}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=IsInactive}" Value="True">
+                                                    <Setter Property="Source" Value="{StaticResource InactiveIconDrawingImage}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Path=IsScheduled}" Value="True">
+                                                    <Setter Property="Source" Value="{StaticResource ScheduledIconDrawingImage}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding Path=Title}" Header="Title" Width="*" />
+                <DataGridTextColumn Binding="{Binding Path=ProjectTitle}" IsReadOnly="True" Header="Project" Width="*" />
                 <DataGridTextColumn Binding="{Binding Path=DateDue,StringFormat='{}{0:dddd dd-MM-yy}'}" Header="Due" />
                 <DataGridCheckBoxColumn Binding="{Binding Path=Done}" Header="Done" />
                 
             </DataGrid.Columns>
         </DataGrid>
+        <local:MiniTaskNoteCollectionView Grid.Row="2" Grid.ColumnSpan="2" Margin="2" DataContext="{Binding SelectedTask}" />
     </Grid>
 </UserControl>
