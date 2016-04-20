@@ -117,8 +117,13 @@ namespace MiniTD.ViewModels
             get { return CurrentTask.Status == MiniTaskStatus.Delegated || CurrentTask.Status == MiniTaskStatus.Scheduled; }
         }
 
-        public IEnumerable<ValueDescription> StatusOptions => 
-            EnumHelper.GetAllValuesAndDescriptions<MiniTaskStatus>();
+        public IEnumerable<ValueDescription> StatusOptions
+        {
+            get
+            {
+                return EnumHelper.GetAllValuesAndDescriptions<MiniTaskStatus>();
+            }
+        }
 
         public string NewProjectTitle
         {

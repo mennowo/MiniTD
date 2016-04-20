@@ -74,7 +74,7 @@ DEALINGS IN THE SOFTWARE.
             </DockPanel>
             <DockPanel LastChildFill="True" Visibility="{Binding Path=CurrentTaskStatusHasDueDate,Converter={StaticResource Bool2VisConv}}">
                 <Label Content="Due date:" />
-                <DatePicker SelectedDate="{Binding Path=CurrentTask.DueDate,UpdateSourceTrigger=PropertyChanged}" />
+                <DatePicker SelectedDate="{Binding Path=CurrentTask.DateDue,UpdateSourceTrigger=PropertyChanged}" />
             </DockPanel>
         </StackPanel>
         <Label Grid.Row="4" Grid.Column="0" Content="Topic:" />

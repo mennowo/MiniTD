@@ -43,12 +43,31 @@ namespace MiniTD.ViewModels
         #region Fields
 
         private MiniOrganizerViewModel _OrganizerVM;
+        private MiniTaskViewModel _CurrentSelectedTask;
         private object _SelectedItem;
         private bool _ShowDone;
 
         #endregion // Fields
 
         #region Properties
+
+        public CurrentTasksViewModel CurrentTasksVM
+        {
+            get
+            {
+                return _OrganizerVM.CurrentTasksVM;
+            }
+        }
+
+        public MiniTaskViewModel CurrentSelectedTask
+        {
+            get { return _CurrentSelectedTask; }
+            set
+            {
+                _CurrentSelectedTask = value;
+                SelectedItem = value;
+            }
+        }
 
         public ObservableCollection<MiniTaskViewModel> AllTasks
         {

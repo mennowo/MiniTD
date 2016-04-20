@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MiniTD.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,17 @@ namespace MiniTD.Views
     /// </summary>
     public partial class CurrentTasksView : UserControl
     {
+
+        public bool ShowNotes
+        {
+            get { return (bool)GetValue(ShowNotesProperty); }
+            set { SetValue(ShowNotesProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ShowNotes.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ShowNotesProperty =
+            DependencyProperty.Register("ShowNotes", typeof(bool), typeof(CurrentTasksView), new PropertyMetadata(true));
+
         public CurrentTasksView()
         {
             InitializeComponent();
