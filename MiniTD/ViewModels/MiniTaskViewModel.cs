@@ -74,6 +74,10 @@ namespace MiniTD.ViewModels
             {
                 _Task.Title = value;
                 OnMonitoredPropertyChanged("Title", OrganizerVM);
+                foreach(MiniTaskViewModel mtvm in AllTasks)
+                {
+                    mtvm.OnPropertyChanged("ProjectTitle");
+                }
             }
         }
 
@@ -204,6 +208,7 @@ namespace MiniTD.ViewModels
             {
                 _Task.ProjectID = value;
                 OnPropertyChanged("ProjectID");
+                OnPropertyChanged("ProjectTitle");
             }
         }
 

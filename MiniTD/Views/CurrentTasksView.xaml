@@ -31,8 +31,8 @@ DEALINGS IN THE SOFTWARE.
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Resources/Resources.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Resources/Generic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MiniTD;component/Resources/Resources.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MiniTD;component/Resources/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
