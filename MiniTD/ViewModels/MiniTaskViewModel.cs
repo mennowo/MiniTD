@@ -159,8 +159,13 @@ namespace MiniTD.ViewModels
             get { return _OrganizerVM.Topics; }
         }
 
-        public IEnumerable<ValueDescription> StatusOptions =>
-             EnumHelper.GetAllValuesAndDescriptions<MiniTaskStatus>();
+        public IEnumerable<ValueDescription> StatusOptions
+        {
+            get
+            {
+                return EnumHelper.GetAllValuesAndDescriptions<MiniTaskStatus>();
+            }
+        }
 
         public MiniTaskStatus Status
         {
@@ -214,11 +219,25 @@ namespace MiniTD.ViewModels
         public bool IsProject
         {
             get { return Type == MiniTaskType.Project; }
+            set
+            {
+                if (value)
+                {
+                    Type = MiniTaskType.Project;
+                }
+            }
         }
 
         public bool IsTask
         {
             get { return Type == MiniTaskType.Task; }
+            set
+            {
+                if (value)
+                {
+                    Type = MiniTaskType.Task;
+                }
+            }
         }
 
         public long ID
@@ -313,6 +332,10 @@ namespace MiniTD.ViewModels
             set
             {
                 _IsExpanded = value;
+                if(_IsExpanded && ParentTaskVM != null)
+                {
+                    ParentTaskVM.IsExpanded = value;
+                }
                 OnPropertyChanged("IsExpanded");
             }
         }

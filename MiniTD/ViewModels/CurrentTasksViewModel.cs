@@ -70,6 +70,8 @@ namespace MiniTD.ViewModels
             set
             {
                 _SelectedTask = value;
+                _SelectedTask.IsSelected = true;
+                _SelectedTask.IsExpanded = true;
                 OnPropertyChanged("SelectedTask");
             }
         }
@@ -104,13 +106,10 @@ namespace MiniTD.ViewModels
                     CurrentTasks.Add(tvm);
                     tvm.DoneChanged += Tttvm_DoneChanged;
                 }
-                else
+                foreach (MiniTaskViewModel ttvm in GetAllCurrentProjectTasks(tvm))
                 {
-                    foreach (MiniTaskViewModel ttvm in GetAllCurrentProjectTasks(tvm))
-                    {
-                        CurrentTasks.Add(ttvm);
-                        ttvm.DoneChanged += Tttvm_DoneChanged;
-                    }
+                    CurrentTasks.Add(ttvm);
+                    ttvm.DoneChanged += Tttvm_DoneChanged;
                 }
             }
         }
@@ -133,13 +132,13 @@ namespace MiniTD.ViewModels
                         {
                             currentTasks.Add(ttvm);
                         }
-                        // if type is project, add all current tasks
-                        else if (ttvm.AllTasks != null && ttvm.AllTasks.Count > 0)
+                    }
+                    // if it has tasks, add them all
+                    if (ttvm.AllTasks != null && ttvm.AllTasks.Count > 0)
+                    {
+                        foreach (MiniTaskViewModel tttvm in GetAllCurrentProjectTasks(ttvm))
                         {
-                            foreach (MiniTaskViewModel tttvm in GetAllCurrentProjectTasks(ttvm))
-                            {
-                                currentTasks.Add(tttvm);
-                            }
+                            currentTasks.Add(tttvm);
                         }
                     }
                 }

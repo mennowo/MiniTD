@@ -44,7 +44,7 @@ DEALINGS IN THE SOFTWARE.
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="2*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock Margin="5" Text="{Binding Path=CurrentTime,StringFormat='Now: {0:dddd, MMMM dd, yyyy hh:mm:ss}'}" />
         <DataGrid
@@ -99,6 +99,6 @@ DEALINGS IN THE SOFTWARE.
                 
             </DataGrid.Columns>
         </DataGrid>
-        <local:MiniTaskNoteCollectionView Grid.Row="2" Grid.ColumnSpan="2" Margin="2" DataContext="{Binding SelectedTask}" />
+        <local:MiniTaskNoteCollectionView Visibility="{Binding Path=ShowNotes,Converter={StaticResource Bool2VisConv},RelativeSource={RelativeSource AncestorType=UserControl}}" Grid.Row="2" Grid.ColumnSpan="2" Margin="2" DataContext="{Binding SelectedTask}" />
     </Grid>
 </UserControl>
