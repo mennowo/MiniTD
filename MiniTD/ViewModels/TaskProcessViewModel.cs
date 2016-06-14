@@ -55,6 +55,17 @@ namespace MiniTD.ViewModels
             }
         }
 
+        public bool HasUnprocessedTasks
+        {
+            get
+            {
+                if (_OrganizerVM.GatheredTasks.Count > 0)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
         public int GatheredTaskCount
         {
             get { return _OrganizerVM.GatheredTasks.Count == 0 ? 0 : _OrganizerVM.GatheredTasks.Count; }
@@ -86,7 +97,13 @@ namespace MiniTD.ViewModels
 
         public MiniTaskStatus CurrentTaskStatus
         {
-            get { return CurrentTask.Status; }
+            get 
+            {
+                if (CurrentTask != null)
+                    return CurrentTask.Status; 
+                else
+                    return MiniTaskStatus.ASAP;
+            }
             set
             {
                 CurrentTask.Status = value;
@@ -98,7 +115,13 @@ namespace MiniTD.ViewModels
 
         public bool CurrentTaskDone
         {
-            get { return CurrentTask.Done; }
+            get
+            {
+                if (CurrentTask != null)
+                    return CurrentTask.Done;
+                else
+                    return false;
+            }
             set
             {
                 CurrentTask.Done = value;
@@ -108,13 +131,25 @@ namespace MiniTD.ViewModels
 
         public bool CurrentTaskStatusHasDelegatedTo
         {
-            get { return CurrentTask.Status == MiniTaskStatus.Delegated; }
+            get 
+            {
+                if (CurrentTask != null)
+                    return CurrentTask.Status == MiniTaskStatus.Delegated;
+                else
+                    return false;
+            }
         }
 
 
         public bool CurrentTaskStatusHasDueDate
         {
-            get { return CurrentTask.Status == MiniTaskStatus.Delegated || CurrentTask.Status == MiniTaskStatus.Scheduled; }
+            get 
+            {
+                if (CurrentTask != null)
+                    return CurrentTask.Status == MiniTaskStatus.Delegated || CurrentTask.Status == MiniTaskStatus.Scheduled;
+                else
+                    return false;
+            }
         }
 
         public IEnumerable<ValueDescription> StatusOptions
@@ -238,6 +273,7 @@ namespace MiniTD.ViewModels
             OnPropertyChanged("CurrentTaskStatusHasDelegatedTo");
             OnPropertyChanged("CurrentTaskStatusHasDueDate");
             OnPropertyChanged("CurrentTaskDone");
+            OnPropertyChanged("HasUnprocessedTasks");
         }
 
         #endregion // Collection Changed

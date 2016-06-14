@@ -39,8 +39,8 @@ DEALINGS IN THE SOFTWARE.
                     <vm:DoneToTextDecorationsConverter x:Key="doneToTextDecorationsConverter" />
                     <vm:currentToItalicConverter x:Key="currentToItalicConv" />
                 </ResourceDictionary>
-                <ResourceDictionary Source="pack://application:,,,/Resources/Resources.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/Resources/Generic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MiniTD;component/Resources/Resources.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MiniTD;component/Resources/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
