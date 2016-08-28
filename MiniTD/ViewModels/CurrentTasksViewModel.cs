@@ -27,6 +27,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Data;
 
 namespace MiniTD.ViewModels
 {
@@ -37,11 +38,24 @@ namespace MiniTD.ViewModels
         private MiniOrganizerViewModel _OrganizerVM;
         private ObservableCollection<MiniTaskViewModel> _CurrentTasks;
         private MiniTaskViewModel _SelectedTask;
-        Timer _UpdateClockTimer; 
+        Timer _UpdateClockTimer;
 
         #endregion // Fields
 
         #region Properties
+
+        ListCollectionView _CurrentTasksGrouped;
+        public ListCollectionView CurrentTasksGrouped
+        {
+            get
+            {
+                if(_CurrentTasksGrouped == null)
+                {
+                    _CurrentTasksGrouped = new ListCollectionView(CurrentTasks);
+                }
+                return _CurrentTasksGrouped;
+            }
+        }
 
         public ObservableCollection<MiniTaskViewModel> CurrentTasks
         {
@@ -167,6 +181,9 @@ namespace MiniTD.ViewModels
             _UpdateClockTimer.AutoReset = true;
             _UpdateClockTimer.Elapsed += _UpdateClockTimer_Elapsed;
             _UpdateClockTimer.Start();
+
+            CurrentTasksGrouped.GroupDescriptions.Add(new PropertyGroupDescription("DateDue.Date"));
+            CurrentTasksGrouped.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateDue", System.ComponentModel.ListSortDirection.Ascending));
 
         }
 
