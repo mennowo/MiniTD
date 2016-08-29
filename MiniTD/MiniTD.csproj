@@ -96,6 +96,7 @@
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\IDProvider.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
+    <Compile Include="ViewModels\TasksPlanningViewModel.cs" />
     <Compile Include="ViewModels\CurrentTasksViewModel.cs" />
     <Compile Include="ViewModels\MiniTaskNoteViewModel.cs" />
     <Compile Include="ViewModels\MiniTaskViewModel.cs" />
@@ -107,6 +108,9 @@
     <Compile Include="ViewModels\TaskProcessViewModel.cs" />
     <Compile Include="ViewModels\TopicsListViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\TasksPlanningView.xaml.cs">
+      <DependentUpon>TasksPlanningView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CurrentTasksView.xaml.cs">
       <DependentUpon>CurrentTasksView.xaml</DependentUpon>
     </Compile>
@@ -155,6 +159,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Resources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TasksPlanningView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

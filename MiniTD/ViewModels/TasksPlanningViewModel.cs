@@ -31,7 +31,7 @@ using System.Windows.Data;
 
 namespace MiniTD.ViewModels
 {
-    public class CurrentTasksViewModel : ViewModelBase
+    public class TasksPlanningViewModel : ViewModelBase
     {
         #region Fields
          
@@ -139,7 +139,7 @@ namespace MiniTD.ViewModels
                 foreach (MiniTaskViewModel ttvm in tvm.AllTasks)
                 {
                     // if a task is not done or inactive
-                    if (!ttvm.Done && ttvm.IsCurrent)
+                    if (!ttvm.Done && !ttvm.IsInactive)
                     {
                         // if type is task, add it
                         if (ttvm.Type == DataTypes.MiniTaskType.Task)
@@ -172,7 +172,7 @@ namespace MiniTD.ViewModels
 
         #region Constructor
 
-        public CurrentTasksViewModel(MiniOrganizerViewModel _organizervm)
+        public TasksPlanningViewModel(MiniOrganizerViewModel _organizervm)
         {
             _OrganizerVM = _organizervm;
             _OrganizerVM.TasksChanged += _OrganizerVM_TasksChanged;
@@ -183,7 +183,7 @@ namespace MiniTD.ViewModels
             _UpdateClockTimer.Start();
 
             CurrentTasksGrouped.GroupDescriptions.Add(new PropertyGroupDescription("DateDueGroup"));
-            CurrentTasksGrouped.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateDue", System.ComponentModel.ListSortDirection.Ascending));
+            CurrentTasksGrouped.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateDueSort", System.ComponentModel.ListSortDirection.Ascending));
 
         }
 

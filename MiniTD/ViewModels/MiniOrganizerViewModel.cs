@@ -42,6 +42,7 @@ namespace MiniTD.ViewModels
         private TopicsListViewModel _TopicsListVM;
         private ProjectManagerViewModel _ProjectManagerVM;
         private CurrentTasksViewModel _CurrentTasksVM;
+        private TasksPlanningViewModel _TasksPlanningVM;
 
         private ObservableCollection<MiniTaskViewModel> _GatheredTasks;
         private ObservableCollection<MiniTaskViewModel> _AllTasks;
@@ -164,6 +165,16 @@ namespace MiniTD.ViewModels
             {
                 _CurrentTasksVM = value;
                 OnPropertyChanged("CurrentTasksVM");
+            }
+        }
+
+        public TasksPlanningViewModel TasksPlanningVM
+        {
+            get { return _TasksPlanningVM; }
+            set
+            {
+                _TasksPlanningVM = value;
+                OnPropertyChanged("TasksPlanningVM");
             }
         }
 
@@ -303,6 +314,7 @@ namespace MiniTD.ViewModels
             TasksGatherVM = new TaskGatherViewModel(this);
             ProjectManagerVM = new ProjectManagerViewModel(this);
             CurrentTasksVM = new CurrentTasksViewModel(this);
+            TasksPlanningVM = new TasksPlanningViewModel(this);
 
             GatheredTasks.CollectionChanged += GatheredTasks_CollectionChanged;
             Topics.CollectionChanged += Topics_CollectionChanged;

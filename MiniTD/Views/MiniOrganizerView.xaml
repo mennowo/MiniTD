@@ -74,11 +74,11 @@ DEALINGS IN THE SOFTWARE.
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <Image Source="{StaticResource CurrentIconDrawingImage}" Width="15" Height="15" />
-                            <TextBlock Margin="2" Text="Current" />
+                            <TextBlock Margin="2" Text="Planning" />
                         </StackPanel>
                     </DataTemplate>
                 </TabItem.HeaderTemplate>
-                <local:CurrentTasksView DataContext="{Binding CurrentTasksVM}" />
+                <local:TasksPlanningView DataContext="{Binding TasksPlanningVM}" />
             </TabItem>
             <TabItem>
                 <TabItem.HeaderTemplate>

@@ -133,6 +133,70 @@ namespace MiniTD.ViewModels
             }
         }
 
+        private static void GetWeek(DateTime now, System.Globalization.CultureInfo cultureInfo, out DateTime begining, out DateTime end)
+        {
+            if (now == null)
+                throw new ArgumentNullException("Now");
+            if (cultureInfo == null)
+                throw new ArgumentNullException("CultureInfo");
+
+            var firstDayOfWeek = cultureInfo.DateTimeFormat.FirstDayOfWeek;
+
+            int offset = firstDayOfWeek - now.DayOfWeek;
+            if (offset != 1)
+            {
+                DateTime weekStart = now.AddDays(offset);
+                DateTime endOfWeek = weekStart.AddDays(6);
+                begining = weekStart;
+                end = endOfWeek;
+            }
+            else
+            {
+                begining = now.AddDays(-6);
+                end = now;
+            }
+        }
+
+        public DateTime DateDueSort
+        {
+            get
+            {
+                if (DateTime.Now.Date.CompareTo(DateDue.Date) >= 0)
+                {
+                    return DateTime.Now;
+                }
+                else
+                {
+                    return DateDue;
+                }
+            }
+        }
+
+        public string DateDueGroup
+        {
+            get
+            {
+
+                DateTime first;
+                DateTime last;
+                GetWeek(DateTime.Now, System.Globalization.CultureInfo.CurrentCulture, out first, out last);
+                DateTime nextweek = last.AddDays(7);
+
+                if(DateTime.Now.Date.CompareTo(DateDue.Date) >= 0)
+                {
+                    return "Today (" + DateTime.Now.DayOfWeek.ToString() + ")";
+                }
+                else if (DateTime.Now.Date.AddDays(1).CompareTo(DateDue.Date) == 0)
+                {
+                    return "Tomorrow (" + DateDue.DayOfWeek.ToString() + ")";
+                }
+                else
+                {
+                    return DateDue.DayOfWeek.ToString() + " " + DateDue.ToString("dd-MM-yyyy");
+                }
+            }
+        }
+
         public TimeSpan Duration
         {
             get { return _Task.Duration; }
@@ -290,6 +354,7 @@ namespace MiniTD.ViewModels
                     (this.Status == MiniTaskStatus.Scheduled && this.DateDue.Date <= DateTime.Today.Date);
             }
         }
+
         public bool IsASAP
         {
             get { return Status == MiniTaskStatus.ASAP; }
