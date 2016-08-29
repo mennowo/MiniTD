@@ -63,6 +63,7 @@ namespace MiniTD.DataTypes
         public DateTime DateCreated { get; set; }
         public DateTime DateDue { get; set; }
         public DateTime DateDone { get; set; }
+        public TimeSpan Duration { get; set; }
         public bool Done { get; set; }
 
         public List<MiniTaskNote> Notes { get; set; }
