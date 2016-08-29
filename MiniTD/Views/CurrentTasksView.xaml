@@ -33,6 +33,22 @@ DEALINGS IN THE SOFTWARE.
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MiniTD;component/Resources/Resources.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MiniTD;component/Resources/Generic.xaml" />
+                <ResourceDictionary>
+                    <Style x:Key="GroupedStyle" TargetType="{x:Type GroupItem}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type GroupItem}">
+                                    <StackPanel>
+                                        <Border>
+                                            <TextBlock Text="{Binding Path=Name,StringFormat='\{0:dd-MM-yyyy}'}" />
+                                        </Border>
+                                        <ItemsPresenter />
+                                    </StackPanel>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -52,7 +68,16 @@ DEALINGS IN THE SOFTWARE.
             AutoGenerateColumns="False"
             CanUserAddRows="False"
             SelectedItem="{Binding Path=SelectedTask}"
-            ItemsSource="{Binding Path=CurrentTasks}">
+            ItemsSource="{Binding Path=CurrentTasksGrouped}">
+            <DataGrid.GroupStyle>
+                <GroupStyle ContainerStyle="{StaticResource GroupedStyle}">
+                    <GroupStyle.Panel>
+                        <ItemsPanelTemplate>
+                            <DataGridRowsPresenter />
+                        </ItemsPanelTemplate>
+                    </GroupStyle.Panel>
+                </GroupStyle>
+            </DataGrid.GroupStyle>
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Topic">
                     <DataGridTemplateColumn.CellTemplate>

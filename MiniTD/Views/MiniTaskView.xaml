@@ -46,6 +46,7 @@ DEALINGS IN THE SOFTWARE.
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -96,6 +97,8 @@ DEALINGS IN THE SOFTWARE.
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
+        <Label Grid.Row="5" Grid.Column="0" Content="Duration:" Visibility="{Binding Path=IsTask,Converter={StaticResource Bool2VisConv}}" />
+        <xc:TimeSpanUpDown Text="{Binding Path=Duration}" Grid.Row="5" Grid.Column="1" Margin="2" Visibility="{Binding Path=IsTask,Converter={StaticResource Bool2VisConv}}" />
         <!--<Label Grid.Row="4" Grid.Column="0" Content="Project:" />-->
         <!--<ComboBox 
             Grid.Row="4" 
@@ -107,8 +110,8 @@ DEALINGS IN THE SOFTWARE.
             SelectedValue="{Binding Path=CurrentTask.Project,UpdateSourceTrigger=PropertyChanged}"
             SelectedValuePath="ID"
             />-->
-        <local:MiniTaskNoteCollectionView Grid.Row="5" Grid.ColumnSpan="2" Margin="2" />
-        <Grid Grid.Row="6" Grid.ColumnSpan="2">
+        <local:MiniTaskNoteCollectionView Grid.Row="6" Grid.ColumnSpan="2" Margin="2" />
+        <Grid Grid.Row="7" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto "/>

@@ -133,6 +133,16 @@ namespace MiniTD.ViewModels
             }
         }
 
+        public TimeSpan Duration
+        {
+            get { return _Task.Duration; }
+            set
+            {
+                _Task.Duration = value;
+                OnMonitoredPropertyChanged("Duration", OrganizerVM);
+            }
+        }
+
         public long TopicID
         {
             get { return _Task.TopicID; }
