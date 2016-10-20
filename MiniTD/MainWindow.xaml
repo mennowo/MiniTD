@@ -24,7 +24,6 @@ DEALINGS IN THE SOFTWARE.
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:MiniTD"
         xmlns:vw="clr-namespace:MiniTD.Views"
         xmlns:vm="clr-namespace:MiniTD.ViewModels"
@@ -48,6 +47,7 @@ DEALINGS IN THE SOFTWARE.
         <KeyBinding Command="{Binding Path=SaveFileCommand}" Gesture="Ctrl+S" />
         <KeyBinding Command="{Binding Path=SaveAsFileCommand}" Gesture="Ctrl+Shift+S" />
         <KeyBinding Command="{Binding Path=CloseFileCommand}" Gesture="Ctrl+F4" />
+        <KeyBinding Command="{Binding Path=ShowAboutDialogCommand}" Gesture="F1" />
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -84,6 +84,13 @@ DEALINGS IN THE SOFTWARE.
                 <MenuItem Background="Transparent" Header="Exit" Command="{Binding Path=ExitApplicationCommand}" InputGestureText="Alt+F4" >
                     <MenuItem.Icon>
                         <Image Source="{StaticResource ExitApplicationIconDrawingImage}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Background="Transparent" Header="About" Command="{Binding Path=ShowAboutDialogCommand}" InputGestureText="F1" >
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource AppIconDrawingImage}" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>

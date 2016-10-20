@@ -150,6 +150,19 @@ namespace MiniTD.ViewModels
             }
         }
 
+        RelayCommand _ShowAboutDialogCommand;
+        public ICommand ShowAboutDialogCommand
+        {
+            get
+            {
+                if (_ShowAboutDialogCommand == null)
+                {
+                    _ShowAboutDialogCommand = new RelayCommand(ShowAboutDialogCommand_Executed, ShowAboutDialogCommand_CanExecute);
+                }
+                return _ShowAboutDialogCommand;
+            }
+        }
+
         #endregion // Commands
 
         #region Command functionality
@@ -202,7 +215,7 @@ namespace MiniTD.ViewModels
 
         bool SaveFileCommand_CanExecute(object prm)
         {
-            return true;
+            return OrganizerVM != null;
         }
         
         void SaveAsFileCommand_Executed(object prm)
@@ -222,7 +235,7 @@ namespace MiniTD.ViewModels
 
         bool SaveAsFileCommand_CanExecute(object prm)
         {
-            return true;
+            return OrganizerVM != null;
         }
         
         void CloseFileCommand_Executed(object prm)
@@ -236,7 +249,7 @@ namespace MiniTD.ViewModels
         
         bool CloseFileCommand_CanExecute(object prm)
         {
-            return true;
+            return OrganizerVM != null;
         }
         
         void ExitApplicationCommand_Executed(object prm)
@@ -247,6 +260,19 @@ namespace MiniTD.ViewModels
         bool ExitApplicationCommand_CanExecute(object prm)
         {
             return true;
+        }
+
+        private bool ShowAboutDialogCommand_CanExecute(object obj)
+        {
+            return true;
+        }
+
+        private void ShowAboutDialogCommand_Executed(object obj)
+        {
+            Views.Dialogs.AboutDialog d = new Views.Dialogs.AboutDialog();
+            d.Owner = Application.Current.MainWindow;
+            d.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            d.ShowDialog();
         }
 
         #endregion // Command functionality
@@ -283,6 +309,15 @@ namespace MiniTD.ViewModels
         public MainWindowViewModel()
         {
             _DataProvider = new MiniDataProvider();
+
+            string[] args = Environment.GetCommandLineArgs();
+
+            if (args.Length > 1)
+            {
+                _DataProvider.FileName = args[1];
+                _DataProvider.LoadOrganizer();
+                OrganizerVM = new MiniOrganizerViewModel(DataProvider);
+            }
 
             Application.Current.MainWindow.Closing += new CancelEventHandler(MainWindow_Closing);
 
