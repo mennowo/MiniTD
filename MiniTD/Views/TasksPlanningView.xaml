@@ -34,16 +34,35 @@ DEALINGS IN THE SOFTWARE.
                 <ResourceDictionary Source="pack://application:,,,/MiniTD;component/Resources/Resources.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MiniTD;component/Resources/Generic.xaml" />
                 <ResourceDictionary>
+                    <local:GroupsToTotalConverter x:Key="groupsConverter" />
+                    <local:GroupsToTotalConverter2 x:Key="groupsConverter2" />
                     <Style x:Key="GroupedStyle" TargetType="{x:Type GroupItem}">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type GroupItem}">
-                                    <StackPanel>
-                                        <Border Margin="2" >
-                                            <TextBlock FontWeight="Bold" Text="{Binding Path=Name,StringFormat='\{0:dd-MM-yyyy}'}" />
-                                        </Border>
+                                    <Expander>
+                                        <Expander.Header>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="150"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Path=Name}" Margin="5" Grid.Column="0"/>
+                                                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                                    <TextBlock Text="Time needed:" Margin="5" />
+                                                    <TextBlock Text="{Binding Path=Items, Converter={StaticResource groupsConverter}}" Margin="5" 
+                                                               Foreground="{Binding Path=Items, Converter={StaticResource groupsConverter2}}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Expander.Header>
                                         <ItemsPresenter />
-                                    </StackPanel>
+                                    </Expander>
+                                    <!--<StackPanel>
+                                        <Grid Margin="2" >
+                                            <TextBlock FontWeight="Bold" Text="{Binding Path=Name,StringFormat='\{0:dd-MM-yyyy}'}" />
+                                        </Grid>
+                                        <ItemsPresenter />
+                                    </StackPanel>-->
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>

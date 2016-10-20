@@ -91,6 +91,17 @@ namespace MiniTD.ViewModels
             }
         }
 
+        public bool AnyParentDone
+        {
+            get
+            {
+                bool done = false;
+                if (this.ParentTaskVM != null)
+                    done = ParentTaskVM.Done || ParentTaskVM.AnyParentDone;
+                return done;
+            }
+        }
+
         public bool Done
         {
             get { return _Task.Done; }
@@ -105,8 +116,7 @@ namespace MiniTD.ViewModels
                 // if the Task becomes undone, we have recreate the current list
                 // by calling OnTaskChanged, which will propagate to the current 
                 // tasks viewmodel
-                if(!_Task.Done)
-                    OrganizerVM.OnTasksChanged();
+                OrganizerVM.OnTasksChanged();
             }
         }
 
@@ -129,6 +139,7 @@ namespace MiniTD.ViewModels
                 _Task.DateDue = value;
                 OnMonitoredPropertyChanged("DateDue", OrganizerVM);
 
+                OrganizerVM.OnTasksChanged();
                 SetIsCurrent();
             }
         }
@@ -172,6 +183,33 @@ namespace MiniTD.ViewModels
             }
         }
 
+        double GetTotTaskTime(MiniTaskViewModel tvm, DateTime d)
+        {
+            double dd = 0.0;
+            dd += AllTasks.Where(x => x.DateDue.Date <= d.Date).Select(x => x.Duration).Sum(x => x.TotalMinutes);
+            if (tvm.AllTasks == null || tvm.AllTasks.Count <= 0)
+                return dd;
+
+            foreach (MiniTaskViewModel tvm2 in tvm.AllTasks)
+            {
+                dd += GetTotTaskTime(tvm2, d);
+            }
+            return dd;
+        }
+
+        double GetTotalTime(DateTime d)
+        {
+            double dd = 0.0;
+            dd += OrganizerVM.AllTasks.Where(x => x.DateDue.Date <= d.Date).Select(x => x.Duration).Sum(x => x.TotalMinutes);
+
+            foreach (MiniTaskViewModel tvm2 in OrganizerVM.AllTasks)
+            {
+                dd += GetTotTaskTime(tvm2, d);
+            }
+
+            return dd;
+        }
+
         public string DateDueGroup
         {
             get
@@ -203,7 +241,25 @@ namespace MiniTD.ViewModels
             set
             {
                 _Task.Duration = value;
+                OrganizerVM.OnTasksChanged();
                 OnMonitoredPropertyChanged("Duration", OrganizerVM);
+            }
+        }
+
+        public TimeSpan TotalDuration
+        {
+            get
+            {
+                TimeSpan t = new TimeSpan();
+                t += this.Duration;
+                if (AllTasks != null)
+                {
+                    foreach (MiniTaskViewModel tvm in AllTasks)
+                    {
+                        t += tvm.TotalDuration;
+                    }
+                }
+                return t;
             }
         }
 
@@ -569,6 +625,15 @@ namespace MiniTD.ViewModels
         #endregion // Private methods
 
         #region Public methods
+
+        public IEnumerable<MiniTaskViewModel> GetAllProjects()
+        {
+            yield return this;
+            foreach (var item in AllTasks.Where(x => x.Type == MiniTaskType.Project && x.Done == false).SelectMany(x => x.GetAllProjects()))
+            {
+                yield return item;
+            }
+        }
 
         #endregion // Public methods
 

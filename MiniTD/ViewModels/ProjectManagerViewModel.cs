@@ -176,7 +176,13 @@ namespace MiniTD.ViewModels
         public ProjectManagerViewModel(MiniOrganizerViewModel _organizervm)
         {
             _OrganizerVM = _organizervm;
+            AllTasks.CollectionChanged += AllTasks_CollectionChanged;
             SetAllFilterDone();
+        }
+
+        private void AllTasks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            _OrganizerVM.OnTasksChanged();
         }
 
         #endregion // Constructor

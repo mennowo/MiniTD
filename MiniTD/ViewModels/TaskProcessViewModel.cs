@@ -83,7 +83,7 @@ namespace MiniTD.ViewModels
 
         public IEnumerable<MiniTaskViewModel> AllProjects
         {
-            get { return from task in _OrganizerVM.AllTasks where task.Type == MiniTaskType.Project select task; }
+            get { return AllTasks.Where(x => x.Type == MiniTaskType.Project && x.Done == false).SelectMany(x => x.GetAllProjects()); }
         }
 
         public bool IsAddedToNewProject
@@ -253,17 +253,6 @@ namespace MiniTD.ViewModels
 
         #region Collection Changed
 
-        private void AllTasks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            // Update the view!
-            OnPropertyChanged("GatheredTaskCount");
-            OnPropertyChanged("CurrentTask");
-            OnPropertyChanged("CurrentTaskStatus");
-            OnPropertyChanged("CurrentTaskStatusHasDelegatedTo");
-            OnPropertyChanged("CurrentTaskStatusHasDueDate");
-            OnPropertyChanged("CurrentTaskDone");
-        }
-
         private void GatheredTasks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             // Update the view!
@@ -284,8 +273,21 @@ namespace MiniTD.ViewModels
         {
             _OrganizerVM = _organizervm;
             _OrganizerVM.GatheredTasks.CollectionChanged += GatheredTasks_CollectionChanged;
-            _OrganizerVM.AllTasks.CollectionChanged += AllTasks_CollectionChanged;
+            _OrganizerVM.TasksChanged += _OrganizerVM_TasksChanged;
 
+        }
+
+        private void _OrganizerVM_TasksChanged(EventArgs e)
+        {
+            // Update the view!
+            OnPropertyChanged("GatheredTaskCount");
+            OnPropertyChanged("CurrentTask");
+            OnPropertyChanged("CurrentTaskStatus");
+            OnPropertyChanged("CurrentTaskStatusHasDelegatedTo");
+            OnPropertyChanged("CurrentTaskStatusHasDueDate");
+            OnPropertyChanged("CurrentTaskDone");
+            OnPropertyChanged("AllTasks");
+            OnPropertyChanged("AllProjects");
         }
 
         #endregion // Constructor

@@ -27,6 +27,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace MiniTD.DataTypes
 {
@@ -63,7 +64,17 @@ namespace MiniTD.DataTypes
         public DateTime DateCreated { get; set; }
         public DateTime DateDue { get; set; }
         public DateTime DateDone { get; set; }
+        [XmlIgnore]
         public TimeSpan Duration { get; set; }
+        [XmlElement("DurationSer")]
+        public long SerializedDuration
+        {
+            get { return Duration.Ticks; }
+            set
+            {
+                Duration = new TimeSpan(value);
+            }
+        }
         public bool Done { get; set; }
 
         public List<MiniTaskNote> Notes { get; set; }

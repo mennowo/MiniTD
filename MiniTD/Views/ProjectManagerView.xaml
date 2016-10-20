@@ -81,7 +81,7 @@ DEALINGS IN THE SOFTWARE.
                 <Label Content="Projects" FontWeight="Bold" />
                 <TreeView 
                     Grid.Row="1"
-                    Margin="0,5.4,4,25"
+                    Margin="2"
                     ItemsSource="{Binding Path=AllTasks}"
                     MinHeight="100"
                     dd:DragDrop.IsDragSource="True"
@@ -102,22 +102,6 @@ DEALINGS IN THE SOFTWARE.
                         </Style>
                     </TreeView.ItemContainerStyle>
                     <TreeView.Resources>
-                        <!--<HierarchicalDataTemplate DataType="{x:Type vm:MiniProjectViewModel}" ItemsSource="{Binding Children}">
-                        <StackPanel Orientation="Horizontal" >
-                            <Image Source="{StaticResource ProjectIconDrawingImage}" />
-                            <Rectangle Width="14" Height="14" Margin="2" Fill="{Binding Path=Topic.TopicColor,Converter={StaticResource Color2SolidColorConv}}" />
-                            <TextBlock Margin="2" Text="{Binding Path=Title}" FontWeight="Bold" TextDecorations="{Binding Path=Done,Converter={StaticResource doneToTextDecorationsConverter}}" >
-                                <TextBlock.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="Add new task" Command="{Binding Path=AddNewTaskCommand}" />
-                                        <MenuItem Header="Add new project" Command="{Binding Path=AddNewProjectCommand}" />
-                                        <MenuItem Header="Remove project" Command="{Binding Path=RemoveMeCommand}" />
-                                    </ContextMenu>
-                                </TextBlock.ContextMenu>
-                            </TextBlock>
-                        </StackPanel>
-                    </HierarchicalDataTemplate>-->
-
                         <HierarchicalDataTemplate DataType="{x:Type vm:MiniTaskViewModel}"  ItemsSource="{Binding AllTasks}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Width="17" Visibility="{Binding Path=IsProject,Converter={StaticResource Bool2VisConv}}"
@@ -172,7 +156,7 @@ DEALINGS IN THE SOFTWARE.
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Label Content="Selected task" FontWeight="Bold" />
-                <ContentControl Grid.Row="1" Content="{Binding Path=SelectedItem}" >
+                <ContentControl Grid.Row="1" Content="{Binding Path=SelectedItem}" Margin="0,0,0,-0.2" >
                     <ContentControl.Resources>
                         <DataTemplate DataType="{x:Type vm:MiniTaskViewModel}">
                             <vw:MiniTaskView />

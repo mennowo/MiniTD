@@ -84,8 +84,15 @@ namespace MiniTD.ViewModels
             set
             {
                 _SelectedTask = value;
-                _SelectedTask.IsSelected = true;
-                _SelectedTask.IsExpanded = true;
+                if (value != null)
+                {
+                    if ((_SelectedTask.Done || _SelectedTask.AnyParentDone) && !_OrganizerVM.ProjectManagerVM.ShowDone)
+                    {
+                        _OrganizerVM.ProjectManagerVM.ShowDone = true;
+                    }
+                    _SelectedTask.IsSelected = true;
+                    _SelectedTask.IsExpanded = true;
+                }
                 OnPropertyChanged("SelectedTask");
             }
         }

@@ -34,7 +34,7 @@ DEALINGS IN THE SOFTWARE.
   <SolidColorBrush x:Key="Color6Brush" Color="{DynamicResource Color6}" />
   <Geometry x:Key="ASAPIconGeometry">F0 M16,16z M0,0z M353.72816,501.32753L346.72816,509.32753 350.72816,509.32753 348.72816,515.32753 355.72816,507.32753 351.72816,507.32753z</Geometry>
   <SolidColorBrush x:Key="ASAPIconColorBrush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
-  <DrawingGroup x:Key="ASAPIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H15,999999 V0 H0 Z">
+  <DrawingGroup x:Key="ASAPIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-343,-500.36221">
       <GeometryDrawing Geometry="{StaticResource ASAPIconGeometry}">
         <GeometryDrawing.Pen>
@@ -56,7 +56,7 @@ DEALINGS IN THE SOFTWARE.
   <SolidColorBrush x:Key="SaveAsFileIconColor5Brush" Color="{Binding Color, Source={StaticResource Color3Brush}}" />
   <SolidColorBrush x:Key="SaveAsFileIconColor6Brush" Color="{Binding Color, Source={StaticResource Color3Brush}}" />
   <SolidColorBrush x:Key="SaveAsFileIconColor7Brush" Color="{Binding Color, Source={StaticResource Color3Brush}}" />
-  <DrawingGroup x:Key="SaveAsFileIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H15,999999 V0 H0 Z">
+  <DrawingGroup x:Key="SaveAsFileIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-343,-500.36221">
       <GeometryDrawing Brush="{DynamicResource SaveAsFileIconColor1Brush}" Geometry="{StaticResource SaveAsFileIconGeometry1}">
         <GeometryDrawing.Pen>
@@ -88,7 +88,7 @@ DEALINGS IN THE SOFTWARE.
   <Geometry x:Key="ProcessIconGeometry2">F0 M16,16z M0,0z M353.26792,515.19361L353.22702,509.53079 358.77298,512.3622z</Geometry>
   <SolidColorBrush x:Key="ProcessIconColor1Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="ProcessIconColor2Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
-  <DrawingGroup x:Key="ProcessIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H15,999999 V0 H0 Z">
+  <DrawingGroup x:Key="ProcessIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-343,-500.36221">
       <DrawingGroup Transform="0.59529942,0,0,-0.59529942,132.31836,817.64283">
         <GeometryDrawing Geometry="{StaticResource ProcessIconGeometry1}">
@@ -113,7 +113,7 @@ DEALINGS IN THE SOFTWARE.
   <SolidColorBrush x:Key="ProjectsIconColor7Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="ProjectsIconColor8Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="ProjectsIconColor9Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
-  <DrawingGroup x:Key="ProjectsIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H15,999999 V0 H0 Z">
+  <DrawingGroup x:Key="ProjectsIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-343,-500.36221">
       <DrawingGroup Transform="1,0,0,1,0.75,0.50001526">
         <GeometryDrawing Brush="{DynamicResource ProjectsIconColor1Brush}">
@@ -168,7 +168,7 @@ DEALINGS IN THE SOFTWARE.
   <SolidColorBrush x:Key="ExitApplicationIconColor4Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="ExitApplicationIconColor5Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="ExitApplicationIconColor6Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
-  <DrawingGroup x:Key="ExitApplicationIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H15,999999 V0 H0 Z">
+  <DrawingGroup x:Key="ExitApplicationIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-343,-500.53375">
       <DrawingGroup Transform="1,0,0,1,-1.05274,0.17154161" />
       <GeometryDrawing Brush="{DynamicResource ExitApplicationIconColor1Brush}" Geometry="{StaticResource ExitApplicationIconGeometry1}">
@@ -198,7 +198,7 @@ DEALINGS IN THE SOFTWARE.
   <SolidColorBrush x:Key="InboxIconColor2Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="InboxIconColor3Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="InboxIconColor4Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
-  <DrawingGroup x:Key="InboxIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H15,999999 V0 H0 Z">
+  <DrawingGroup x:Key="InboxIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-343,-500.36221">
       <GeometryDrawing Geometry="{StaticResource InboxIconGeometry1}">
         <GeometryDrawing.Pen>
@@ -223,7 +223,7 @@ DEALINGS IN THE SOFTWARE.
   <SolidColorBrush x:Key="NewFileIconColor2Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="NewFileIconColor3Brush" Color="{Binding Color, Source={StaticResource Color3Brush}}" />
   <SolidColorBrush x:Key="NewFileIconColor4Brush" Color="{Binding Color, Source={StaticResource Color3Brush}}" />
-  <DrawingGroup x:Key="NewFileIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H15,999999 V0 H0 Z">
+  <DrawingGroup x:Key="NewFileIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-343,-500.53375">
       <GeometryDrawing Brush="{DynamicResource NewFileIconColor1Brush}" Geometry="{StaticResource NewFileIconGeometry1}">
         <GeometryDrawing.Pen>
@@ -251,7 +251,7 @@ DEALINGS IN THE SOFTWARE.
   <SolidColorBrush x:Key="CloseFileIconColor2Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="CloseFileIconColor3Brush" Color="{Binding Color, Source={StaticResource Color3Brush}}" />
   <SolidColorBrush x:Key="CloseFileIconColor4Brush" Color="{Binding Color, Source={StaticResource Color3Brush}}" />
-  <DrawingGroup x:Key="CloseFileIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H15,999999 V0 H0 Z">
+  <DrawingGroup x:Key="CloseFileIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-343,-500.53375">
       <GeometryDrawing Brush="{DynamicResource CloseFileIconColor1Brush}" Geometry="{StaticResource CloseFileIconGeometry1}">
         <GeometryDrawing.Pen>
@@ -280,7 +280,7 @@ DEALINGS IN THE SOFTWARE.
   <SolidColorBrush x:Key="OpenFileIconColor3Brush" Color="{Binding Color, Source={StaticResource Color3Brush}}" />
   <SolidColorBrush x:Key="OpenFileIconColor4Brush" Color="{Binding Color, Source={StaticResource Color3Brush}}" />
   <SolidColorBrush x:Key="OpenFileIconColor5Brush" Color="{Binding Color, Source={StaticResource Color3Brush}}" />
-  <DrawingGroup x:Key="OpenFileIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H15,999999 V0 H0 Z">
+  <DrawingGroup x:Key="OpenFileIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-343,-500.36221">
       <GeometryDrawing Brush="{DynamicResource OpenFileIconColor1Brush}" Geometry="{StaticResource OpenFileIconGeometry1}">
         <GeometryDrawing.Pen>
@@ -302,7 +302,7 @@ DEALINGS IN THE SOFTWARE.
   <Geometry x:Key="TopicsIconGeometry2">F1 M16,16z M0,0z M350.28572,508.71443L350.28572,508.35713Q350.28572,507.89361 350.48368,507.5508 350.68165,507.20798 351.20794,506.82172 351.71491,506.45959 351.87425,506.23266 352.03841,506.00572 352.03841,505.72568 352.03841,505.41184 351.80665,505.24767 351.57489,505.08351 351.15965,505.08351 350.4354,505.08351 349.50836,505.55669L348.98206,504.49928Q350.05879,503.89573 351.26588,503.89573 352.26052,503.89573 352.84475,504.37374 353.43381,504.85175 353.43381,505.64843 353.43381,506.17955 353.19239,506.56581 352.95097,506.95208 352.275,507.43492 351.81148,507.77773 351.68594,507.95638 351.56523,508.13503 351.56523,508.42473L351.56523,508.71443 350.28572,508.71443z M350.13121,510.36573Q350.13121,509.96015 350.34849,509.75253 350.56576,509.54491 350.981,509.54491 351.38176,509.54491 351.59903,509.75736 351.82114,509.9698 351.82114,510.36573 351.82114,510.74717 351.59903,510.96927 351.37693,511.18655 350.981,511.18655 350.57542,511.18655 350.35332,510.9741 350.13121,510.75682 350.13121,510.36573z</Geometry>
   <SolidColorBrush x:Key="TopicsIconColor1Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="TopicsIconColor2Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
-  <DrawingGroup x:Key="TopicsIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H15,999999 V0 H0 Z">
+  <DrawingGroup x:Key="TopicsIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-343,-500.36221">
       <GeometryDrawing Geometry="{StaticResource TopicsIconGeometry1}">
         <GeometryDrawing.Pen>
@@ -320,7 +320,7 @@ DEALINGS IN THE SOFTWARE.
   <SolidColorBrush x:Key="CurrentIconColor2Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="CurrentIconColor3Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="CurrentIconColor4Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
-  <DrawingGroup x:Key="CurrentIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H15,999999 V0 H0 Z">
+  <DrawingGroup x:Key="CurrentIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-343,-500.36221">
       <GeometryDrawing Brush="{DynamicResource CurrentIconColor1Brush}" Geometry="{StaticResource CurrentIconGeometry}">
         <GeometryDrawing.Pen>
@@ -338,22 +338,22 @@ DEALINGS IN THE SOFTWARE.
     </DrawingGroup>
   </DrawingGroup>
   <DrawingImage x:Key="CurrentIconDrawingImage" Drawing="{StaticResource CurrentIconDrawingGroup}" />
-  <Geometry x:Key="AppIconGeometry1">F0 M16.000003,16z M0,0z M327.33247,488.91291C327.14381,491.44567 325.04526,493.4238 322.46203,493.4238 319.7535,493.4238 317.57779,491.24909 317.57779,488.54054 317.57779,485.83201 319.7535,483.65631 322.46203,483.65631 323.91157,483.65631 325.2085,484.27945 326.101,485.27392L327.55917,484.07425C326.31418,482.65572 324.48923,481.75759 322.46203,481.75759 318.72736,481.75759 315.67908,484.80587 315.67908,488.54054 315.67908,492.27522 318.72736,495.32251 322.46203,495.32251 326.19672,495.32251 329.24499,492.27523 329.24499,488.54054 329.24499,488.05089 329.19259,487.57304 329.09311,487.1123</Geometry>
-  <Geometry x:Key="AppIconGeometry2">F0 M16.000003,16z M0,0z M318.44432,487.2957L319.90688,485.64601 323.32848,488.92452 331.67908,482.35818 323.2817,492.00546z</Geometry>
+  <Geometry x:Key="AppIconGeometry1">F0 M16,16z M0,0z M327.33247,488.91291C327.14381,491.44567 325.04526,493.4238 322.46203,493.4238 319.7535,493.4238 317.57779,491.24909 317.57779,488.54054 317.57779,485.83201 319.7535,483.65631 322.46203,483.65631 323.91157,483.65631 325.2085,484.27945 326.101,485.27392L327.55917,484.07425C326.31418,482.65572 324.48923,481.75759 322.46203,481.75759 318.72736,481.75759 315.67908,484.80587 315.67908,488.54054 315.67908,492.27522 318.72736,495.32251 322.46203,495.32251 326.19672,495.32251 329.24499,492.27523 329.24499,488.54054 329.24499,488.05089 329.19259,487.57304 329.09311,487.1123</Geometry>
+  <Geometry x:Key="AppIconGeometry2">F0 M16,16z M0,0z M318.44432,487.2957L319.90688,485.64601 323.32848,488.92452 331.67908,482.35818 323.2817,492.00546z</Geometry>
   <SolidColorBrush x:Key="AppIconColor1Brush" Color="{Binding Color, Source={StaticResource Color5Brush}}" />
   <SolidColorBrush x:Key="AppIconColor2Brush" Color="{Binding Color, Source={StaticResource Color6Brush}}" />
-  <DrawingGroup x:Key="AppIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H16,000003 V0 H0 Z">
+  <DrawingGroup x:Key="AppIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-315.67908,-480.51001">
       <GeometryDrawing Brush="{DynamicResource AppIconColor1Brush}" Geometry="{StaticResource AppIconGeometry1}" />
       <GeometryDrawing Brush="{DynamicResource AppIconColor2Brush}" Geometry="{StaticResource AppIconGeometry2}" />
     </DrawingGroup>
   </DrawingGroup>
   <DrawingImage x:Key="AppIconDrawingImage" Drawing="{StaticResource AppIconDrawingGroup}" />
-  <Geometry x:Key="ProjectIconGeometry1">F0 M16.000003,16z M0,0z M324.04598,494.6317C324.04598,492.69767 325.01301,489.7966 326.94704,489.7966 328.8811,489.7966 329.8217,492.70318 329.84812,494.6317</Geometry>
-  <Geometry x:Key="ProjectIconGeometry2">F0 M16.000003,16z M0,0z M320.26708,483.22425L326.93175,483.22425</Geometry>
-  <Geometry x:Key="ProjectIconGeometry3">F0 M16.000003,16z M0,0z M320.26708,486.55657L323.47199,486.55657</Geometry>
-  <Geometry x:Key="ProjectIconGeometry4">F0 M16.000003,16z M0,0z M320.26708,489.8889L324.19056,489.8889</Geometry>
-  <Geometry x:Key="ProjectIconGeometry5">F0 M16.000003,16z M0,0z M316.82346,489.32437L318.23398,490.84134 319.96385,488.23322 318.20736,489.48406z</Geometry>
+  <Geometry x:Key="ProjectIconGeometry1">F0 M16,16z M0,0z M324.04598,494.6317C324.04598,492.69767 325.01301,489.7966 326.94704,489.7966 328.8811,489.7966 329.8217,492.70318 329.84812,494.6317</Geometry>
+  <Geometry x:Key="ProjectIconGeometry2">F0 M16,16z M0,0z M320.26708,483.22425L326.93175,483.22425</Geometry>
+  <Geometry x:Key="ProjectIconGeometry3">F0 M16,16z M0,0z M320.26708,486.55657L323.47199,486.55657</Geometry>
+  <Geometry x:Key="ProjectIconGeometry4">F0 M16,16z M0,0z M320.26708,489.8889L324.19056,489.8889</Geometry>
+  <Geometry x:Key="ProjectIconGeometry5">F0 M16,16z M0,0z M316.82346,489.32437L318.23398,490.84134 319.96385,488.23322 318.20736,489.48406z</Geometry>
   <SolidColorBrush x:Key="ProjectIconColor1Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="ProjectIconColor2Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="ProjectIconColor3Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
@@ -366,7 +366,7 @@ DEALINGS IN THE SOFTWARE.
   <SolidColorBrush x:Key="ProjectIconColor10Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="ProjectIconColor11Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="ProjectIconColor12Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
-  <DrawingGroup x:Key="ProjectIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H16,000003 V0 H0 Z">
+  <DrawingGroup x:Key="ProjectIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-315.67908,-480.51001">
       <GeometryDrawing Brush="{DynamicResource ProjectIconColor1Brush}">
         <GeometryDrawing.Geometry>
@@ -430,7 +430,7 @@ DEALINGS IN THE SOFTWARE.
   <SolidColorBrush x:Key="DelegatedIconColor7Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="DelegatedIconColor8Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="DelegatedIconColor9Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
-  <DrawingGroup x:Key="DelegatedIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H15,999999 V0 H0 Z">
+  <DrawingGroup x:Key="DelegatedIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-343,-500.36221">
       <GeometryDrawing Brush="{DynamicResource DelegatedIconColor1Brush}">
         <GeometryDrawing.Geometry>
@@ -479,7 +479,7 @@ DEALINGS IN THE SOFTWARE.
   <SolidColorBrush x:Key="ScheduledIconColor5Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="ScheduledIconColor6Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="ScheduledIconColor7Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
-  <DrawingGroup x:Key="ScheduledIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H15,999999 V0 H0 Z">
+  <DrawingGroup x:Key="ScheduledIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-343,-500.36221">
       <GeometryDrawing Brush="{DynamicResource ScheduledIconColor1Brush}" Geometry="{StaticResource ScheduledIconGeometry1}" />
       <GeometryDrawing>
@@ -521,7 +521,7 @@ DEALINGS IN THE SOFTWARE.
   <SolidColorBrush x:Key="InactiveIconColor2Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="InactiveIconColor3Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
   <SolidColorBrush x:Key="InactiveIconColor4Brush" Color="{Binding Color, Source={StaticResource Color1Brush}}" />
-  <DrawingGroup x:Key="InactiveIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H15,999999 V0 H0 Z">
+  <DrawingGroup x:Key="InactiveIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-343,-500.36221">
       <DrawingGroup Transform="0.47783266,0,0,0.47783266,180.80894,264.975">
         <GeometryDrawing Brush="{DynamicResource InactiveIconColor1Brush}" Geometry="{StaticResource InactiveIconGeometry1}" />
@@ -548,7 +548,7 @@ DEALINGS IN THE SOFTWARE.
   <SolidColorBrush x:Key="SaveFileIconColor3Brush" Color="{Binding Color, Source={StaticResource Color3Brush}}" />
   <SolidColorBrush x:Key="SaveFileIconColor4Brush" Color="{Binding Color, Source={StaticResource Color3Brush}}" />
   <SolidColorBrush x:Key="SaveFileIconColor5Brush" Color="{Binding Color, Source={StaticResource Color3Brush}}" />
-  <DrawingGroup x:Key="SaveFileIconDrawingGroup" ClipGeometry="M0,0 V15,999999 H15,999999 V0 H0 Z">
+  <DrawingGroup x:Key="SaveFileIconDrawingGroup" ClipGeometry="M0,0 V16 H16 V0 H0 Z">
     <DrawingGroup Transform="1,0,0,1,-343,-500.36221">
       <GeometryDrawing Brush="{DynamicResource SaveFileIconColor1Brush}" Geometry="{StaticResource SaveFileIconGeometry1}">
         <GeometryDrawing.Pen>

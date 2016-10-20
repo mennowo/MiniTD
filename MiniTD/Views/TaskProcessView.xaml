@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MiniTD.Views"
+             xmlns:xc="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -41,6 +42,7 @@ DEALINGS IN THE SOFTWARE.
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -77,9 +79,11 @@ DEALINGS IN THE SOFTWARE.
                 <DatePicker SelectedDate="{Binding Path=CurrentTask.DateDue,UpdateSourceTrigger=PropertyChanged}" />
             </DockPanel>
         </StackPanel>
-        <Label Grid.Row="4" Grid.Column="0" Content="Topic:" />
+        <Label Grid.Row="4" Grid.Column="0" Content="Duration:" />
+        <xc:TimeSpanUpDown Text="{Binding Path=CurrentTask.Duration}" HorizontalAlignment="Left" Grid.Row="4" Grid.Column="1" Margin="2" Visibility="{Binding Path=IsTask,Converter={StaticResource Bool2VisConv}}" />
+        <Label Grid.Row="5" Grid.Column="0" Content="Topic:" />
         <ComboBox 
-            Grid.Row="4" Grid.Column="1" Margin="2" 
+            Grid.Row="5" Grid.Column="1" Margin="2" 
             ItemsSource="{Binding Path=Topics}" 
             SelectedValue="{Binding Path=CurrentTask.TopicID,UpdateSourceTrigger=PropertyChanged}"
             SelectedValuePath="ID"
@@ -97,9 +101,9 @@ DEALINGS IN THE SOFTWARE.
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <Label Grid.Row="5" Grid.Column="0" Content="Project:" />
+        <Label Grid.Row="6" Grid.Column="0" Content="Project:" />
         <ComboBox 
-            Grid.Row="5" 
+            Grid.Row="6" 
             Grid.Column="1" 
             Margin="2" 
             ItemsSource="{Binding Path=AllProjects}" 
@@ -108,7 +112,7 @@ DEALINGS IN THE SOFTWARE.
             SelectedValuePath="ID"
             />
         <Expander 
-            ExpandDirection="Down" Grid.Row="6" Grid.ColumnSpan="3" Header="Add to new project" >
+            ExpandDirection="Down" Grid.Row="7" Grid.ColumnSpan="3" Header="Add to new project" >
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -122,8 +126,8 @@ DEALINGS IN THE SOFTWARE.
                 <TextBox Grid.Column="1" Margin="2" Text="{Binding Path=NewProjectTitle,UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </Expander>
-        <local:MiniTaskNoteCollectionView Grid.Row="7" Margin="2" Grid.ColumnSpan="2" DataContext="{Binding CurrentTask}" />
-        <Grid Grid.Row="8" Grid.ColumnSpan="2">
+        <local:MiniTaskNoteCollectionView Grid.Row="8" Margin="2" Grid.ColumnSpan="2" DataContext="{Binding CurrentTask}" />
+        <Grid Grid.Row="9" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto "/>

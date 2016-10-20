@@ -98,7 +98,9 @@ DEALINGS IN THE SOFTWARE.
             </ComboBox.ItemTemplate>
         </ComboBox>
         <Label Grid.Row="5" Grid.Column="0" Content="Duration:" Visibility="{Binding Path=IsTask,Converter={StaticResource Bool2VisConv}}" />
-        <xc:TimeSpanUpDown Text="{Binding Path=Duration}" Grid.Row="5" Grid.Column="1" Margin="2" Visibility="{Binding Path=IsTask,Converter={StaticResource Bool2VisConv}}" />
+        <Label Grid.Row="5" Grid.Column="0" Content="Total duration:" Visibility="{Binding Path=IsProject,Converter={StaticResource Bool2VisConv}}" />
+        <xc:TimeSpanUpDown Text="{Binding Path=Duration}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Margin="2" Visibility="{Binding Path=IsTask,Converter={StaticResource Bool2VisConv}}" />
+        <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Path=TotalDuration}" Margin="5" Visibility="{Binding Path=IsProject,Converter={StaticResource Bool2VisConv}}" />
         <!--<Label Grid.Row="4" Grid.Column="0" Content="Project:" />-->
         <!--<ComboBox 
             Grid.Row="4" 
