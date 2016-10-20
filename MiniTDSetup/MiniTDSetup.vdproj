@@ -400,7 +400,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:MiniTD"
         "ProductCode" = "8:{B1EB7D6D-1D0D-4AF2-A1F0-739C00E2066D}"
-        "PackageCode" = "8:{0EDC5BB9-E6A6-4246-912E-496B7FBC1479}"
+        "PackageCode" = "8:{3EF33917-9629-4B49-8865-1E5611F16059}"
         "UpgradeCode" = "8:{3266D1A2-8A1B-47DF-95FA-75FA3FF9F113}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -423,7 +423,7 @@
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:0"
         "PreBuildEvent" = "8:"
-        "PostBuildEvent" = "8:"
+        "PostBuildEvent" = "8:\"C:\\Program Files (x86)\\Windows Kits\\8.1\\bin\\x86\\signtool.exe\" sign /a  $(BuiltOuputPath)"
         "RunPostBuildEvent" = "3:0"
         }
         "Registry"
