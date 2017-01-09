@@ -71,6 +71,8 @@ DEALINGS IN THE SOFTWARE.
             </DockPanel>
             <DockPanel LastChildFill="True" Visibility="{Binding Path=StatusHasDueDate,Converter={StaticResource Bool2VisConv}}">
                 <Label Content="Due date:" />
+                <Button Content="+ Week" Margin="2" DockPanel.Dock="Right" Command="{Binding Path=PostponeCommand}" CommandParameter="week" />
+                <Button Content="+ Day" Margin="2" DockPanel.Dock="Right" Command="{Binding Path=PostponeCommand}" CommandParameter="day"/>
                 <DatePicker SelectedDate="{Binding Path=DateDue,UpdateSourceTrigger=PropertyChanged}" />
             </DockPanel>
         </StackPanel>

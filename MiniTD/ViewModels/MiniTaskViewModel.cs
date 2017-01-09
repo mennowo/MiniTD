@@ -556,6 +556,20 @@ namespace MiniTD.ViewModels
             }
         }
 
+
+        RelayCommand _PostponeCommand;
+        public ICommand PostponeCommand
+        {
+            get
+            {
+                if (_PostponeCommand == null)
+                {
+                    _PostponeCommand = new RelayCommand(PostponeCommand_Executed, PostponeCommand_CanExecute);
+                }
+                return _PostponeCommand;
+            }
+        }
+
         #endregion // Commands
 
         #region Command functionality
@@ -598,6 +612,28 @@ namespace MiniTD.ViewModels
         bool RemoveMeCommand_CanExecute(object prm)
         {
             return true;
+        }
+
+        void PostponeCommand_Executed(object prm)
+        {
+            if(DateDue != null)
+            {
+                string s = (string)prm;
+                switch (s)
+                {
+                    case "day":
+                        DateDue = DateDue.AddDays(1);
+                        break;
+                    case "week":
+                        DateDue = DateDue.AddDays(7);
+                        break;
+                }
+            }
+        }
+
+        bool PostponeCommand_CanExecute(object prm)
+        {
+            return DateDue != null;
         }
 
         #endregion // Command functionality
