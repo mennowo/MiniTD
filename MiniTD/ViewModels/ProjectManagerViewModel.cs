@@ -20,21 +20,16 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 **/
 
-using MiniTD.DataAccess;
 using MiniTD.DataTypes;
 using MiniTD.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using JetBrains.Annotations;
 
 namespace MiniTD.ViewModels
 {
@@ -42,57 +37,39 @@ namespace MiniTD.ViewModels
     {
         #region Fields
 
-        private MiniOrganizerViewModel _OrganizerVM;
-        private MiniTaskViewModel _CurrentSelectedTask;
-        private object _SelectedItem;
-        private bool _ShowDone;
+        private readonly MiniOrganizerViewModel _organizerVM;
+        
+        private object _selectedItem;
+        private bool _showDone;
 
         #endregion // Fields
 
         #region Properties
 
-        public CurrentTasksViewModel CurrentTasksVM
-        {
-            get
-            {
-                return _OrganizerVM.CurrentTasksVM;
-            }
-        }
+        [UsedImplicitly]
+        public CurrentTasksViewModel CurrentTasksVM => _organizerVM.CurrentTasksVM;
+        
+        [UsedImplicitly]
+        public ObservableCollection<MiniTaskViewModel> AllTasks => _organizerVM.AllTasks;
 
-        public MiniTaskViewModel CurrentSelectedTask
-        {
-            get { return _CurrentSelectedTask; }
-            set
-            {
-                _CurrentSelectedTask = value;
-                SelectedItem = value;
-            }
-        }
-
-        public ObservableCollection<MiniTaskViewModel> AllTasks
-        {
-            get
-            {
-                return _OrganizerVM.AllTasks;
-            }
-        }
-
+        [UsedImplicitly]
         public object SelectedItem
         {
-            get { return _SelectedItem; }
+            get => _selectedItem;
             set
             {
-                _SelectedItem = value;
+                _selectedItem = value;
+                _organizerVM.CurrentTasksVM.SelectedTask = (MiniTaskViewModel)value;
                 OnPropertyChanged("SelectedItem");
             }
         }
 
         public bool ShowDone
         {
-            get { return _ShowDone; }
+            get => _showDone;
             set
             {
-                _ShowDone = value;
+                _showDone = value;
                 SetAllFilterDone();
                 OnPropertyChanged("ShowDone");
             }
@@ -102,30 +79,23 @@ namespace MiniTD.ViewModels
 
         #region Commands
 
+        private RelayCommand _addProjectCommand;
+        [UsedImplicitly]
+        public ICommand AddProjectCommand => _addProjectCommand ?? (_addProjectCommand =
+                                                 new RelayCommand(AddProjectCommand_Executed, AddProjectCommand_CanExecute));
 
-        RelayCommand _AddProjectCommand;
-        public ICommand AddProjectCommand
-        {
-            get
-            {
-                if (_AddProjectCommand == null)
-                {
-                    _AddProjectCommand = new RelayCommand(AddProjectCommand_Executed, AddProjectCommand_CanExecute);
-                }
-                return _AddProjectCommand;
-            }
-        }
-        
         #endregion // Commands
 
         #region Command functionality
 
         void AddProjectCommand_Executed(object prm)
         {
-            MiniTask t = new MiniTask();
-            t.Type = MiniTaskType.Project;
-            t.Title = "New project";
-            AllTasks.Add(new MiniTaskViewModel(t, _OrganizerVM, null));
+            var t = new MiniTask
+            {
+                Type = MiniTaskType.Project,
+                Title = "New project"
+            };
+            AllTasks.Add(new MiniTaskViewModel(t, _organizerVM, null));
         }
         
         bool AddProjectCommand_CanExecute(object prm)
@@ -141,18 +111,18 @@ namespace MiniTD.ViewModels
         {
             if (!ShowDone)
             {
-                ICollectionView iv = CollectionViewSource.GetDefaultView(AllTasks);
+                var iv = CollectionViewSource.GetDefaultView(AllTasks);
                 iv.Filter = FilterDone;
-                foreach (MiniTaskViewModel t in AllTasks)
+                foreach (var t in AllTasks)
                 {
                     t.SetFilterDone(FilterDone);
                 }
             }
             else
             {
-                ICollectionView iv = CollectionViewSource.GetDefaultView(AllTasks);
+                var iv = CollectionViewSource.GetDefaultView(AllTasks);
                 iv.Filter = null;
-                foreach (MiniTaskViewModel t in AllTasks)
+                foreach (var t in AllTasks)
                 {
                     t.SetFilterDone(null);
                 }
@@ -161,8 +131,8 @@ namespace MiniTD.ViewModels
 
         private bool FilterDone(object item)
         {
-            MiniTaskViewModel mtv = item as MiniTaskViewModel;
-            return mtv.Done == false;
+            var mtv = item as MiniTaskViewModel;
+            return mtv != null && mtv.Done == false;
         }
 
         #endregion // Private methods
@@ -173,31 +143,30 @@ namespace MiniTD.ViewModels
 
         #region Constructor
 
-        public ProjectManagerViewModel(MiniOrganizerViewModel _organizervm)
+        public ProjectManagerViewModel(MiniOrganizerViewModel organizervm)
         {
-            _OrganizerVM = _organizervm;
+            _organizerVM = organizervm;
             AllTasks.CollectionChanged += AllTasks_CollectionChanged;
             SetAllFilterDone();
         }
 
         private void AllTasks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            _OrganizerVM.OnTasksChanged();
+            _organizerVM.OnTasksChanged();
         }
 
         #endregion // Constructor
     }
 
-    public class currentToItalicConverter : IValueConverter
+    public class CurrentToItalicConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((bool)value)
+            if (value != null && (bool)value)
             {
                 return FontStyles.Italic;
             }
-            else
-                return FontStyles.Normal;
+            return FontStyles.Normal;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -210,13 +179,8 @@ namespace MiniTD.ViewModels
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool done = (bool)value;
-            if (done)
-            {
-                return TextDecorations.Strikethrough;
-            }
-            return null;
-
+            var done = value != null && (bool)value;
+            return done ? TextDecorations.Strikethrough : null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -225,16 +189,16 @@ namespace MiniTD.ViewModels
         }
     }
 
-    class TreeViewLineConverter : IValueConverter
+    internal class TreeViewLineConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            TreeViewItem item = (TreeViewItem)value;
-            ItemsControl ic = ItemsControl.ItemsControlFromItemContainer(item);
-            return ic.ItemContainerGenerator.IndexFromContainer(item) == ic.Items.Count - 1;
+            var item = (TreeViewItem)value;
+            var ic = ItemsControl.ItemsControlFromItemContainer(item);
+            return item != null && ic.ItemContainerGenerator.IndexFromContainer(item) == ic.Items.Count - 1;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return false;
         }

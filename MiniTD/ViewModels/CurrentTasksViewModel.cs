@@ -23,11 +23,9 @@ DEALINGS IN THE SOFTWARE.
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Data;
+using JetBrains.Annotations;
 
 namespace MiniTD.ViewModels
 {
@@ -35,63 +33,55 @@ namespace MiniTD.ViewModels
     {
         #region Fields
          
-        private MiniOrganizerViewModel _OrganizerVM;
-        private ObservableCollection<MiniTaskViewModel> _CurrentTasks;
-        private MiniTaskViewModel _SelectedTask;
-        Timer _UpdateClockTimer;
+        private readonly MiniOrganizerViewModel _organizerVM;
+        private ObservableCollection<MiniTaskViewModel> _currentTasks;
+        private MiniTaskViewModel _selectedTask;
+        private ListCollectionView _currentTasksGrouped;
 
         #endregion // Fields
 
         #region Properties
 
-        ListCollectionView _CurrentTasksGrouped;
-        public ListCollectionView CurrentTasksGrouped
-        {
-            get
-            {
-                if(_CurrentTasksGrouped == null)
-                {
-                    _CurrentTasksGrouped = new ListCollectionView(CurrentTasks);
-                }
-                return _CurrentTasksGrouped;
-            }
-        }
+        [UsedImplicitly]
+        public ListCollectionView CurrentTasksGrouped => _currentTasksGrouped ?? (_currentTasksGrouped = new ListCollectionView(CurrentTasks));
 
+        [UsedImplicitly]
         public ObservableCollection<MiniTaskViewModel> CurrentTasks
         {
             get
             {
-                if (_CurrentTasks == null)
-                {
-                    _CurrentTasks = new ObservableCollection<MiniTaskViewModel>();
-                    OnPropertyChanged("CurrentTasks");
-                }
-                return _CurrentTasks;
+                if (_currentTasks != null) return _currentTasks;
+                _currentTasks = new ObservableCollection<MiniTaskViewModel>();
+                OnPropertyChanged("CurrentTasks");
+                return _currentTasks;
             }
         }
 
-        public DateTime CurrentTime
-        {
-            get
-            {
-                return DateTime.Now;
-            }
-        }
+        [UsedImplicitly]
+        public DateTime CurrentTime => DateTime.Now;
 
+        [UsedImplicitly]
         public MiniTaskViewModel SelectedTask
         {
-            get { return _SelectedTask; }
+            get => _selectedTask;
             set
             {
-                _SelectedTask = value;
-                if (value != null)
+                if (CurrentTasks.Contains(value))
                 {
-                    if ((_SelectedTask.Done || _SelectedTask.AnyParentDone) && !_OrganizerVM.ProjectManagerVM.ShowDone)
+                    _selectedTask = value;
+                    if (value != null)
                     {
-                        _OrganizerVM.ProjectManagerVM.ShowDone = true;
+                        if ((_selectedTask.Done || _selectedTask.AnyParentDone) && !_organizerVM.ProjectManagerVM.ShowDone)
+                        {
+                            _organizerVM.ProjectManagerVM.ShowDone = true;
+                        }
+                        _selectedTask.IsSelected = true;
+                        _selectedTask.IsExpanded = true;
                     }
-                    _SelectedTask.IsSelected = true;
-                    _SelectedTask.IsExpanded = true;
+                }
+                else
+                {
+                    _selectedTask = null;
                 }
                 OnPropertyChanged("SelectedTask");
             }
@@ -117,79 +107,71 @@ namespace MiniTD.ViewModels
 
         #region Tasks Changed
 
-        private void _OrganizerVM_TasksChanged(EventArgs e)
+        private void _OrganizerVM_TasksChanged(object sender, EventArgs e)
         {
+            var sel = SelectedTask;
+            SelectedTask = null;
             CurrentTasks.Clear();
-            foreach(MiniTaskViewModel tvm in _OrganizerVM.AllTasks)
+            foreach (var tvm in _organizerVM.AllTasks)
             {
                 if (tvm.Type == DataTypes.MiniTaskType.Task && !tvm.Done && tvm.IsCurrent)
                 {
                     CurrentTasks.Add(tvm);
-                    tvm.DoneChanged += Tttvm_DoneChanged;
                 }
-                foreach (MiniTaskViewModel ttvm in GetAllCurrentProjectTasks(tvm))
+                foreach (var ttvm in GetAllCurrentProjectTasks(tvm))
                 {
                     CurrentTasks.Add(ttvm);
-                    ttvm.DoneChanged += Tttvm_DoneChanged;
                 }
             }
+            SelectedTask = sel;
+            OnPropertyChanged("SelectedTask");
         }
 
-        List<MiniTaskViewModel> GetAllCurrentProjectTasks(MiniTaskViewModel tvm)
+        IEnumerable<MiniTaskViewModel> GetAllCurrentProjectTasks(MiniTaskViewModel tvm)
         {
-            List<MiniTaskViewModel> currentTasks = new List<MiniTaskViewModel>();
+            var currentTasks = new List<MiniTaskViewModel>();
             
-            // if the project has tasks
-            if (tvm.AllTasks != null && tvm.AllTasks.Count > 0)
+            // return if the project no tasks
+            if (tvm.AllTasks == null || tvm.AllTasks.Count <= 0) return currentTasks;
+
+            // loop all tasks
+            foreach (var ttvm in tvm.AllTasks)
             {
-                // loop all tasks
-                foreach (MiniTaskViewModel ttvm in tvm.AllTasks)
+                // if a task is not done or inactive
+                if (!ttvm.Done && ttvm.IsCurrent)
                 {
-                    // if a task is not done or inactive
-                    if (!ttvm.Done && ttvm.IsCurrent)
+                    // if type is task, add it
+                    if (ttvm.Type == DataTypes.MiniTaskType.Task)
                     {
-                        // if type is task, add it
-                        if (ttvm.Type == DataTypes.MiniTaskType.Task)
-                        {
-                            currentTasks.Add(ttvm);
-                        }
+                        currentTasks.Add(ttvm);
                     }
-                    // if it has tasks, add them all
-                    if (ttvm.AllTasks != null && ttvm.AllTasks.Count > 0)
-                    {
-                        foreach (MiniTaskViewModel tttvm in GetAllCurrentProjectTasks(ttvm))
-                        {
-                            currentTasks.Add(tttvm);
-                        }
-                    }
+                }
+                // if it has tasks, add them all
+                if (ttvm.AllTasks != null && ttvm.AllTasks.Count > 0)
+                {
+                    currentTasks.AddRange(GetAllCurrentProjectTasks(ttvm));
                 }
             }
             return currentTasks;
-        }
-
-        private void Tttvm_DoneChanged(object sender, MiniTaskViewModel.DoneChangedEventArgs e)
-        {
-            if(e.tvm.Done || !e.tvm.IsCurrent)
-            {
-                CurrentTasks.Remove(e.tvm);
-            }
         }
 
         #endregion Tasks Changed
 
         #region Constructor
 
-        public CurrentTasksViewModel(MiniOrganizerViewModel _organizervm)
+        public CurrentTasksViewModel(MiniOrganizerViewModel organizervm)
         {
-            _OrganizerVM = _organizervm;
-            _OrganizerVM.TasksChanged += _OrganizerVM_TasksChanged;
-            _UpdateClockTimer = new Timer();
-            _UpdateClockTimer.Interval = 1000;
-            _UpdateClockTimer.AutoReset = true;
-            _UpdateClockTimer.Elapsed += _UpdateClockTimer_Elapsed;
-            _UpdateClockTimer.Start();
+            _organizerVM = organizervm;
+            _organizerVM.TasksChanged += _OrganizerVM_TasksChanged;
+            var updateClockTimer = new Timer
+            {
+                Interval = 1000,
+                AutoReset = true
+            };
+            updateClockTimer.Elapsed += _UpdateClockTimer_Elapsed;
+            updateClockTimer.Start();
 
-            CurrentTasksGrouped.GroupDescriptions.Add(new PropertyGroupDescription("DateDueGroup"));
+            CurrentTasksGrouped.GroupDescriptions?.Add(new PropertyGroupDescription("DateDueGroup"));
             CurrentTasksGrouped.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateDue", System.ComponentModel.ListSortDirection.Ascending));
 
         }

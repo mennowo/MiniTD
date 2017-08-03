@@ -21,12 +21,8 @@ DEALINGS IN THE SOFTWARE.
 **/
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace MiniTD.DataAccess
@@ -40,11 +36,11 @@ namespace MiniTD.DataAccess
             if (string.IsNullOrWhiteSpace(fileName) || !File.Exists(fileName))
                 return default(T);
 
-            T t = default(T);
+            var t = default(T);
 
             try
             {
-                FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
                 using (var gz = new GZipStream(fs, CompressionMode.Decompress))
                 {
                     var serializer = new XmlSerializer(typeof(T));

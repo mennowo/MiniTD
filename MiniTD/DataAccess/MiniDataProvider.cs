@@ -22,13 +22,6 @@ DEALINGS IN THE SOFTWARE.
 
 using MiniTD.DataTypes;
 using MiniTD.Helpers;
-using MiniTD.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MiniTD.DataAccess
 {
@@ -80,7 +73,7 @@ namespace MiniTD.DataAccess
         {
             if (!string.IsNullOrWhiteSpace(FileName))
             {
-                DeserializeT<MiniOrganizer> deserializer = new DeserializeT<MiniOrganizer>();
+                var deserializer = new DeserializeT<MiniOrganizer>();
                 Organizer = deserializer.DeSerializeGZip(FileName);
                 IDProvider.Organizer = Organizer;
             }
@@ -90,7 +83,7 @@ namespace MiniTD.DataAccess
         {
             if (!string.IsNullOrWhiteSpace(FileName))
             {
-                SerializeT<MiniOrganizer> serializer = new SerializeT<MiniOrganizer>();
+                var serializer = new SerializeT<MiniOrganizer>();
                 serializer.SerializeGZip(FileName, Organizer);
             }
         }

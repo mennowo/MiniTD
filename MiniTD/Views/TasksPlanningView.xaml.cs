@@ -1,19 +1,9 @@
 ﻿using MiniTD.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MiniTD.Views
 {
@@ -37,7 +27,7 @@ namespace MiniTD.Views
             if (value is ReadOnlyObservableCollection<Object>)
             {
                 var items = (ReadOnlyObservableCollection<Object>)value;
-                TimeSpan total = new TimeSpan();
+                var total = new TimeSpan();
                 foreach (MiniTaskViewModel tvm in items)
                 {
                     total += tvm.Duration;
@@ -60,7 +50,7 @@ namespace MiniTD.Views
             if (value is ReadOnlyObservableCollection<Object>)
             {
                 var items = (ReadOnlyObservableCollection<Object>)value;
-                TimeSpan total = new TimeSpan();
+                var total = new TimeSpan();
                 foreach (MiniTaskViewModel tvm in items)
                 {
                     total += tvm.Duration;

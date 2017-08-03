@@ -23,11 +23,9 @@ DEALINGS IN THE SOFTWARE.
 using MiniTD.DataAccess;
 using MiniTD.DataTypes;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace MiniTD.ViewModels
 {
@@ -35,36 +33,33 @@ namespace MiniTD.ViewModels
     {
         #region Fields
 
-        private MiniDataProvider _DataProvider;
-        private MiniOrganizer _Organizer;
-        private TaskGatherViewModel _TasksGatherVM;
-        private TaskProcessViewModel _TasksProcessVM;
-        private TopicsListViewModel _TopicsListVM;
-        private ProjectManagerViewModel _ProjectManagerVM;
-        private CurrentTasksViewModel _CurrentTasksVM;
-        private TasksPlanningViewModel _TasksPlanningVM;
+        private readonly MiniOrganizer _organizer;
+        private TaskGatherViewModel _tasksGatherVM;
+        private TaskProcessViewModel _tasksProcessVM;
+        private TopicsListViewModel _topicsListVM;
+        private ProjectManagerViewModel _projectManagerVM;
+        private CurrentTasksViewModel _currentTasksVM;
+        private TasksPlanningViewModel _tasksPlanningVM;
 
-        private ObservableCollection<MiniTaskViewModel> _GatheredTasks;
-        private ObservableCollection<MiniTaskViewModel> _AllTasks;
-        private ObservableCollection<MiniTopicViewModel> _Topics;
+        private ObservableCollection<MiniTaskViewModel> _gatheredTasks;
+        private ObservableCollection<MiniTaskViewModel> _allTasks;
+        private ObservableCollection<MiniTopicViewModel> _topics;
 
-        private bool _HasChanged;
+        private bool _hasChanged;
 
         #endregion // Fields
 
         #region Properties
 
-        public MiniOrganizer Organizer
-        {
-            get { return _Organizer; }
-        }
+        [UsedImplicitly]
+        public MiniOrganizer Organizer => _organizer;
 
         public bool HasChanged
         {
-            get { return _HasChanged; }
+            get => _hasChanged;
             set
             {
-                _HasChanged = value;
+                _hasChanged = value;
                 OnPropertyChanged("HasChanged");
             }
         }
@@ -73,107 +68,109 @@ namespace MiniTD.ViewModels
         {
             get
             {
-                if (_GatheredTasks == null)
-                {
-                    _GatheredTasks = new ObservableCollection<MiniTaskViewModel>();
-                    OnPropertyChanged("GatheredTasks");
-                }
-                return _GatheredTasks;
+                if (_gatheredTasks != null) return _gatheredTasks;
+                _gatheredTasks = new ObservableCollection<MiniTaskViewModel>();
+                OnPropertyChanged("GatheredTasks");
+                return _gatheredTasks;
             }
         }
 
+        [UsedImplicitly]
         public ObservableCollection<MiniTopicViewModel> Topics
         {
             get
             {
-                if (_Topics == null)
-                {
-                    _Topics = new ObservableCollection<MiniTopicViewModel>();
-                    OnPropertyChanged("Topics");
-                }
-                return _Topics;
+                if (_topics != null) return _topics;
+                _topics = new ObservableCollection<MiniTopicViewModel>();
+                OnPropertyChanged("Topics");
+                return _topics;
             }
             set
             {
-                _Topics = value;
+                _topics = value;
                 OnPropertyChanged("Topics");
             }
         }
 
+        [UsedImplicitly]
         public ObservableCollection<MiniTaskViewModel> AllTasks
         {
             get
             {
-                if (_AllTasks == null)
-                {
-                    _AllTasks = new ObservableCollection<MiniTaskViewModel>();
-                    OnPropertyChanged("AllTasks");
-                }
-                return _AllTasks;
+                if (_allTasks != null) return _allTasks;
+                _allTasks = new ObservableCollection<MiniTaskViewModel>();
+                OnPropertyChanged("AllTasks");
+                return _allTasks;
             }
             set
             {
-                _AllTasks = value;
+                _allTasks = value;
                 OnPropertyChanged("AllTasks");
             }
         }
 
+        [UsedImplicitly]
         public TaskGatherViewModel TasksGatherVM
         {
-            get { return _TasksGatherVM; }
+            get => _tasksGatherVM;
             set
             {
-                _TasksGatherVM = value;
+                _tasksGatherVM = value;
                 OnPropertyChanged("TasksGatherVM");
             }
         }
 
+        [UsedImplicitly]
         public TaskProcessViewModel TasksProcessVM
         {
-            get { return _TasksProcessVM; }
+            get => _tasksProcessVM;
             set
             {
-                _TasksProcessVM = value;
+                _tasksProcessVM = value;
                 OnPropertyChanged("TasksProcessVM");
             }
         }
 
+        [UsedImplicitly]
         public TopicsListViewModel TopicsListVM
         {
-            get { return _TopicsListVM; }
+            get => _topicsListVM;
             set
             {
-                _TopicsListVM = value;
+                _topicsListVM = value;
                 OnPropertyChanged("TopicsListVM");
             }
         }
 
+        [UsedImplicitly]
         public ProjectManagerViewModel ProjectManagerVM
         {
-            get { return _ProjectManagerVM; }
+            get => _projectManagerVM;
             set
             {
-                _ProjectManagerVM = value;
+                _projectManagerVM = value;
                 OnPropertyChanged("ProjectManagerVM");
             }
         }
 
+        [UsedImplicitly]
         public CurrentTasksViewModel CurrentTasksVM
         {
-            get { return _CurrentTasksVM; }
+            get => _currentTasksVM;
             set
             {
-                _CurrentTasksVM = value;
+                _currentTasksVM = value;
                 OnPropertyChanged("CurrentTasksVM");
             }
         }
 
+        [UsedImplicitly]
         public TasksPlanningViewModel TasksPlanningVM
         {
-            get { return _TasksPlanningVM; }
+            get => _tasksPlanningVM;
             set
             {
-                _TasksPlanningVM = value;
+                _tasksPlanningVM = value;
                 OnPropertyChanged("TasksPlanningVM");
             }
         }
@@ -181,17 +178,17 @@ namespace MiniTD.ViewModels
         #endregion // Properties
 
         #region Events
-
-        public delegate void TasksChangedHandler(EventArgs e);
-
-        public event TasksChangedHandler TasksChanged;
+        
+        public event EventHandler TasksChanged;
 
         public void OnTasksChanged()
         {
-            if (TasksChanged != null)
-            {
-                TasksChanged(EventArgs.Empty);
-            }
+            TasksChanged?.Invoke(this, EventArgs.Empty);
+        }
+        
+        public void OnTaskDoneChanged(object sender, MiniTaskViewModel e)
+        {
+            
         }
 
         #endregion // Events
@@ -212,12 +209,7 @@ namespace MiniTD.ViewModels
 
         public MiniTopicViewModel GetTopicVMFromID(long topicid)
         {
-            foreach(MiniTopicViewModel tvm in Topics)
-            {
-                if (tvm.ID == topicid)
-                    return tvm;
-            }
-            return null;
+            return Topics.FirstOrDefault(tvm => tvm.ID == topicid);
         }
 
         #endregion // Public methods
@@ -230,14 +222,14 @@ namespace MiniTD.ViewModels
             {
                 foreach (MiniTopicViewModel tvm in e.NewItems)
                 {
-                    _Organizer.Topics.Add(tvm.Topic);
+                    _organizer.Topics.Add(tvm.Topic);
                 }
             }
             if (e.OldItems != null && e.OldItems.Count > 0)
             {
                 foreach (MiniTopicViewModel tvm in e.OldItems)
                 {
-                    _Organizer.Topics.Remove(tvm.Topic);
+                    _organizer.Topics.Remove(tvm.Topic);
                 }
             }
             HasChanged = true;
@@ -251,14 +243,14 @@ namespace MiniTD.ViewModels
                 {
                     // this is always a task, never a project
                     tvm.Task.Type = MiniTaskType.Task;
-                    _Organizer.TaskInbox.Add(tvm.Task);
+                    _organizer.TaskInbox.Add(tvm.Task);
                 }
             }
             if (e.OldItems != null && e.OldItems.Count > 0)
             {
                 foreach (MiniTaskViewModel tvm in e.OldItems)
                 {
-                    _Organizer.TaskInbox.Remove(tvm.Task);
+                    _organizer.TaskInbox.Remove(tvm.Task);
                 }
             }
             HasChanged = true;
@@ -270,14 +262,16 @@ namespace MiniTD.ViewModels
             {
                 foreach (MiniTaskViewModel tvm in e.NewItems)
                 {
-                    _Organizer.AllTasks.Add(tvm.Task);
+                    _organizer.AllTasks.Add(tvm.Task);
+                    tvm.DoneChanged += OnTaskDoneChanged;
                 }
             }
             if (e.OldItems != null && e.OldItems.Count > 0)
             {
                 foreach (MiniTaskViewModel tvm in e.OldItems)
                 {
-                    _Organizer.AllTasks.Remove(tvm.Task);
+                    _organizer.AllTasks.Remove(tvm.Task);
+                    tvm.DoneChanged -= OnTaskDoneChanged;
                 }
             }
             OnTasksChanged();
@@ -288,24 +282,23 @@ namespace MiniTD.ViewModels
 
         #region Constructor
 
-        public MiniOrganizerViewModel(MiniDataProvider _provider)
+        public MiniOrganizerViewModel(MiniDataProvider provider)
         {
-            _DataProvider = _provider;
-            _Organizer = _DataProvider.Organizer;
+            _organizer = provider.Organizer;
             
-            foreach (MiniTopic t in Organizer.Topics)
+            foreach (var t in Organizer.Topics)
             {
-                MiniTopicViewModel tvm = new MiniTopicViewModel(t, this);
+                var tvm = new MiniTopicViewModel(t, this);
                 Topics.Add(tvm);
             }
-            foreach (MiniTask t in Organizer.TaskInbox)
+            foreach (var t in Organizer.TaskInbox)
             {
-                MiniTaskViewModel tvm = new MiniTaskViewModel(t, this, null);
+                var tvm = new MiniTaskViewModel(t, this, null);
                 GatheredTasks.Add(tvm);
             }
-            foreach (MiniTask t in Organizer.AllTasks)
+            foreach (var t in Organizer.AllTasks)
             {
-                MiniTaskViewModel tvm = new MiniTaskViewModel(t, this, null);
+                var tvm = new MiniTaskViewModel(t, this, null);
                 AllTasks.Add(tvm);
             }
 
@@ -320,7 +313,12 @@ namespace MiniTD.ViewModels
             Topics.CollectionChanged += Topics_CollectionChanged;
             AllTasks.CollectionChanged += AllTasks_CollectionChanged;
 
-            this.OnTasksChanged();
+            foreach (var t in AllTasks)
+            {
+                t.DoneChanged += OnTaskDoneChanged;
+            }
+
+            OnTasksChanged();
         }
 
         #endregion // Constructor

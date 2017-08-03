@@ -20,15 +20,10 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 **/
 
-using MiniTD.DataAccess;
 using MiniTD.DataTypes;
 using MiniTD.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MiniTD.ViewModels
@@ -38,7 +33,7 @@ namespace MiniTD.ViewModels
 
         #region Fields
 
-        private MiniOrganizerViewModel _OrganizerVM;
+        private readonly MiniOrganizerViewModel _OrganizerVM;
         private string _NewTopicTitle;
 
         #endregion // Fields
@@ -87,11 +82,11 @@ namespace MiniTD.ViewModels
 
         void AddNewTopicCommand_Executed(object prm)
         {
-            MiniTopic t = new MiniTopic();
-            Random r = new Random(DateTime.Now.GetHashCode());
+            var t = new MiniTopic();
+            var r = new Random(DateTime.Now.GetHashCode());
             t.Color = System.Windows.Media.Color.FromRgb((byte)r.Next(255), (byte)r.Next(255), (byte)r.Next(255));
             t.Title = NewTopicTitle;
-            MiniTopicViewModel tvm = new MiniTopicViewModel(t, _OrganizerVM);
+            var tvm = new MiniTopicViewModel(t, _OrganizerVM);
             Topics.Add(tvm);
 
             NewTopicTitle = "";

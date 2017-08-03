@@ -20,16 +20,14 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 **/
 
-using MiniTD.DataAccess;
 using MiniTD.DataTypes;
 using MiniTD.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
+using JetBrains.Annotations;
 
 namespace MiniTD.ViewModels
 {
@@ -37,91 +35,55 @@ namespace MiniTD.ViewModels
     {
         #region Fields
 
-        private MiniOrganizerViewModel _OrganizerVM;
-        private string _NewProjectTitle;
+        private readonly MiniOrganizerViewModel _organizerVM;
+        private string _newProjectTitle;
         
         #endregion // Fields
 
         #region Properties
 
-        public MiniTaskViewModel CurrentTask
-        {
-            get
-            {
-                if (_OrganizerVM.GatheredTasks.Count > 0)
-                    return _OrganizerVM.GatheredTasks[0];
-                else
-                    return null;
-            }
-        }
+        [UsedImplicitly]
+        public MiniTaskViewModel CurrentTask => _organizerVM.GatheredTasks.Count > 0 ? _organizerVM.GatheredTasks[0] : null;
 
-        public bool HasUnprocessedTasks
-        {
-            get
-            {
-                if (_OrganizerVM.GatheredTasks.Count > 0)
-                    return true;
-                else
-                    return false;
-            }
-        }
+        [UsedImplicitly]
+        public bool HasUnprocessedTasks => _organizerVM.GatheredTasks.Count > 0;
 
-        public int GatheredTaskCount
-        {
-            get { return _OrganizerVM.GatheredTasks.Count == 0 ? 0 : _OrganizerVM.GatheredTasks.Count; }
-        }
+        [UsedImplicitly]
+        public int GatheredTaskCount => _organizerVM.GatheredTasks.Count == 0 ? 0 : _organizerVM.GatheredTasks.Count;
 
-        public ObservableCollection<MiniTopicViewModel> Topics
-        {
-            get { return _OrganizerVM.Topics; }
-        }
+        [UsedImplicitly]
+        public ObservableCollection<MiniTopicViewModel> Topics => _organizerVM.Topics;
 
-        public ObservableCollection<MiniTaskViewModel> AllTasks
-        {
-            get { return _OrganizerVM.AllTasks; }
-        }
+        [UsedImplicitly]
+        public ObservableCollection<MiniTaskViewModel> AllTasks => _organizerVM.AllTasks;
 
+        [UsedImplicitly]
         public IEnumerable<MiniTaskViewModel> AllProjects
         {
             get { return AllTasks.Where(x => x.Type == MiniTaskType.Project && x.Done == false).SelectMany(x => x.GetAllProjects()); }
         }
 
-        public bool IsAddedToNewProject
-        {
-            get { return !string.IsNullOrWhiteSpace(NewProjectTitle); }
-        }
-        public bool IsAddedToExistingProject
-        {
-            get { return string.IsNullOrWhiteSpace(NewProjectTitle); }
-        }
+        [UsedImplicitly]
+        public bool IsAddedToNewProject => !string.IsNullOrWhiteSpace(NewProjectTitle);
 
+        [UsedImplicitly]
+        public bool IsAddedToExistingProject => string.IsNullOrWhiteSpace(NewProjectTitle);
+
+        [UsedImplicitly]
         public MiniTaskStatus CurrentTaskStatus
         {
-            get 
-            {
-                if (CurrentTask != null)
-                    return CurrentTask.Status; 
-                else
-                    return MiniTaskStatus.ASAP;
-            }
+            get => CurrentTask?.Status ?? MiniTaskStatus.ASAP;
             set
             {
                 CurrentTask.Status = value;
-                OnPropertyChanged("CurrentTaskStatus");
-                OnPropertyChanged("CurrentTaskStatusHasDelegatedTo");
-                OnPropertyChanged("CurrentTaskStatusHasDueDate");
+                OnPropertyChanged(null);
             }
         }
 
+        [UsedImplicitly]
         public bool CurrentTaskDone
         {
-            get
-            {
-                if (CurrentTask != null)
-                    return CurrentTask.Done;
-                else
-                    return false;
-            }
+            get => CurrentTask != null && CurrentTask.Done;
             set
             {
                 CurrentTask.Done = value;
@@ -129,43 +91,27 @@ namespace MiniTD.ViewModels
             }
         }
 
-        public bool CurrentTaskStatusHasDelegatedTo
-        {
-            get 
-            {
-                if (CurrentTask != null)
-                    return CurrentTask.Status == MiniTaskStatus.Delegated;
-                else
-                    return false;
-            }
-        }
+        [UsedImplicitly]
+        public bool CurrentTaskStatusHasDelegatedTo => CurrentTask?.Status == MiniTaskStatus.Delegated;
 
-
+        [UsedImplicitly]
         public bool CurrentTaskStatusHasDueDate
-        {
-            get 
-            {
-                if (CurrentTask != null)
-                    return CurrentTask.Status == MiniTaskStatus.Delegated || CurrentTask.Status == MiniTaskStatus.Scheduled;
-                else
-                    return false;
-            }
-        }
-
-        public IEnumerable<ValueDescription> StatusOptions
         {
             get
             {
-                return EnumHelper.GetAllValuesAndDescriptions<MiniTaskStatus>();
+                if (CurrentTask != null)
+                    return CurrentTask.Status == MiniTaskStatus.Delegated || CurrentTask.Status == MiniTaskStatus.Scheduled;
+                return false;
             }
         }
 
+        [UsedImplicitly]
         public string NewProjectTitle
         {
-            get { return _NewProjectTitle; }
+            get => _newProjectTitle;
             set
             {
-                _NewProjectTitle = value;
+                _newProjectTitle = value;
                 OnPropertyChanged("NewProjectTitle");
             }
         }
@@ -174,40 +120,34 @@ namespace MiniTD.ViewModels
 
         #region Commands
 
-        RelayCommand _ProcessCurrentTaskCommand;
-        public ICommand ProcessCurrentTaskCommand
-        {
-            get
-            {
-                if (_ProcessCurrentTaskCommand == null)
-                {
-                    _ProcessCurrentTaskCommand = new RelayCommand(ProcessCurrentTaskCommand_Executed, ProcessCurrentTaskCommand_CanExecute);
-                }
-                return _ProcessCurrentTaskCommand;
-            }
-        }
-        
+        RelayCommand _processCurrentTaskCommand;
+        [UsedImplicitly]
+        public ICommand ProcessCurrentTaskCommand => _processCurrentTaskCommand ?? (_processCurrentTaskCommand =
+                                                         new RelayCommand(ProcessCurrentTaskCommand_Executed, ProcessCurrentTaskCommand_CanExecute));
+
         #endregion // Commands
 
         #region Command functionality
 
         void ProcessCurrentTaskCommand_Executed(object prm)
         {
-            MiniTaskViewModel mtvm = CurrentTask;
             if(!string.IsNullOrWhiteSpace(NewProjectTitle))
             {
                 // Create and add project
-                MiniTask p = new MiniTask();
-                p.Title = NewProjectTitle;
-                p.Type = MiniTaskType.Project;
+                var p = new MiniTask
+                {
+                    Title = NewProjectTitle,
+                    Type = MiniTaskType.Project,
+                    DateDone = DateTime.Now
+                };
 
                 // Create view model for project, add task to project, add project to organizer
-                MiniTaskViewModel tvm = new MiniTaskViewModel(p, _OrganizerVM, null);
+                var tvm = new MiniTaskViewModel(p, _organizerVM, null);
                 tvm.AllTasks.Add(CurrentTask);
                 AllTasks.Add(tvm);
                 
                 // Remove from gathered list
-                _OrganizerVM.GatheredTasks.Remove(CurrentTask);
+                _organizerVM.GatheredTasks.Remove(CurrentTask);
 
                 NewProjectTitle = "";
                 OnPropertyChanged("GatheredTaskCount");
@@ -216,29 +156,25 @@ namespace MiniTD.ViewModels
             else
             {
                 MiniTaskViewModel task = null;
-                foreach (MiniTaskViewModel tvm in AllProjects)
+                foreach (var tvm in AllProjects)
                 {
                     if(tvm.ID == CurrentTask.ProjectID)
                     {
                         task = tvm;
                     }
                 }
-                if(task != null)
-                {
-                    // Add task to project
-                    task.AllTasks.Add(CurrentTask);
+                if (task == null) return;
+                // Add task to project
+                task.AllTasks.Add(CurrentTask);
 
-                    // Remove from gathered list
-                    _OrganizerVM.GatheredTasks.Remove(CurrentTask);
-                }
+                // Remove from gathered list
+                _organizerVM.GatheredTasks.Remove(CurrentTask);
             }
         }
-        
-        bool ProcessCurrentTaskCommand_CanExecute(object prm)
+
+        private bool ProcessCurrentTaskCommand_CanExecute(object prm)
         {
-            return  CurrentTask != null && 
-                    !string.IsNullOrWhiteSpace(CurrentTask.Title) &&
-                    !(CurrentTask.ProjectID == 0 && string.IsNullOrWhiteSpace(NewProjectTitle));
+            return  !string.IsNullOrWhiteSpace(CurrentTask?.Title) && !(CurrentTask.ProjectID == 0 && string.IsNullOrWhiteSpace(NewProjectTitle));
         }
 
         #endregion // Command functionality
@@ -256,38 +192,25 @@ namespace MiniTD.ViewModels
         private void GatheredTasks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             // Update the view!
-            OnPropertyChanged("GatheredTaskCount");
-            OnPropertyChanged("CurrentTask");
-            OnPropertyChanged("CurrentTaskStatus");
-            OnPropertyChanged("CurrentTaskStatusHasDelegatedTo");
-            OnPropertyChanged("CurrentTaskStatusHasDueDate");
-            OnPropertyChanged("CurrentTaskDone");
-            OnPropertyChanged("HasUnprocessedTasks");
+            OnPropertyChanged(null);
         }
 
         #endregion // Collection Changed
 
         #region Constructor
 
-        public TaskProcessViewModel(MiniOrganizerViewModel _organizervm)
+        public TaskProcessViewModel(MiniOrganizerViewModel organizervm)
         {
-            _OrganizerVM = _organizervm;
-            _OrganizerVM.GatheredTasks.CollectionChanged += GatheredTasks_CollectionChanged;
-            _OrganizerVM.TasksChanged += _OrganizerVM_TasksChanged;
+            _organizerVM = organizervm;
+            _organizerVM.GatheredTasks.CollectionChanged += GatheredTasks_CollectionChanged;
+            _organizerVM.TasksChanged += _OrganizerVM_TasksChanged;
 
         }
 
-        private void _OrganizerVM_TasksChanged(EventArgs e)
+        private void _OrganizerVM_TasksChanged(object sender, EventArgs e)
         {
             // Update the view!
-            OnPropertyChanged("GatheredTaskCount");
-            OnPropertyChanged("CurrentTask");
-            OnPropertyChanged("CurrentTaskStatus");
-            OnPropertyChanged("CurrentTaskStatusHasDelegatedTo");
-            OnPropertyChanged("CurrentTaskStatusHasDueDate");
-            OnPropertyChanged("CurrentTaskDone");
-            OnPropertyChanged("AllTasks");
-            OnPropertyChanged("AllProjects");
+            OnPropertyChanged(null);
         }
 
         #endregion // Constructor

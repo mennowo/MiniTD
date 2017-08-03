@@ -26,6 +26,8 @@ DEALINGS IN THE SOFTWARE.
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:xc="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:local="clr-namespace:MiniTD.Views"
+             xmlns:helpers="clr-namespace:MiniTD.Helpers"
+             xmlns:enums="clr-namespace:MiniTD.DataTypes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -60,11 +62,9 @@ DEALINGS IN THE SOFTWARE.
         <TextBox Grid.Row="2" Grid.Column="1" Margin="2" Text="{Binding Path=Outcome,UpdateSourceTrigger=PropertyChanged}" />
         <Label Grid.Row="3" Grid.Column="0" Content="Status:" />
         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Vertical">
-            <ComboBox IsEditable="False" 
-                      Margin="2" 
-                      ItemsSource="{Binding Path=StatusOptions}" 
-                      SelectedValue="{Binding Path=Status,UpdateSourceTrigger=PropertyChanged}" 
-                      SelectedValuePath="Value" />
+            <ComboBox Margin="2" 
+                      ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:MiniTaskStatus}}}"
+                      SelectedItem="{Binding Path=Status,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" />
             <DockPanel LastChildFill="True" Visibility="{Binding Path=StatusHasDelegatedTo,Converter={StaticResource Bool2VisConv}}">
                 <Label Content="To:" />
                 <TextBox Margin="2" Text="{Binding Path=DelegatedTo,UpdateSourceTrigger=PropertyChanged}" />

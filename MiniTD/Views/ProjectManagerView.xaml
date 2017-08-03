@@ -37,7 +37,7 @@ DEALINGS IN THE SOFTWARE.
                 <ResourceDictionary>
                     <vm:TreeViewLineConverter x:Key="LineConverter"/>
                     <vm:DoneToTextDecorationsConverter x:Key="doneToTextDecorationsConverter" />
-                    <vm:currentToItalicConverter x:Key="currentToItalicConv" />
+                    <vm:CurrentToItalicConverter x:Key="currentToItalicConv" />
                 </ResourceDictionary>
                 <ResourceDictionary Source="pack://application:,,,/MiniTD;component/Resources/Resources.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MiniTD;component/Resources/Generic.xaml" />
@@ -86,7 +86,7 @@ DEALINGS IN THE SOFTWARE.
                     MinHeight="100"
                     dd:DragDrop.IsDragSource="True"
                     dd:DragDrop.IsDropTarget="True"
-                    MinWidth="120" HorizontalAlignment="Stretch" Grid.RowSpan="2" >
+                    MinWidth="120" HorizontalAlignment="Stretch" >
                     <interactivity:Interaction.Behaviors>
                         <vw:BindableSelectedItemBehavior SelectedItem="{Binding SelectedItem, Mode=TwoWay}" />
                     </interactivity:Interaction.Behaviors>
@@ -156,7 +156,7 @@ DEALINGS IN THE SOFTWARE.
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Label Content="Selected task" FontWeight="Bold" />
-                <ContentControl Grid.Row="1" Content="{Binding Path=SelectedItem}" Margin="0,0,0,-0.2" >
+                <ContentControl Grid.Row="1" Content="{Binding Path=SelectedItem}" >
                     <ContentControl.Resources>
                         <DataTemplate DataType="{x:Type vm:MiniTaskViewModel}">
                             <vw:MiniTaskView />

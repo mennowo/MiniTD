@@ -1,19 +1,10 @@
-﻿using MiniTD.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Interactivity;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MiniTD.Views
 {
@@ -33,11 +24,11 @@ namespace MiniTD.Views
     {
         public static T GetVisualAncestor<T>(this DependencyObject d) where T : class
         {
-            DependencyObject item = VisualTreeHelper.GetParent(d);
+            var item = VisualTreeHelper.GetParent(d);
 
             while (item != null)
             {
-                T itemAsT = item as T;
+                var itemAsT = item as T;
                 if (itemAsT != null) return itemAsT;
                 item = VisualTreeHelper.GetParent(item);
             }
@@ -47,7 +38,7 @@ namespace MiniTD.Views
 
         public static DependencyObject GetVisualAncestor(this DependencyObject d, Type type)
         {
-            DependencyObject item = VisualTreeHelper.GetParent(d);
+            var item = VisualTreeHelper.GetParent(d);
 
             while (item != null)
             {
@@ -66,18 +57,18 @@ namespace MiniTD.Views
 
         public static IEnumerable<T> GetVisualDescendents<T>(this DependencyObject d) where T : DependencyObject
         {
-            int childCount = VisualTreeHelper.GetChildrenCount(d);
+            var childCount = VisualTreeHelper.GetChildrenCount(d);
 
-            for (int n = 0; n < childCount; n++)
+            for (var n = 0; n < childCount; n++)
             {
-                DependencyObject child = VisualTreeHelper.GetChild(d, n);
+                var child = VisualTreeHelper.GetChild(d, n);
 
                 if (child is T)
                 {
                     yield return (T)child;
                 }
 
-                foreach (T match in GetVisualDescendents<T>(child))
+                foreach (var match in GetVisualDescendents<T>(child))
                 {
                     yield return match;
                 }
@@ -192,7 +183,7 @@ namespace MiniTD.Views
                 }
 
                 // Expand the current container
-                bool _selected = false;
+                var _selected = false;
                 if(container is TreeViewItem)
                     _selected = ((TreeViewItem)container).IsExpanded;
                 if (container is TreeViewItem && !((TreeViewItem)container).IsExpanded)

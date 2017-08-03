@@ -25,12 +25,10 @@ using MiniTD.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
+using JetBrains.Annotations;
 
 namespace MiniTD.ViewModels
 {
@@ -38,55 +36,52 @@ namespace MiniTD.ViewModels
     {
         #region Fields
 
-        private MiniOrganizerViewModel _OrganizerVM;
-        private MiniTaskViewModel _ParentTaskVM;
-        private MiniTask _Task;
-        private ObservableCollection<MiniTaskViewModel> _AllTasks;
-        private ObservableCollection<MiniTaskNoteViewModel> _Notes;
+        private readonly MiniOrganizerViewModel _organizerVM;
+        private MiniTaskViewModel _parentTaskVM;
+        private ObservableCollection<MiniTaskViewModel> _allTasks;
+        private ObservableCollection<MiniTaskNoteViewModel> _notes;
 
-        private bool _IsExpanded;
-        private bool _IsSelected;
+        private bool _isExpanded;
+        private bool _isSelected;
 
         #endregion // Fields
 
         #region Properties
 
+        [UsedImplicitly]
         public MiniTaskViewModel ParentTaskVM
         {
-            get { return _ParentTaskVM; }
+            get => _parentTaskVM;
             set
             {
-                _ParentTaskVM = value;
+                _parentTaskVM = value;
                 OnMonitoredPropertyChanged("ParentTaskVM", OrganizerVM);
             }
         }
 
-        public MiniTask Task
-        {
-            get { return _Task; }
-            set { _Task = value; }
-        }
+        public MiniTask Task { get; }
 
         public string Title
         {
-            get { return _Task.Title; }
+            get => Task.Title;
             set
             {
-                _Task.Title = value;
+                Task.Title = value;
                 OnMonitoredPropertyChanged("Title", OrganizerVM);
-                foreach(MiniTaskViewModel mtvm in AllTasks)
+                foreach(var mtvm in AllTasks)
                 {
                     mtvm.OnPropertyChanged("ProjectTitle");
                 }
             }
         }
 
+        [UsedImplicitly]
         public string Outcome
         {
-            get { return _Task.Outcome; }
+            get => Task.Outcome;
             set
             {
-                _Task.Outcome = value;
+                Task.Outcome = value;
                 OnMonitoredPropertyChanged("Outcome", OrganizerVM);
             }
         }
@@ -95,8 +90,8 @@ namespace MiniTD.ViewModels
         {
             get
             {
-                bool done = false;
-                if (this.ParentTaskVM != null)
+                var done = false;
+                if (ParentTaskVM != null)
                     done = ParentTaskVM.Done || ParentTaskVM.AnyParentDone;
                 return done;
             }
@@ -104,14 +99,14 @@ namespace MiniTD.ViewModels
 
         public bool Done
         {
-            get { return _Task.Done; }
+            get => Task.Done;
             set
             {
-                _Task.Done = value;
+                Task.Done = value;
                 DateDone = DateTime.Now;
-                OnDoneChanged(new DoneChangedEventArgs() { tvm = this });
+                DoneChanged?.Invoke(this, this);
                 OnMonitoredPropertyChanged("Done", OrganizerVM);
-                OnPropertyChanged("IsCurrent");
+                OnPropertyChanged(null);
 
                 // if the Task becomes undone, we have recreate the current list
                 // by calling OnTaskChanged, which will propagate to the current 
@@ -120,23 +115,25 @@ namespace MiniTD.ViewModels
             }
         }
 
+        [UsedImplicitly]
         public DateTime DateDone
         {
-            get { return _Task.DateDone; }
+            get => Task.DateDone;
             set
             {
-                _Task.DateDone = value;
+                Task.DateDone = value;
                 OnMonitoredPropertyChanged("DateDone", OrganizerVM);
-                OnDoneChanged(new DoneChangedEventArgs() { tvm = this });
+                DoneChanged?.Invoke(this, this);
             }
         }
 
+        [UsedImplicitly]
         public DateTime DateDue
         {
-            get { return _Task.DateDue; }
+            get => Task.DateDue;
             set
             {
-                _Task.DateDue = value;
+                Task.DateDue = value;
                 OnMonitoredPropertyChanged("DateDue", OrganizerVM);
 
                 OrganizerVM.OnTasksChanged();
@@ -147,17 +144,17 @@ namespace MiniTD.ViewModels
         private static void GetWeek(DateTime now, System.Globalization.CultureInfo cultureInfo, out DateTime begining, out DateTime end)
         {
             if (now == null)
-                throw new ArgumentNullException("Now");
+                throw new ArgumentNullException(nameof(now));
             if (cultureInfo == null)
-                throw new ArgumentNullException("CultureInfo");
+                throw new ArgumentNullException(nameof(cultureInfo));
 
             var firstDayOfWeek = cultureInfo.DateTimeFormat.FirstDayOfWeek;
 
-            int offset = firstDayOfWeek - now.DayOfWeek;
+            var offset = firstDayOfWeek - now.DayOfWeek;
             if (offset != 1)
             {
-                DateTime weekStart = now.AddDays(offset);
-                DateTime endOfWeek = weekStart.AddDays(6);
+                var weekStart = now.AddDays(offset);
+                var endOfWeek = weekStart.AddDays(6);
                 begining = weekStart;
                 end = endOfWeek;
             }
@@ -168,48 +165,32 @@ namespace MiniTD.ViewModels
             }
         }
 
-        public DateTime DateDueSort
-        {
-            get
-            {
-                if (DateTime.Now.Date.CompareTo(DateDue.Date) >= 0)
-                {
-                    return DateTime.Now;
-                }
-                else
-                {
-                    return DateDue;
-                }
-            }
-        }
+        [UsedImplicitly]
+        public DateTime DateDueSort => DateTime.Now.Date.CompareTo(DateDue.Date) >= 0 ? DateTime.Now : DateDue;
 
-        double GetTotTaskTime(MiniTaskViewModel tvm, DateTime d)
+        private double GetTotTaskTime(MiniTaskViewModel tvm, DateTime d)
         {
-            double dd = 0.0;
+            var dd = 0.0;
             dd += AllTasks.Where(x => x.DateDue.Date <= d.Date).Select(x => x.Duration).Sum(x => x.TotalMinutes);
             if (tvm.AllTasks == null || tvm.AllTasks.Count <= 0)
                 return dd;
 
-            foreach (MiniTaskViewModel tvm2 in tvm.AllTasks)
-            {
-                dd += GetTotTaskTime(tvm2, d);
-            }
+            dd += tvm.AllTasks.Sum(tvm2 => GetTotTaskTime(tvm2, d));
             return dd;
         }
 
-        double GetTotalTime(DateTime d)
+        [UsedImplicitly]
+        private double GetTotalTime(DateTime d)
         {
-            double dd = 0.0;
+            var dd = 0.0;
             dd += OrganizerVM.AllTasks.Where(x => x.DateDue.Date <= d.Date).Select(x => x.Duration).Sum(x => x.TotalMinutes);
 
-            foreach (MiniTaskViewModel tvm2 in OrganizerVM.AllTasks)
-            {
-                dd += GetTotTaskTime(tvm2, d);
-            }
+            dd += OrganizerVM.AllTasks.Sum(tvm2 => GetTotTaskTime(tvm2, d));
 
             return dd;
         }
 
+        [UsedImplicitly]
         public string DateDueGroup
         {
             get
@@ -218,57 +199,49 @@ namespace MiniTD.ViewModels
                 DateTime first;
                 DateTime last;
                 GetWeek(DateTime.Now, System.Globalization.CultureInfo.CurrentCulture, out first, out last);
-                DateTime nextweek = last.AddDays(7);
 
                 if(DateTime.Now.Date.CompareTo(DateDue.Date) >= 0)
                 {
-                    return "Today (" + DateTime.Now.DayOfWeek.ToString() + ")";
+                    return "Today (" + DateTime.Now.DayOfWeek + ")";
                 }
-                else if (DateTime.Now.Date.AddDays(1).CompareTo(DateDue.Date) == 0)
+                if (DateTime.Now.Date.AddDays(1).CompareTo(DateDue.Date) == 0)
                 {
-                    return "Tomorrow (" + DateDue.DayOfWeek.ToString() + ")";
+                    return "Tomorrow (" + DateDue.DayOfWeek + ")";
                 }
-                else
-                {
-                    return DateDue.DayOfWeek.ToString() + " " + DateDue.ToString("dd-MM-yyyy");
-                }
+                return DateDue.DayOfWeek + " " + DateDue.ToString("dd-MM-yyyy");
             }
         }
 
+        [UsedImplicitly]
         public TimeSpan Duration
         {
-            get { return _Task.Duration; }
+            get => Task.Duration;
             set
             {
-                _Task.Duration = value;
+                Task.Duration = value;
                 OrganizerVM.OnTasksChanged();
                 OnMonitoredPropertyChanged("Duration", OrganizerVM);
             }
         }
 
+        [UsedImplicitly]
         public TimeSpan TotalDuration
         {
             get
             {
-                TimeSpan t = new TimeSpan();
-                t += this.Duration;
-                if (AllTasks != null)
-                {
-                    foreach (MiniTaskViewModel tvm in AllTasks)
-                    {
-                        t += tvm.TotalDuration;
-                    }
-                }
-                return t;
+                var t = new TimeSpan();
+                t += Duration;
+                return AllTasks?.Aggregate(t, (current, tvm) => current + tvm.TotalDuration) ?? t;
             }
         }
 
+        [UsedImplicitly]
         public long TopicID
         {
-            get { return _Task.TopicID; }
+            get => Task.TopicID;
             set
             {
-                _Task.TopicID = value;
+                Task.TopicID = value;
                 OnPropertyChanged("Topic");
                 OnMonitoredPropertyChanged("TopicID", OrganizerVM);
             }
@@ -276,10 +249,7 @@ namespace MiniTD.ViewModels
         
         public MiniTopicViewModel Topic
         {
-            get
-            {
-                return _OrganizerVM.GetTopicVMFromID(TopicID);
-            }
+            get => _organizerVM.GetTopicVMFromID(TopicID);
             set
             {
                 TopicID = value.ID;
@@ -288,72 +258,50 @@ namespace MiniTD.ViewModels
             }
         }
 
-        public ObservableCollection<MiniTopicViewModel> Topics
-        {
-            get { return _OrganizerVM.Topics; }
-        }
-
-        public IEnumerable<ValueDescription> StatusOptions
-        {
-            get
-            {
-                return EnumHelper.GetAllValuesAndDescriptions<MiniTaskStatus>();
-            }
-        }
+        [UsedImplicitly]
+        public ObservableCollection<MiniTopicViewModel> Topics => _organizerVM.Topics;
 
         public MiniTaskStatus Status
         {
-            get { return _Task.Status; }
+            get => Task.Status;
             set
             {
-                _Task.Status = value;
+                Task.Status = value;
                 OnMonitoredPropertyChanged("Status", OrganizerVM);
-                OnPropertyChanged("StatusHasDelegatedTo");
-                OnPropertyChanged("StatusHasDueDate");
-                OnPropertyChanged("IsASAP");
-                OnPropertyChanged("IsDelegated");
-                OnPropertyChanged("IsInactive");
-                OnPropertyChanged("IsScheduled");
 
                 SetIsCurrent();
             }
         }
 
+        [UsedImplicitly]
         public MiniTaskType Type
         {
-            get { return _Task.Type; }
+            get => Task.Type;
             set
             {
-                _Task.Type = value;
+                Task.Type = value;
                 OnMonitoredPropertyChanged("Type", OrganizerVM);
-                OnPropertyChanged("IsProject");
-                OnPropertyChanged("IsTask");
+                OnPropertyChanged(null);
             }
         }
 
+        [UsedImplicitly]
         public long ProjectID
         {
-            get { return _Task.ProjectID; }
+            get => Task.ProjectID;
             set
             {
-                _Task.ProjectID = value;
-                OnPropertyChanged("ProjectID");
-                OnPropertyChanged("ProjectTitle");
+                Task.ProjectID = value;
+                OnPropertyChanged(null);
             }
         }
 
-        public string ProjectTitle
-        {
-            get
-            {
-                if (ParentTaskVM != null) return ParentTaskVM.Title;
-                else return null;
-            }
-        }
+        [UsedImplicitly]
+        public string ProjectTitle => ParentTaskVM?.Title;
 
         public bool IsProject
         {
-            get { return Type == MiniTaskType.Project; }
+            get => Type == MiniTaskType.Project;
             set
             {
                 if (value)
@@ -365,7 +313,7 @@ namespace MiniTD.ViewModels
 
         public bool IsTask
         {
-            get { return Type == MiniTaskType.Task; }
+            get => Type == MiniTaskType.Task;
             set
             {
                 if (value)
@@ -375,72 +323,46 @@ namespace MiniTD.ViewModels
             }
         }
 
-        public long ID
-        {
-            get { return _Task.ID; }
-        }
+        public long ID => Task.ID;
 
-        public bool StatusHasDelegatedTo
-        {
-            get { return _Task.Status == MiniTaskStatus.Delegated; }
-        }
+        [UsedImplicitly]
+        public bool StatusHasDelegatedTo => Task.Status == MiniTaskStatus.Delegated;
 
+        [UsedImplicitly]
+        public bool StatusHasDueDate => Task.Status == MiniTaskStatus.Delegated || Task.Status == MiniTaskStatus.Scheduled;
 
-        public bool StatusHasDueDate
-        {
-            get { return _Task.Status == MiniTaskStatus.Delegated || _Task.Status == MiniTaskStatus.Scheduled; }
-        }
-
+        [UsedImplicitly]
         public string DelegatedTo
         {
-            get { return _Task.DelegatedTo; }
+            get => Task.DelegatedTo;
             set
             {
-                _Task.DelegatedTo = value;
+                Task.DelegatedTo = value;
                 OnMonitoredPropertyChanged("DelegatedTo", OrganizerVM);
             }
         }
         
-        public bool IsCurrent
-        {
-            get
-            {
-                return this.Status == MiniTaskStatus.ASAP ||
-                    (this.Status == MiniTaskStatus.Delegated && this.DateDue.Date <= DateTime.Today.Date) ||
-                    (this.Status == MiniTaskStatus.Scheduled && this.DateDue.Date <= DateTime.Today.Date);
-            }
-        }
+        public bool IsCurrent => Status == MiniTaskStatus.ASAP ||
+                                 Status == MiniTaskStatus.Delegated && DateDue.Date <= DateTime.Today.Date ||
+                                 Status == MiniTaskStatus.Scheduled && DateDue.Date <= DateTime.Today.Date;
 
-        public bool IsASAP
-        {
-            get { return Status == MiniTaskStatus.ASAP; }
-        }
+        public bool IsASAP => Status == MiniTaskStatus.ASAP;
 
-        public bool IsScheduled
-        {
-            get { return Status == MiniTaskStatus.Scheduled; }
-        }
+        public bool IsScheduled => Status == MiniTaskStatus.Scheduled;
 
-        public bool IsDelegated
-        {
-            get { return Status == MiniTaskStatus.Delegated; }
-        }
+        public bool IsDelegated => Status == MiniTaskStatus.Delegated;
 
-        public bool IsInactive
-        {
-            get { return Status == MiniTaskStatus.Inactive; }
-        }
+        public bool IsInactive => Status == MiniTaskStatus.Inactive;
 
+        [UsedImplicitly]
         public ObservableCollection<MiniTaskNoteViewModel> Notes
         {
             get
             {
-                if (_Notes == null)
-                {
-                    _Notes = new ObservableCollection<MiniTaskNoteViewModel>();
-                    OnPropertyChanged("Notes");
-                }
-                return _Notes;
+                if (_notes != null) return _notes;
+                _notes = new ObservableCollection<MiniTaskNoteViewModel>();
+                OnPropertyChanged("Notes");
+                return _notes;
             }
         }
 
@@ -448,160 +370,107 @@ namespace MiniTD.ViewModels
         {
             get
             {
-                if (_AllTasks == null)
-                {
-                    _AllTasks = new ObservableCollection<MiniTaskViewModel>();
-                    OnPropertyChanged("AllTasks");
-                }
-                return _AllTasks;
+                if (_allTasks != null) return _allTasks;
+                _allTasks = new ObservableCollection<MiniTaskViewModel>();
+                OnPropertyChanged("AllTasks");
+                return _allTasks;
             }
             set
             {
-                _AllTasks = value;
+                _allTasks = value;
                 OnPropertyChanged("AllTasks");
             }
         }
 
+        [UsedImplicitly]
         public bool IsExpanded
         {
-            get { return _IsExpanded; }
+            get => _isExpanded;
             set
             {
-                _IsExpanded = value;
-                if(_IsExpanded && ParentTaskVM != null)
+                _isExpanded = value;
+                if(_isExpanded && ParentTaskVM != null)
                 {
                     ParentTaskVM.IsExpanded = value;
                 }
                 OnPropertyChanged("IsExpanded");
             }
         }
+        [UsedImplicitly]
         public bool IsSelected
         {
-            get { return _IsSelected; }
+            get => _isSelected;
             set
             {
-                _IsSelected = value;
+                _isSelected = value;
                 OnPropertyChanged("IsSelected");
             }
         }
 
-        public MiniOrganizerViewModel OrganizerVM
-        {
-            get { return _OrganizerVM; }
-        }
+        [UsedImplicitly]
+        public MiniOrganizerViewModel OrganizerVM => _organizerVM;
 
         #endregion // Properties
 
         #region Events
 
-
-        public delegate void OnDoneChangedEventHandler(object sender, DoneChangedEventArgs e);
-        public event OnDoneChangedEventHandler DoneChanged;
-
-        public class DoneChangedEventArgs : EventArgs
-        {
-            public MiniTaskViewModel tvm { get; set; }
-        }
-
-        public void OnDoneChanged(DoneChangedEventArgs e)
-        {
-            // raise event
-            OnDoneChangedEventHandler handler = DoneChanged;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
+        public event EventHandler<MiniTaskViewModel> DoneChanged;
 
         #endregion // Events
 
         #region Commands
 
-        RelayCommand _AddNewProjectCommand;
-        public ICommand AddNewProjectCommand
-        {
-            get
-            {
-                if (_AddNewProjectCommand == null)
-                {
-                    _AddNewProjectCommand = new RelayCommand(AddNewProjectCommand_Executed, AddNewProjectCommand_CanExecute);
-                }
-                return _AddNewProjectCommand;
-            }
-        }
+        private RelayCommand _addNewProjectCommand;
+        public ICommand AddNewProjectCommand => _addNewProjectCommand ?? (_addNewProjectCommand =
+                                                    new RelayCommand(AddNewProjectCommand_Executed, AddNewProjectCommand_CanExecute));
 
-        RelayCommand _AddNewTaskCommand;
-        public ICommand AddNewTaskCommand
-        {
-            get
-            {
-                if (_AddNewTaskCommand == null)
-                {
-                    _AddNewTaskCommand = new RelayCommand(AddNewTaskCommand_Executed, AddNewTaskCommand_CanExecute);
-                }
-                return _AddNewTaskCommand;
-            }
-        }
+        private RelayCommand _addNewTaskCommand;
+        public ICommand AddNewTaskCommand => _addNewTaskCommand ?? (_addNewTaskCommand =
+                                                 new RelayCommand(AddNewTaskCommand_Executed, AddNewTaskCommand_CanExecute));
 
-        RelayCommand _RemoveMeCommand;
-        public ICommand RemoveMeCommand
-        {
-            get
-            {
-                if (_RemoveMeCommand == null)
-                {
-                    _RemoveMeCommand = new RelayCommand(RemoveMeCommand_Executed, RemoveMeCommand_CanExecute);
-                }
-                return _RemoveMeCommand;
-            }
-        }
+        private RelayCommand _removeMeCommand;
+        public ICommand RemoveMeCommand => _removeMeCommand ?? (_removeMeCommand =
+                                               new RelayCommand(RemoveMeCommand_Executed, RemoveMeCommand_CanExecute));
 
 
-        RelayCommand _PostponeCommand;
-        public ICommand PostponeCommand
-        {
-            get
-            {
-                if (_PostponeCommand == null)
-                {
-                    _PostponeCommand = new RelayCommand(PostponeCommand_Executed, PostponeCommand_CanExecute);
-                }
-                return _PostponeCommand;
-            }
-        }
+        private RelayCommand _postponeCommand;
+        [UsedImplicitly]
+        public ICommand PostponeCommand => _postponeCommand ?? (_postponeCommand =
+                                               new RelayCommand(PostponeCommand_Executed, PostponeCommand_CanExecute));
 
         #endregion // Commands
 
         #region Command functionality
 
-        void AddNewTaskCommand_Executed(object prm)
+        private void AddNewTaskCommand_Executed(object prm)
         {
-            MiniTask t = new MiniTask();
-            t.Title = "New task";
-            MiniTaskViewModel tvm = new MiniTaskViewModel(t, OrganizerVM, this);
+            var t = new MiniTask {Title = "New task"};
+            var tvm = new MiniTaskViewModel(t, OrganizerVM, this);
             AllTasks.Add(tvm);
         }
 
-        void AddNewProjectCommand_Executed(object prm)
+        private void AddNewProjectCommand_Executed(object prm)
         {
-            MiniTask t = new MiniTask();
-            t.Type = MiniTaskType.Project;
-            t.Title = "New project";
-            MiniTaskViewModel tvm = new MiniTaskViewModel(t, OrganizerVM, this);
+            var t = new MiniTask
+            {
+                Type = MiniTaskType.Project,
+                Title = "New project"
+            };
+            var tvm = new MiniTaskViewModel(t, OrganizerVM, this);
             AllTasks.Add(tvm);
         }
 
-        bool AddNewProjectCommand_CanExecute(object prm)
+        private bool AddNewProjectCommand_CanExecute(object prm)
         {
             return AllTasks != null;
         }
 
-        bool AddNewTaskCommand_CanExecute(object prm)
+        private bool AddNewTaskCommand_CanExecute(object prm)
         {
             return AllTasks != null;
         }
 
-        void RemoveMeCommand_Executed(object prm)
+        private void RemoveMeCommand_Executed(object prm)
         {
             if (ParentTaskVM != null)
                 ParentTaskVM.AllTasks.Remove(this);
@@ -609,31 +478,28 @@ namespace MiniTD.ViewModels
                 OrganizerVM.AllTasks.Remove(this);
         }
 
-        bool RemoveMeCommand_CanExecute(object prm)
+        private bool RemoveMeCommand_CanExecute(object prm)
         {
             return true;
         }
 
-        void PostponeCommand_Executed(object prm)
+        private void PostponeCommand_Executed(object prm)
         {
-            if(DateDue != null)
+            var s = (string) prm;
+            switch (s)
             {
-                string s = (string)prm;
-                switch (s)
-                {
-                    case "day":
-                        DateDue = DateDue.AddDays(1);
-                        break;
-                    case "week":
-                        DateDue = DateDue.AddDays(7);
-                        break;
-                }
+                case "day":
+                    DateDue = DateDue.AddDays(1);
+                    break;
+                case "week":
+                    DateDue = DateDue.AddDays(7);
+                    break;
             }
         }
 
-        bool PostponeCommand_CanExecute(object prm)
+        private bool PostponeCommand_CanExecute(object prm)
         {
-            return DateDue != null;
+            return true;
         }
 
         #endregion // Command functionality
@@ -642,9 +508,9 @@ namespace MiniTD.ViewModels
 
         public void SetFilterDone(Predicate<object> predicate)
         {
-            ICollectionView iv = CollectionViewSource.GetDefaultView(AllTasks);
+            var iv = CollectionViewSource.GetDefaultView(AllTasks);
             iv.Filter = predicate;
-            foreach(MiniTaskViewModel t in AllTasks)
+            foreach(var t in AllTasks)
             {
                 t.SetFilterDone(predicate);
             }
@@ -658,6 +524,12 @@ namespace MiniTD.ViewModels
             OrganizerVM.OnTasksChanged();
             OnPropertyChanged("IsCurrent");
         }
+
+        private void OnTaskDoneChanged(object sender, MiniTaskViewModel e)
+        {
+            DoneChanged?.Invoke(this, e);
+        }
+
         #endregion // Private methods
 
         #region Public methods
@@ -691,16 +563,16 @@ namespace MiniTD.ViewModels
             {
                 foreach (MiniTaskNoteViewModel tvm in e.NewItems)
                 {
-                    MiniTaskNote n = new MiniTaskNote();
+                    var n = new MiniTaskNote();
                     tvm.Note = n;
-                    _Task.Notes.Add(n);
+                    Task.Notes.Add(n);
                 }
             }
             if (e.OldItems != null && e.OldItems.Count > 0)
             {
                 foreach (MiniTaskNoteViewModel tvm in e.OldItems)
                 {
-                    _Task.Notes.Remove(tvm.Note);
+                    Task.Notes.Remove(tvm.Note);
                 }
             }
             OrganizerVM.HasChanged = true;
@@ -712,14 +584,16 @@ namespace MiniTD.ViewModels
             {
                 foreach (MiniTaskViewModel tvm in e.NewItems)
                 {
-                    _Task.AllTasks.Add(tvm.Task);
+                    Task.AllTasks.Add(tvm.Task);
+                    tvm.DoneChanged += OnTaskDoneChanged;
                 }
             }
             if (e.OldItems != null && e.OldItems.Count > 0)
             {
                 foreach (MiniTaskViewModel tvm in e.OldItems)
                 {
-                    _Task.AllTasks.Remove(tvm.Task);
+                    Task.AllTasks.Remove(tvm.Task);
+                    tvm.DoneChanged -= OnTaskDoneChanged;
                 }
             }
             OrganizerVM.HasChanged = true;
@@ -730,26 +604,31 @@ namespace MiniTD.ViewModels
 
         #region Constructor
 
-        public MiniTaskViewModel(MiniTask task, MiniOrganizerViewModel _organizervm, MiniTaskViewModel _taskvm)
+        public MiniTaskViewModel(MiniTask task, MiniOrganizerViewModel organizervm, MiniTaskViewModel taskvm)
         {
-            _Task = task;
-            _OrganizerVM = _organizervm;
-            _ParentTaskVM = _taskvm;
+            Task = task;
+            _organizerVM = organizervm;
+            _parentTaskVM = taskvm;
 
-            foreach (MiniTaskNote n in _Task.Notes)
+            foreach (var n in Task.Notes)
             {
-                MiniTaskNoteViewModel tnvn = new MiniTaskNoteViewModel(n);
+                var tnvn = new MiniTaskNoteViewModel(n);
                 Notes.Add(tnvn);
             }
 
-            foreach (MiniTask t in _Task.AllTasks)
+            foreach (var t in Task.AllTasks)
             {
-                MiniTaskViewModel tvn = new MiniTaskViewModel(t, _OrganizerVM, this);
+                var tvn = new MiniTaskViewModel(t, _organizerVM, this);
                 AllTasks.Add(tvn);
             }
 
             AllTasks.CollectionChanged += AllTasks_CollectionChanged;
             Notes.CollectionChanged += Notes_CollectionChanged;
+
+            foreach (var t in AllTasks)
+            {
+                t.DoneChanged += OnTaskDoneChanged;
+            }
         }
         
         #endregion // Constructor

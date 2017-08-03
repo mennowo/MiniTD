@@ -22,11 +22,7 @@ DEALINGS IN THE SOFTWARE.
 
 using MiniTD.DataTypes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -37,7 +33,7 @@ namespace MiniTD.ViewModels
         #region Fields
 
         private MiniTopic _Topic;
-        private MiniOrganizerViewModel _OrganizerVM;
+        private readonly MiniOrganizerViewModel _OrganizerVM;
 
         #endregion // Fields
 
@@ -140,23 +136,23 @@ namespace MiniTD.ViewModels
         {
             if (value.GetType() == typeof(String))
             {
-                string val = value as string;
+                var val = value as string;
                 Color c;
                 if (val.StartsWith("#"))
                 {
                     val = val.Replace("#", "");
-                    byte a = System.Convert.ToByte("ff", 16);
+                    var a = System.Convert.ToByte("ff", 16);
                     byte pos = 0;
                     if (val.Length == 8)
                     {
                         a = System.Convert.ToByte(val.Substring(pos, 2), 16);
                         pos = 2;
                     }
-                    byte r = System.Convert.ToByte(val.Substring(pos, 2), 16);
+                    var r = System.Convert.ToByte(val.Substring(pos, 2), 16);
                     pos += 2;
-                    byte g = System.Convert.ToByte(val.Substring(pos, 2), 16);
+                    var g = System.Convert.ToByte(val.Substring(pos, 2), 16);
                     pos += 2;
-                    byte b = System.Convert.ToByte(val.Substring(pos, 2), 16);
+                    var b = System.Convert.ToByte(val.Substring(pos, 2), 16);
                     c = Color.FromArgb(a, r, g, b);
                     return new SolidColorBrush(c);
                 }
@@ -178,10 +174,10 @@ namespace MiniTD.ViewModels
 
         public static Color GetColorFromString(string colorString)
         {
-            Type colorType = (typeof(System.Windows.Media.Colors));
+            var colorType = (typeof(System.Windows.Media.Colors));
             if (colorType.GetProperty(colorString) != null)
             {
-                object color = colorType.InvokeMember(colorString, BindingFlags.GetProperty, null, null, null);
+                var color = colorType.InvokeMember(colorString, BindingFlags.GetProperty, null, null, null);
                 try
                 {
                     return (Color)color;
@@ -196,7 +192,7 @@ namespace MiniTD.ViewModels
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            Color val = (Color)value;
+            var val = (Color)value;
             return val.ToString();
             //if (typeof(Colors).GetProperty(val.Color.ToString()) != null)
             //    return typeof(Colors).GetProperty(val.Color.ToString()).GetValue(val, null);

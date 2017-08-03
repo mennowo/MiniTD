@@ -22,14 +22,9 @@ DEALINGS IN THE SOFTWARE.
 
 using Microsoft.Win32;
 using MiniTD.DataAccess;
-using MiniTD.DataTypes;
 using MiniTD.Helpers;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -40,7 +35,7 @@ namespace MiniTD.ViewModels
         #region Fields
 
         private MiniOrganizerViewModel _OrganizerVM;
-        private MiniDataProvider _DataProvider;
+        private readonly MiniDataProvider _DataProvider;
 
         #endregion // Fields
 
@@ -185,7 +180,7 @@ namespace MiniTD.ViewModels
         {
             if (!OrganizerHasChanged())
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
+                var openFileDialog = new OpenFileDialog();
                 openFileDialog.CheckFileExists = true;
                 openFileDialog.Filter = "MiniTD files|*.mtd";
                 if (openFileDialog.ShowDialog() == true)
@@ -220,7 +215,7 @@ namespace MiniTD.ViewModels
         
         void SaveAsFileCommand_Executed(object prm)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            var saveFileDialog = new SaveFileDialog();
             saveFileDialog.OverwritePrompt = true;
             saveFileDialog.Filter = "MiniTD files|*.mtd";
             if (!string.IsNullOrWhiteSpace(DataProvider.FileName))
@@ -269,7 +264,7 @@ namespace MiniTD.ViewModels
 
         private void ShowAboutDialogCommand_Executed(object obj)
         {
-            Views.Dialogs.AboutDialog d = new Views.Dialogs.AboutDialog();
+            var d = new Views.Dialogs.AboutDialog();
             d.Owner = Application.Current.MainWindow;
             d.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             d.ShowDialog();
@@ -283,7 +278,7 @@ namespace MiniTD.ViewModels
         {
             if (OrganizerVM != null && OrganizerVM.HasChanged)
             {
-                System.Windows.MessageBoxResult r = System.Windows.MessageBox.Show("Save changes?", "There are unsaved changes. Save first?", System.Windows.MessageBoxButton.YesNoCancel);
+                var r = System.Windows.MessageBox.Show("Save changes?", "There are unsaved changes. Save first?", System.Windows.MessageBoxButton.YesNoCancel);
                 if (r == System.Windows.MessageBoxResult.Yes)
                 {
                     SaveFileCommand.Execute(null);
@@ -310,7 +305,7 @@ namespace MiniTD.ViewModels
         {
             _DataProvider = new MiniDataProvider();
 
-            string[] args = Environment.GetCommandLineArgs();
+            var args = Environment.GetCommandLineArgs();
 
             if (args.Length > 1)
             {

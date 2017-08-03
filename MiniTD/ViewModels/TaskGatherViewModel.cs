@@ -20,15 +20,10 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 **/
 
-using MiniTD.DataAccess;
 using MiniTD.DataTypes;
 using MiniTD.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace MiniTD.ViewModels
@@ -37,7 +32,7 @@ namespace MiniTD.ViewModels
     {
         #region Fields
 
-        private MiniOrganizerViewModel _OrganizerVM;
+        private readonly MiniOrganizerViewModel _OrganizerVM;
         private string _NewTaskTitle;
         private MiniTopicViewModel _NewTaskTopic;
         private MiniTaskViewModel _SelectedTask;
@@ -110,13 +105,13 @@ namespace MiniTD.ViewModels
         void AddTaskCommand_Executed(object prm)
         {
             // Create Task
-            MiniTask t = new MiniTask();
+            var t = new MiniTask();
             t.Title = NewTaskTitle;
             t.TopicID = NewTaskTopic.ID;
             t.DateCreated = DateTime.Now;
 
             // Add to viewmodel
-            MiniTaskViewModel tvm = new MiniTaskViewModel(t, _OrganizerVM, null);
+            var tvm = new MiniTaskViewModel(t, _OrganizerVM, null);
             GatheredTasks.Add(tvm);
 
             // Reset new title
@@ -164,13 +159,13 @@ namespace MiniTD.ViewModels
             // For a more sophisticated converter, check also the targetType and react accordingly..
             if (value is System.Windows.Media.Color)
             {
-                System.Windows.Media.Color color = (System.Windows.Media.Color)value;
+                var color = (System.Windows.Media.Color)value;
                 return new System.Windows.Media.SolidColorBrush(color);
             }
             // You can support here more source types if you wish
             // For the example I throw an exception
 
-            Type type = value.GetType();
+            var type = value.GetType();
             throw new InvalidOperationException("Unsupported type [" + type.Name + "]");
         }
 

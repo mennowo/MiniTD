@@ -20,13 +20,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 **/
 
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace MiniTD.DataAccess
@@ -37,10 +32,10 @@ namespace MiniTD.DataAccess
 
         public bool SerializeGZip(string file, T t)
         {
-            bool result = true;
+            var result = true;
             try
             {
-                FileStream fs = new FileStream(file,
+                var fs = new FileStream(file,
                                            FileMode.Create, FileAccess.Write);
                 using (var gz = new GZipStream(fs, CompressionMode.Compress))
                 {
