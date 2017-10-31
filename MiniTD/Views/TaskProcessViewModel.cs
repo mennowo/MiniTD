@@ -143,6 +143,7 @@ namespace MiniTD.ViewModels
 
                 // Create view model for project, add task to project, add project to organizer
                 var tvm = new MiniTaskViewModel(p, _organizerVM, null);
+	            CurrentTask.ParentTaskVM = tvm;
                 tvm.AllTasks.Add(CurrentTask);
                 AllTasks.Add(tvm);
                 
@@ -165,10 +166,11 @@ namespace MiniTD.ViewModels
                 }
                 if (task == null) return;
                 // Add task to project
+	            CurrentTask.ParentTaskVM = task;
                 task.AllTasks.Add(CurrentTask);
 
-                // Remove from gathered list
-                _organizerVM.GatheredTasks.Remove(CurrentTask);
+				// Remove from gathered list
+				_organizerVM.GatheredTasks.Remove(CurrentTask);
             }
         }
 

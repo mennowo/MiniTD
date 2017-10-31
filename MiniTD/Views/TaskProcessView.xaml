@@ -69,7 +69,7 @@ DEALINGS IN THE SOFTWARE.
         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Vertical">
             <ComboBox Margin="2" 
                       ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:MiniTaskStatus}}}"
-                      SelectedItem="{Binding Path=Status,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" />
+                      SelectedItem="{Binding Path=CurrentTask.Status,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" />
             <DockPanel LastChildFill="True" Visibility="{Binding Path=CurrentTaskStatusHasDelegatedTo,Converter={StaticResource Bool2VisConv}}">
                 <Label Content="To:" />
                 <TextBox Margin="2" Text="{Binding Path=CurrentTask.DelegatedTo,UpdateSourceTrigger=PropertyChanged}" />

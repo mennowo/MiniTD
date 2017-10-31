@@ -103,20 +103,30 @@
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\IDProvider.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
-    <Compile Include="ViewModels\TasksPlanningViewModel.cs" />
-    <Compile Include="ViewModels\CurrentTasksViewModel.cs" />
     <Compile Include="ViewModels\MiniTaskNoteViewModel.cs" />
-    <Compile Include="ViewModels\MiniTaskViewModel.cs" />
     <Compile Include="ViewModels\MiniTopicViewModel.cs" />
-    <Compile Include="ViewModels\ProjectManagerViewModel.cs" />
-    <Compile Include="ViewModels\TaskGatherViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\MiniOrganizerViewModel.cs" />
-    <Compile Include="ViewModels\TaskProcessViewModel.cs" />
-    <Compile Include="ViewModels\TopicsListViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\CurrentTasksViewModel.cs">
+      <DependentUpon>CurrentTasksView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MiniOrganizerViewModel.cs">
+      <DependentUpon>MiniOrganizerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MiniTaskViewModel.cs">
+      <DependentUpon>MiniTaskView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProjectManagerViewModel.cs">
+      <DependentUpon>ProjectManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TaskGatherViewModel.cs">
+      <DependentUpon>TaskGatherView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TaskProcessViewModel.cs">
+      <DependentUpon>TaskProcessView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TasksPlanningView.xaml.cs">
       <DependentUpon>TasksPlanningView.xaml</DependentUpon>
@@ -142,7 +152,13 @@
     <Compile Include="Views\TaskProcessView.xaml.cs">
       <DependentUpon>TaskProcessView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\TasksPlanningViewModel.cs">
+      <DependentUpon>TasksPlanningView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TopicsListView.xaml.cs">
+      <DependentUpon>TopicsListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TopicsListViewModel.cs">
       <DependentUpon>TopicsListView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
