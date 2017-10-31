@@ -37,6 +37,7 @@ namespace MiniTD.ViewModels
 
         private readonly MiniOrganizerViewModel _organizerVM;
         private string _newProjectTitle;
+        private long _newProjectTopicID;
         
         #endregion // Fields
 
@@ -116,11 +117,22 @@ namespace MiniTD.ViewModels
             }
         }
 
-        #endregion // Properties
+	    [UsedImplicitly]
+	    public long NewProjectTopicID
+	    {
+		    get => _newProjectTopicID;
+		    set
+		    {
+			    _newProjectTopicID = value;
+			    OnPropertyChanged("NewProjectTopicID");
+		    }
+	    }
 
-        #region Commands
+		#endregion // Properties
 
-        RelayCommand _processCurrentTaskCommand;
+		#region Commands
+
+		RelayCommand _processCurrentTaskCommand;
         [UsedImplicitly]
         public ICommand ProcessCurrentTaskCommand => _processCurrentTaskCommand ?? (_processCurrentTaskCommand =
                                                          new RelayCommand(ProcessCurrentTaskCommand_Executed, ProcessCurrentTaskCommand_CanExecute));
@@ -138,7 +150,8 @@ namespace MiniTD.ViewModels
                 {
                     Title = NewProjectTitle,
                     Type = MiniTaskType.Project,
-                    DateDone = DateTime.Now
+                    DateDone = DateTime.Now,
+					TopicID = NewProjectTopicID
                 };
 
                 // Create view model for project, add task to project, add project to organizer
