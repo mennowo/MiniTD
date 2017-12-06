@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
 using System.Windows.Media;
+using JetBrains.Annotations;
 
 namespace MiniTD.Views
 {
@@ -63,9 +64,9 @@ namespace MiniTD.Views
             {
                 var child = VisualTreeHelper.GetChild(d, n);
 
-                if (child is T)
+	            if (child is T descendents)
                 {
-                    yield return (T)child;
+                    yield return descendents;
                 }
 
                 foreach (var match in GetVisualDescendents<T>(child))
@@ -79,8 +80,9 @@ namespace MiniTD.Views
     }
 
     // from here: http://stackoverflow.com/questions/11065995/binding-selecteditem-in-a-hierarchicaldatatemplate-applied-wpf-treeview/18700099#18700099
+    /// <inheritdoc />
     /// <summary>
-    ///     Behavior that makes the <see cref="System.Windows.Controls.TreeView.SelectedItem" /> bindable.
+    ///     Behavior that makes the <see cref="P:System.Windows.Controls.TreeView.SelectedItem" /> bindable.
     /// </summary>
     public class BindableSelectedItemBehavior : Behavior<TreeView>
     {
@@ -100,17 +102,11 @@ namespace MiniTD.Views
         /// </summary>
         public object SelectedItem
         {
-            get
-            {
-                return this.GetValue(SelectedItemProperty);
-            }
-
-            set
-            {
-                this.SetValue(SelectedItemProperty, value);
-            }
+            [UsedImplicitly] get => GetValue(SelectedItemProperty);
+	        set => SetValue(SelectedItemProperty, value);
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Called after the behavior is attached to an AssociatedObject.
         /// </summary>
@@ -120,9 +116,10 @@ namespace MiniTD.Views
         protected override void OnAttached()
         {
             base.OnAttached();
-            this.AssociatedObject.SelectedItemChanged += this.OnTreeViewSelectedItemChanged;
+            AssociatedObject.SelectedItemChanged += OnTreeViewSelectedItemChanged;
         }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Called when the behavior is being detached from its AssociatedObject, but before it has
         ///     actually occurred.
@@ -133,16 +130,15 @@ namespace MiniTD.Views
         protected override void OnDetaching()
         {
             base.OnDetaching();
-            if (this.AssociatedObject != null)
+            if (AssociatedObject != null)
             {
-                this.AssociatedObject.SelectedItemChanged -= this.OnTreeViewSelectedItemChanged;
+                AssociatedObject.SelectedItemChanged -= OnTreeViewSelectedItemChanged;
             }
         }
 
         private static Action<int> GetBringIndexIntoView(Panel itemsHostPanel)
         {
-            var virtualizingPanel = itemsHostPanel as VirtualizingStackPanel;
-            if (virtualizingPanel == null)
+	        if (!(itemsHostPanel is VirtualizingStackPanel virtualizingPanel))
             {
                 return null;
             }
@@ -183,12 +179,12 @@ namespace MiniTD.Views
                 }
 
                 // Expand the current container
-                var _selected = false;
-                if(container is TreeViewItem)
-                    _selected = ((TreeViewItem)container).IsExpanded;
-                if (container is TreeViewItem && !((TreeViewItem)container).IsExpanded)
+                var selected = false;
+	            if(container is TreeViewItem viewItem)
+                    selected = viewItem.IsExpanded;
+	            if (container is TreeViewItem treeViewItem && !treeViewItem.IsExpanded)
                 {
-                    container.SetValue(TreeViewItem.IsExpandedProperty, true);
+                    treeViewItem.SetValue(TreeViewItem.IsExpandedProperty, true);
                 }
 
                 // Try to generate the ItemsPresenter and the ItemsPanel.
@@ -219,7 +215,7 @@ namespace MiniTD.Views
 
                 // Ensure that the generator for this panel has been created.
 #pragma warning disable 168
-                var children = itemsHostPanel.Children;
+                var unused = itemsHostPanel.Children;
 #pragma warning restore 168
 
                 var bringIndexIntoView = GetBringIndexIntoView(itemsHostPanel);
@@ -264,7 +260,7 @@ namespace MiniTD.Views
                 }
 
                 if(container is TreeViewItem)
-                    container.SetValue(TreeViewItem.IsExpandedProperty, _selected);
+                    container.SetValue(TreeViewItem.IsExpandedProperty, selected);
             }
 
             return null;
@@ -272,8 +268,7 @@ namespace MiniTD.Views
 
         private static void OnSelectedItemChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            var item = e.NewValue as TreeViewItem;
-            if (item != null)
+	        if (e.NewValue is TreeViewItem item)
             {
                 item.SetValue(TreeViewItem.IsSelectedProperty, true);
                 return;
@@ -296,7 +291,7 @@ namespace MiniTD.Views
 
         private void OnTreeViewSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            this.SelectedItem = e.NewValue;
+            SelectedItem = e.NewValue;
         }
     }
 }

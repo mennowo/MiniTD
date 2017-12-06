@@ -268,8 +268,9 @@ namespace MiniTD.ViewModels
             {
                 Task.Status = value;
                 OnMonitoredPropertyChanged("Status", OrganizerVM);
-
-                SetIsCurrent();
+				OnPropertyChanged("StatusHasDelegatedTo");
+				OnPropertyChanged("StatusHasDueDate");
+				SetIsCurrent();
             }
         }
 

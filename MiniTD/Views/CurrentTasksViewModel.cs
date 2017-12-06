@@ -99,6 +99,11 @@ namespace MiniTD.ViewModels
 
         #region Private methods
 
+        private void _UpdateClockTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            OnPropertyChanged("CurrentTime");
+        }
+
         #endregion // Private methods
 
         #region Public methods
@@ -174,11 +179,22 @@ namespace MiniTD.ViewModels
             CurrentTasksGrouped.GroupDescriptions?.Add(new PropertyGroupDescription("DateDueGroup"));
             CurrentTasksGrouped.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateDue", System.ComponentModel.ListSortDirection.Ascending));
 
-        }
+	        CurrentTasks.CollectionChanged += (o, e) =>
+	        {
+		        if (e.OldItems != null && e.OldItems.Count > 0)
+		        {
+			        _organizerVM.TasksChanged -= _OrganizerVM_TasksChanged;
+					foreach (MiniTaskViewModel mtvm in e.OldItems)
+			        {
+						if (mtvm.ParentTaskVM != null)
+							mtvm.ParentTaskVM.AllTasks.Remove(mtvm);
+						else
+							_organizerVM.AllTasks.Remove(mtvm);
+					}
+			        _organizerVM.TasksChanged += _OrganizerVM_TasksChanged;
+		        }
+	        };
 
-        private void _UpdateClockTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            OnPropertyChanged("CurrentTime");
         }
 
         #endregion // Constructor
