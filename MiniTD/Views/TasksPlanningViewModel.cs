@@ -21,11 +21,14 @@ DEALINGS IN THE SOFTWARE.
 **/
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Timers;
 using System.Windows.Data;
+using GongSolutions.Wpf.DragDrop;
 using JetBrains.Annotations;
+using MiniTD.Helpers;
 
 namespace MiniTD.ViewModels
 {
@@ -37,13 +40,17 @@ namespace MiniTD.ViewModels
         private ObservableCollection<MiniTaskViewModel> _currentTasks;
         private MiniTaskViewModel _selectedTask;
         private ListCollectionView _currentTasksGrouped;
+	    private TaskPlanningDropTarget _dropTarget;
 
-        #endregion // Fields
+	    #endregion // Fields
 
         #region Properties
 
         [UsedImplicitly]
-        public ListCollectionView CurrentTasksGrouped => _currentTasksGrouped ?? (_currentTasksGrouped = new ListCollectionView(CurrentTasks));
+        public ListCollectionView CurrentTasksGrouped => _currentTasksGrouped ?? (_currentTasksGrouped = new ListCollectionView(CurrentTasks)
+        {
+	        CustomSort = new MiniTaskViewModelDueDateComparer()
+        });
 
         [UsedImplicitly]
         public ObservableCollection<MiniTaskViewModel> CurrentTasks
@@ -76,7 +83,9 @@ namespace MiniTD.ViewModels
             }
         }
 
-        #endregion // Properties
+	    public IDropTarget DropHandler => _dropTarget ?? (_dropTarget = new TaskPlanningDropTarget());
+
+	    #endregion // Properties
 
         #region Commands
 
@@ -163,7 +172,7 @@ namespace MiniTD.ViewModels
             updateClockTimer.Start();
 
             CurrentTasksGrouped.GroupDescriptions?.Add(new PropertyGroupDescription("DateDueGroup"));
-            CurrentTasksGrouped.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateDueSort", System.ComponentModel.ListSortDirection.Ascending));
+            //CurrentTasksGrouped.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateDueSort", System.ComponentModel.ListSortDirection.Ascending));
 
         }
 

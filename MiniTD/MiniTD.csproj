@@ -102,7 +102,9 @@
     <Compile Include="DataAccess\SerializeT.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\IDProvider.cs" />
+    <Compile Include="Helpers\MiniTaskViewModelDueDateComparer.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
+    <Compile Include="Helpers\TaskPlanningDropTarget.cs" />
     <Compile Include="ViewModels\MiniTaskNoteViewModel.cs" />
     <Compile Include="ViewModels\MiniTopicViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />

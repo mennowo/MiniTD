@@ -26,6 +26,8 @@ DEALINGS IN THE SOFTWARE.
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:MiniTD.Views"
+             xmlns:dragDrop="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -40,7 +42,7 @@ DEALINGS IN THE SOFTWARE.
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type GroupItem}">
-                                    <Expander>
+                                    <Expander IsExpanded="True">
                                         <Expander.Header>
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
@@ -86,6 +88,9 @@ DEALINGS IN THE SOFTWARE.
             Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="2"
             AutoGenerateColumns="False"
             CanUserAddRows="False"
+            dragDrop:DragDrop.IsDragSource="True"
+            dragDrop:DragDrop.IsDropTarget="True"
+            dragDrop:DragDrop.DropHandler="{Binding Path=DropHandler}"
             SelectedItem="{Binding Path=SelectedTask}"
             ItemsSource="{Binding Path=CurrentTasksGrouped}">
             <DataGrid.GroupStyle>
@@ -138,6 +143,20 @@ DEALINGS IN THE SOFTWARE.
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding Path=Title}" Header="Title" Width="*" />
                 <DataGridTextColumn Binding="{Binding Path=ProjectTitle}" IsReadOnly="True" Header="Project" Width="*" />
+                <DataGridTemplateColumn Header="Duration">
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <xctk:TimeSpanUpDown Text="{Binding Path=Duration}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Margin="2" Visibility="{Binding Path=IsTask,Converter={StaticResource Bool2VisConv}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="5,0">
+                                <TextBlock Text="{Binding Path=Duration}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Due">
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
@@ -152,7 +171,6 @@ DEALINGS IN THE SOFTWARE.
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <!--<DataGridTextColumn Binding="{Binding Path=DateDue,StringFormat='{}{0:dddd dd-MM-yy}'}" Header="Due" />-->
                 <DataGridCheckBoxColumn Binding="{Binding Path=Done}" Header="Done" />
                 
             </DataGrid.Columns>
