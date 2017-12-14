@@ -24,7 +24,7 @@ namespace MiniTD.Views.Dialogs
 
         private void InfoHyperlink2_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://www.codingconnected.eu");
+            System.Diagnostics.Process.Start("https://www.codingconnected.eu/software/minitd");
         }
     }
 }

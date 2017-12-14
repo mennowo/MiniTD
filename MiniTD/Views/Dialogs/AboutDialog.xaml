@@ -23,21 +23,21 @@
             <TextBlock TextWrapping="Wrap">
                 <Span FontWeight="Bold">MiniTD</Span>
                 <LineBreak />
-                Versie: 1.0.0
+                Versie: 1.1.0
                 <LineBreak />
-                Datum: 20 October 2016
+                Datum: 14th of December 2017
                 <LineBreak />
                 Info: <Hyperlink Click="InfoHyperlink_Click">menno@codingconnected.eu</Hyperlink>
                 <LineBreak />
-                Website: <Hyperlink Click="InfoHyperlink2_Click">www.codingconnected.eu</Hyperlink>
+                Website: <Hyperlink Click="InfoHyperlink2_Click">www.codingconnected.eu/software/minitd</Hyperlink>
                 <LineBreak />
                 <LineBreak />
-                Een open source mini TODO manager.
+                A minimal open source TODO manager.
                 <LineBreak />
                 This software is available open source under the conditions of the MIT lisence.
                 <LineBreak />
                 <LineBreak />
-                Copyright (C) 2016 CodingConnected e.U., Menno van der Woude
+                Copyright (C) 2016-2017 CodingConnected e.U., Menno van der Woude
                 <LineBreak />
             </TextBlock>
         </StackPanel>
