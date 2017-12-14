@@ -44,10 +44,7 @@ namespace MiniTD.ViewModels
         #region Properties
 
         [UsedImplicitly]
-        public ListCollectionView CurrentTasksGrouped => _currentTasksGrouped ?? (_currentTasksGrouped = new ListCollectionView(CurrentTasks)
-        {
-			CustomSort = new MiniTaskViewModelDueDateComparer()
-		});
+        public ListCollectionView CurrentTasksGrouped => _currentTasksGrouped ?? (_currentTasksGrouped = new ListCollectionView(CurrentTasks));
 
         [UsedImplicitly]
         public ObservableCollection<MiniTaskViewModel> CurrentTasks
@@ -181,7 +178,7 @@ namespace MiniTD.ViewModels
             updateClockTimer.Start();
 
             CurrentTasksGrouped.GroupDescriptions?.Add(new PropertyGroupDescription("DateDueGroup"));
-            //CurrentTasksGrouped.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateDue", System.ComponentModel.ListSortDirection.Ascending));
+            CurrentTasksGrouped.SortDescriptions.Add(new System.ComponentModel.SortDescription("Title", System.ComponentModel.ListSortDirection.Ascending));
 
 	        CurrentTasks.CollectionChanged += (o, e) =>
 	        {

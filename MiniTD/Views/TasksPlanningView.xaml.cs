@@ -1,6 +1,7 @@
 ﻿using MiniTD.ViewModels;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -17,7 +18,7 @@ namespace MiniTD.Views
         {
             InitializeComponent();
         }
-    }
+	}
 
     // below from: http://stackoverflow.com/questions/24618966/wpf-datagrid-grouping-with-sums-and-other-fields
     public class GroupsToTotalConverter : IValueConverter
