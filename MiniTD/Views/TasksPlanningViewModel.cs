@@ -169,8 +169,8 @@ namespace MiniTD.ViewModels
             updateClockTimer.Start();
 
             CurrentTasksGrouped.GroupDescriptions?.Add(new PropertyGroupDescription("DateDueGroup"));
+            CurrentTasksGrouped.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateDueSort", System.ComponentModel.ListSortDirection.Ascending));
             CurrentTasksGrouped.SortDescriptions.Add(new System.ComponentModel.SortDescription("Title", System.ComponentModel.ListSortDirection.Ascending));
-            CurrentTasksGrouped.SortDescriptions.Add(new System.ComponentModel.SortDescription("DateDue", System.ComponentModel.ListSortDirection.Ascending));
 
         }
 
