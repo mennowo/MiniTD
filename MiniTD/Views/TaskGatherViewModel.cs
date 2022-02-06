@@ -105,10 +105,12 @@ namespace MiniTD.ViewModels
         void AddTaskCommand_Executed(object prm)
         {
             // Create Task
-            var t = new MiniTask();
-            t.Title = NewTaskTitle;
-            t.TopicID = NewTaskTopic.ID;
-            t.DateCreated = DateTime.Now;
+            var t = new MiniTask
+            {
+                Title = NewTaskTitle,
+                TopicID = NewTaskTopic.ID,
+                DateCreated = DateTime.Now
+            };
 
             // Add to viewmodel
             var tvm = new MiniTaskViewModel(t, _OrganizerVM, null);

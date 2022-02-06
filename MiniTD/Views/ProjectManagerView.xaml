@@ -25,12 +25,11 @@ DEALINGS IN THE SOFTWARE.
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:local="clr-namespace:MiniTD.Views"
              xmlns:vm="clr-namespace:MiniTD.ViewModels"
              xmlns:vw="clr-namespace:MiniTD.Views"
              xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DataContext="{d:DesignInstance vm:ProjectManagerViewModel}"
+             mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -161,10 +160,6 @@ DEALINGS IN THE SOFTWARE.
                         <DataTemplate DataType="{x:Type vm:MiniTaskViewModel}">
                             <vw:MiniTaskView />
                         </DataTemplate>
-
-                        <!--<DataTemplate DataType="{x:Type vm:MiniProjectViewModel}">
-                    <vw:MiniProjectView />
-                </DataTemplate>-->
                     </ContentControl.Resources>
                 </ContentControl>
             </Grid>

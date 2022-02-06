@@ -28,7 +28,8 @@ DEALINGS IN THE SOFTWARE.
              xmlns:local="clr-namespace:MiniTD.Views"
              xmlns:helpers="clr-namespace:MiniTD.Helpers"
              xmlns:enums="clr-namespace:MiniTD.DataTypes"
-             mc:Ignorable="d" 
+             xmlns:viewModels="clr-namespace:MiniTD.ViewModels"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance viewModels:MiniTaskViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -84,10 +85,9 @@ DEALINGS IN THE SOFTWARE.
             ItemsSource="{Binding Path=Topics}" 
             SelectedValue="{Binding Path=TopicID,UpdateSourceTrigger=PropertyChanged}"
             SelectedValuePath="ID"
-            IsEditable="False"
-            >
+            IsEditable="False">
             <ComboBox.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate DataType="{x:Type viewModels:MiniTopicViewModel}">
                     <Grid >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="20" />
@@ -103,19 +103,8 @@ DEALINGS IN THE SOFTWARE.
         <Label Grid.Row="5" Grid.Column="0" Content="Total duration:" Visibility="{Binding Path=IsProject,Converter={StaticResource Bool2VisConv}}" />
         <xc:TimeSpanUpDown Text="{Binding Path=Duration}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Margin="2" Visibility="{Binding Path=IsTask,Converter={StaticResource Bool2VisConv}}" />
         <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Path=TotalDuration}" Margin="5" Visibility="{Binding Path=IsProject,Converter={StaticResource Bool2VisConv}}" />
-        <!--<Label Grid.Row="4" Grid.Column="0" Content="Project:" />-->
-        <!--<ComboBox 
-            Grid.Row="4" 
-            Grid.Column="1" 
-            IsEditable="True" 
-            Margin="2" 
-            ItemsSource="{Binding Path=Projects}" 
-            DisplayMemberPath="Title"
-            SelectedValue="{Binding Path=CurrentTask.Project,UpdateSourceTrigger=PropertyChanged}"
-            SelectedValuePath="ID"
-            />-->
-        <local:MiniTaskNoteCollectionView Grid.Row="6" Grid.ColumnSpan="2" Margin="2" />
-        <Grid Grid.Row="7" Grid.ColumnSpan="2">
+        <local:MiniTaskNoteCollectionView Grid.Row="6" Grid.ColumnSpan="2" Grid.Column="0" Margin="2" />
+        <Grid Grid.Row="7" Grid.ColumnSpan="2" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto "/>
@@ -123,10 +112,10 @@ DEALINGS IN THE SOFTWARE.
             </Grid.ColumnDefinitions>
             <CheckBox 
                 Grid.Column="0"
-                Name="ProcessDoneCB" Margin="5" IsChecked="{Binding Path=Done,Mode=TwoWay}">Done</CheckBox>
+                Name="ProcessDoneCb" Margin="5" IsChecked="{Binding Path=Done,Mode=TwoWay}">Done</CheckBox>
             <DatePicker
                 Grid.Column="1"
-                IsEnabled="{Binding ElementName=ProcessDoneCB,Path=IsChecked}"
+                IsEnabled="{Binding ElementName=ProcessDoneCb,Path=IsChecked}"
                 SelectedDate="{Binding Path=DateDone,UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
     </Grid>

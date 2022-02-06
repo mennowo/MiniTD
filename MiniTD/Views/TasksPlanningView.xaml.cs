@@ -1,7 +1,6 @@
 ﻿using MiniTD.ViewModels;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -25,9 +24,8 @@ namespace MiniTD.Views
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value is ReadOnlyObservableCollection<Object>)
+            if (value is ReadOnlyObservableCollection<object> items)
             {
-                var items = (ReadOnlyObservableCollection<Object>)value;
                 var total = new TimeSpan();
                 foreach (MiniTaskViewModel tvm in items)
                 {

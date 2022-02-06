@@ -24,11 +24,11 @@ DEALINGS IN THE SOFTWARE.
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:MiniTD.Views"
              xmlns:dragDrop="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             mc:Ignorable="d" 
+             xmlns:viewModels="clr-namespace:MiniTD.ViewModels"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance viewModels:TasksPlanningViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -36,8 +36,8 @@ DEALINGS IN THE SOFTWARE.
                 <ResourceDictionary Source="pack://application:,,,/MiniTD;component/Resources/Resources.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MiniTD;component/Resources/Generic.xaml" />
                 <ResourceDictionary>
-                    <local:GroupsToTotalConverter x:Key="groupsConverter" />
-                    <local:GroupsToTotalConverter2 x:Key="groupsConverter2" />
+                    <local:GroupsToTotalConverter x:Key="GroupsConverter" />
+                    <local:GroupsToTotalConverter2 x:Key="GroupsConverter2" />
                     <Style x:Key="GroupedStyle" TargetType="{x:Type GroupItem}">
                         <Setter Property="Template">
                             <Setter.Value>
@@ -52,19 +52,13 @@ DEALINGS IN THE SOFTWARE.
                                                 <TextBlock Text="{Binding Path=Name}" Margin="5" Grid.Column="0"/>
                                                 <StackPanel Orientation="Horizontal" Grid.Column="1">
                                                     <TextBlock Text="Time needed:" Margin="5" />
-                                                    <TextBlock Text="{Binding Path=Items, Converter={StaticResource groupsConverter}}" Margin="5" 
-                                                               Foreground="{Binding Path=Items, Converter={StaticResource groupsConverter2}}"/>
+                                                    <TextBlock Text="{Binding Path=Items, Converter={StaticResource GroupsConverter}}" Margin="5" 
+                                                               Foreground="{Binding Path=Items, Converter={StaticResource GroupsConverter2}}"/>
                                                 </StackPanel>
                                             </Grid>
                                         </Expander.Header>
                                         <ItemsPresenter />
                                     </Expander>
-                                    <!--<StackPanel>
-                                        <Grid Margin="2" >
-                                            <TextBlock FontWeight="Bold" Text="{Binding Path=Name,StringFormat='\{0:dd-MM-yyyy}'}" />
-                                        </Grid>
-                                        <ItemsPresenter />
-                                    </StackPanel>-->
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
@@ -93,6 +87,11 @@ DEALINGS IN THE SOFTWARE.
             dragDrop:DragDrop.DropHandler="{Binding Path=DropHandler}"
             SelectedItem="{Binding Path=SelectedTask}"
             ItemsSource="{Binding Path=CurrentTasksGrouped}">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Move one week forward" Command="{Binding Path=MoveTaskOneWeekFormardCommand}" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
             <DataGrid.GroupStyle>
                 <GroupStyle ContainerStyle="{StaticResource GroupedStyle}">
                     <GroupStyle.Panel>

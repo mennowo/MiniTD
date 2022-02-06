@@ -44,14 +44,14 @@
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 		  <Component Id='MainExecutable' Guid='16AAF2C9-F31D-4FED-8630-12DFD8347C59'>
-		    <File Id='MiniTDEXE' Name='MiniTD.exe' Source='../MiniTD/bin/Debug/MiniTD.exe' KeyPath='yes' >
+		    <File Id='MiniTDEXE' Name='MiniTD.exe' Source='../MiniTD/bin/Release/MiniTD.exe' KeyPath='yes' >
 		      <Shortcut Id="startmenuMiniTD" Directory="ProgramMenuDir" Name="MiniTD"
 		                WorkingDirectory='INSTALLDIR' Icon="MiniTD.exe" IconIndex="0" Advertise="yes" />
 		    </File>
-		    <File Id='DragDropDLL' Name='GongSolutions.Wpf.DragDrop.dll' Source='../MiniTD/bin/Debug/GongSolutions.Wpf.DragDrop.dll' KeyPath='no' />
-		    <File Id='InteractionsDLL' Name='Microsoft.Expression.Interactions.dll' Source='../MiniTD/bin/Debug/Microsoft.Expression.Interactions.dll' KeyPath='no' />
-		    <File Id='InteractivityDLL' Name='System.Windows.Interactivity.dll' Source='../MiniTD/bin/Debug/System.Windows.Interactivity.dll' KeyPath='no' />
-		    <File Id='WpfToolkitDLL' Name='Xceed.Wpf.Toolkit.dll' Source='../MiniTD/bin/Debug/Xceed.Wpf.Toolkit.dll' KeyPath='no' />
+		    <File Id='DragDropDLL' Name='GongSolutions.Wpf.DragDrop.dll' Source='../MiniTD/bin/Release/GongSolutions.Wpf.DragDrop.dll' KeyPath='no' />
+		    <File Id='InteractionsDLL' Name='Microsoft.Expression.Interactions.dll' Source='../MiniTD/bin/Release/Microsoft.Expression.Interactions.dll' KeyPath='no' />
+		    <File Id='InteractivityDLL' Name='System.Windows.Interactivity.dll' Source='../MiniTD/bin/Release/System.Windows.Interactivity.dll' KeyPath='no' />
+		    <File Id='WpfToolkitDLL' Name='Xceed.Wpf.Toolkit.dll' Source='../MiniTD/bin/Release/Xceed.Wpf.Toolkit.dll' KeyPath='no' />
 
 		    <ProgId Id='MiniTD.mtd' Description='MiniTD file' Icon='MiniTDEXE'>
 		      <Extension Id='mtd' ContentType='application/mtd'>

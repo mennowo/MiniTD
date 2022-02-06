@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using GongSolutions.Wpf.DragDrop;
+using MiniTD.DataTypes;
 using MiniTD.ViewModels;
 
 namespace MiniTD.Helpers
@@ -29,6 +30,11 @@ namespace MiniTD.Helpers
 					var date = ((MiniTaskViewModel) group.Items.First()).DateDue;
 					item.DateDue = new DateTime(date.Year, date.Month, date.Day, 
 						olddate.Hour, olddate.Minute, olddate.Second);
+					if (item.Status == MiniTaskStatus.Inactive ||
+					    item.Status == MiniTaskStatus.ASAP)
+					{
+						item.Status = MiniTaskStatus.Scheduled;
+					}
 				}
 			}
 		}

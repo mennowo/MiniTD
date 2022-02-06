@@ -1,4 +1,4 @@
-﻿/**
+﻿/*
 Copyright(c) 2016 Menno van der Woude
 
 Permission is hereby granted, free of charge, to any person obtaining a 
@@ -21,13 +21,14 @@ DEALINGS IN THE SOFTWARE.
 **/
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Timers;
 using System.Windows.Data;
+using System.Windows.Input;
 using GongSolutions.Wpf.DragDrop;
 using JetBrains.Annotations;
+using MiniTD.DataTypes;
 using MiniTD.Helpers;
 
 namespace MiniTD.ViewModels
@@ -41,8 +42,9 @@ namespace MiniTD.ViewModels
         private MiniTaskViewModel _selectedTask;
         private ListCollectionView _currentTasksGrouped;
 	    private TaskPlanningDropTarget _dropTarget;
+        private RelayCommand _moveTaskOneWeekFormardCommand;
 
-	    #endregion // Fields
+        #endregion // Fields
 
         #region Properties
 
@@ -80,17 +82,27 @@ namespace MiniTD.ViewModels
             }
         }
 
-	    public IDropTarget DropHandler => _dropTarget ?? (_dropTarget = new TaskPlanningDropTarget());
+	    public IDropTarget DropHandler => _dropTarget ??= new TaskPlanningDropTarget();
 
 	    #endregion // Properties
 
         #region Commands
 
+        public ICommand MoveTaskOneWeekFormardCommand => _moveTaskOneWeekFormardCommand ??= new RelayCommand(_ =>
+        {
+            if (SelectedTask.DateDue < DateTime.Now)
+            {
+                SelectedTask.DateDue = DateTime.Now;
+            }
+            SelectedTask.DateDue = SelectedTask.DateDue.AddDays(7);
+            if (SelectedTask.Status == MiniTaskStatus.Inactive ||
+                SelectedTask.Status == MiniTaskStatus.ASAP)
+            {
+                SelectedTask.Status = MiniTaskStatus.Scheduled;
+            }
+        }, _ => SelectedTask != null);
+        
         #endregion // Commands
-
-        #region Command functionality
-
-        #endregion // Command functionality
 
         #region Private methods
 

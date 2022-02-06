@@ -48,7 +48,6 @@ namespace MiniTD.ViewModels
 
         #region Properties
 
-        [UsedImplicitly]
         public MiniTaskViewModel ParentTaskVM
         {
             get => _parentTaskVM;
@@ -75,7 +74,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public string Outcome
         {
             get => Task.Outcome;
@@ -115,7 +113,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public DateTime DateDone
         {
             get => Task.DateDone;
@@ -143,8 +140,6 @@ namespace MiniTD.ViewModels
 
         private static void GetWeek(DateTime now, System.Globalization.CultureInfo cultureInfo, out DateTime begining, out DateTime end)
         {
-            if (now == null)
-                throw new ArgumentNullException(nameof(now));
             if (cultureInfo == null)
                 throw new ArgumentNullException(nameof(cultureInfo));
 
@@ -165,7 +160,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public DateTime DateDueSort => DateTime.Now.Date.CompareTo(DateDue.Date) >= 0 ? DateTime.Now : DateDue;
 
         private double GetTotTaskTime(MiniTaskViewModel tvm, DateTime d)
@@ -179,7 +173,6 @@ namespace MiniTD.ViewModels
             return dd;
         }
 
-        [UsedImplicitly]
         private double GetTotalTime(DateTime d)
         {
             var dd = 0.0;
@@ -190,17 +183,11 @@ namespace MiniTD.ViewModels
             return dd;
         }
 
-        [UsedImplicitly]
         public string DateDueGroup
         {
             get
             {
-
-                DateTime first;
-                DateTime last;
-                GetWeek(DateTime.Now, System.Globalization.CultureInfo.CurrentCulture, out first, out last);
-
-                if(DateTime.Now.Date.CompareTo(DateDue.Date) >= 0)
+                if (DateTime.Now.Date.CompareTo(DateDue.Date) >= 0)
                 {
                     return "Today (" + DateTime.Now.DayOfWeek + ")";
                 }
@@ -212,7 +199,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public TimeSpan Duration
         {
             get => Task.Duration;
@@ -224,7 +210,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public TimeSpan TotalDuration
         {
             get
@@ -235,7 +220,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public long TopicID
         {
             get => Task.TopicID;
@@ -258,7 +242,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public ObservableCollection<MiniTopicViewModel> Topics => _organizerVM.Topics;
 
         public MiniTaskStatus Status
@@ -267,14 +250,12 @@ namespace MiniTD.ViewModels
             set
             {
                 Task.Status = value;
-                OnMonitoredPropertyChanged("Status", OrganizerVM);
-				OnPropertyChanged("StatusHasDelegatedTo");
-				OnPropertyChanged("StatusHasDueDate");
-				SetIsCurrent();
+                OnMonitoredPropertyChanged(nameof(Status), OrganizerVM);
+                SetIsCurrent();
+                RaiseStatusChanged();
             }
         }
 
-        [UsedImplicitly]
         public MiniTaskType Type
         {
             get => Task.Type;
@@ -286,7 +267,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public long ProjectID
         {
             get => Task.ProjectID;
@@ -297,7 +277,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public string ProjectTitle => ParentTaskVM?.Title;
 
         public bool IsProject
@@ -326,13 +305,10 @@ namespace MiniTD.ViewModels
 
         public long ID => Task.ID;
 
-        [UsedImplicitly]
         public bool StatusHasDelegatedTo => Task.Status == MiniTaskStatus.Delegated;
 
-        [UsedImplicitly]
         public bool StatusHasDueDate => Task.Status == MiniTaskStatus.Delegated || Task.Status == MiniTaskStatus.Scheduled;
 
-        [UsedImplicitly]
         public string DelegatedTo
         {
             get => Task.DelegatedTo;
@@ -355,7 +331,6 @@ namespace MiniTD.ViewModels
 
         public bool IsInactive => Status == MiniTaskStatus.Inactive;
 
-        [UsedImplicitly]
         public ObservableCollection<MiniTaskNoteViewModel> Notes
         {
             get
@@ -383,7 +358,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public bool IsExpanded
         {
             get => _isExpanded;
@@ -397,7 +371,7 @@ namespace MiniTD.ViewModels
                 OnPropertyChanged("IsExpanded");
             }
         }
-        [UsedImplicitly]
+
         public bool IsSelected
         {
             get => _isSelected;
@@ -408,7 +382,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public MiniOrganizerViewModel OrganizerVM => _organizerVM;
 
         #endregion // Properties
@@ -445,7 +418,11 @@ namespace MiniTD.ViewModels
 
         private void AddNewTaskCommand_Executed(object prm)
         {
-            var t = new MiniTask {Title = "New task"};
+            var t = new MiniTask
+            {
+                Title = "New task",
+                TopicID = TopicID
+            };
             var tvm = new MiniTaskViewModel(t, OrganizerVM, this);
             AllTasks.Add(tvm);
         }
@@ -455,7 +432,8 @@ namespace MiniTD.ViewModels
             var t = new MiniTask
             {
                 Type = MiniTaskType.Project,
-                Title = "New project"
+                Title = "New project",
+                TopicID = TopicID
             };
             var tvm = new MiniTaskViewModel(t, OrganizerVM, this);
             AllTasks.Add(tvm);
@@ -517,13 +495,23 @@ namespace MiniTD.ViewModels
             }
         }
 
+        private void RaiseStatusChanged()
+        {
+            OnPropertyChanged(nameof(IsASAP));
+            OnPropertyChanged(nameof(IsDelegated));
+            OnPropertyChanged(nameof(IsInactive));
+            OnPropertyChanged(nameof(IsScheduled));
+            OnPropertyChanged(nameof(StatusHasDelegatedTo));
+            OnPropertyChanged(nameof(StatusHasDueDate));
+        }
+
         private void SetIsCurrent()
         {
             // if the Task becomes current, we have recreate the current list
             // by calling OnTaskChanged, which will propagate to the current 
             // tasks viewmodel
             OrganizerVM.OnTasksChanged();
-            OnPropertyChanged("IsCurrent");
+            OnPropertyChanged(nameof(IsCurrent));
         }
 
         private void OnTaskDoneChanged(object sender, MiniTaskViewModel e)
