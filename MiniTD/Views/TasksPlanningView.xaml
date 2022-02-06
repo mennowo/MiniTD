@@ -67,113 +67,156 @@ DEALINGS IN THE SOFTWARE.
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <TextBlock Margin="5" Text="{Binding Path=CurrentTime,StringFormat='Now: {0:dddd, MMMM dd, yyyy hh:mm:ss}'}" />
-        <DataGrid
-            Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="2"
-            AutoGenerateColumns="False"
-            CanUserAddRows="False"
-            dragDrop:DragDrop.IsDragSource="True"
-            dragDrop:DragDrop.IsDropTarget="True"
-            dragDrop:DragDrop.DropHandler="{Binding Path=DropHandler}"
-            SelectedItem="{Binding Path=SelectedTask}"
-            ItemsSource="{Binding Path=CurrentTasksGrouped}">
-            <DataGrid.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Move one week forward" Command="{Binding Path=MoveTaskOneWeekFormardCommand}" />
-                </ContextMenu>
-            </DataGrid.ContextMenu>
-            <DataGrid.GroupStyle>
-                <GroupStyle ContainerStyle="{StaticResource GroupedStyle}">
-                    <GroupStyle.Panel>
-                        <ItemsPanelTemplate>
-                            <DataGridRowsPresenter />
-                        </ItemsPanelTemplate>
-                    </GroupStyle.Panel>
-                </GroupStyle>
-            </DataGrid.GroupStyle>
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Topic">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Rectangle Width="17" Height="17" Margin="1" Fill="{Binding Path=Topic.TopicColor,Converter={StaticResource ColorToSolidColorBrush_ValueConverter}}" />
-                                <TextBlock Text="{Binding Path=Topic.Title}" Margin="2" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Status">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Image Width="17" Height="17" Margin="1">
-                                    <Image.Style>
-                                        <Style TargetType="{x:Type Image}">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Path=IsASAP}" Value="True">
-                                                    <Setter Property="Source" Value="{StaticResource ASAPIconDrawingImage}"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=IsDelegated}" Value="True">
-                                                    <Setter Property="Source" Value="{StaticResource DelegatedIconDrawingImage}"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=IsInactive}" Value="True">
-                                                    <Setter Property="Source" Value="{StaticResource InactiveIconDrawingImage}"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Path=IsScheduled}" Value="True">
-                                                    <Setter Property="Source" Value="{StaticResource ScheduledIconDrawingImage}"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Image.Style>
-                                </Image>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding Path=Title}" Header="Title" Width="*" />
-                <DataGridTextColumn Binding="{Binding Path=ProjectTitle}" IsReadOnly="True" Header="Project" Width="*" />
-                <DataGridTemplateColumn Header="Duration">
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <xctk:TimeSpanUpDown Text="{Binding Path=Duration}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Margin="2" Visibility="{Binding Path=IsTask,Converter={StaticResource Bool2VisConv}}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Margin="5,0">
-                                <TextBlock Text="{Binding Path=Duration}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Due">
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <DatePicker SelectedDate="{Binding Path=DateDue}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Margin="5,0">
-                                <TextBlock Text="{Binding Path=DateDue,StringFormat='{}{0:dd-MM-yy}'}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridCheckBoxColumn Binding="{Binding Path=Done}" Header="Done" />
-                
-            </DataGrid.Columns>
-        </DataGrid>
-        <local:MiniTaskNoteCollectionView Grid.Row="2" Grid.ColumnSpan="2" Margin="2" DataContext="{Binding SelectedTask}" />
-    </Grid>
+    <TabControl>
+        <TabItem Header="List">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Margin="5" Text="{Binding Path=CurrentTime,StringFormat='Now: {0:dddd, MMMM dd, yyyy hh:mm:ss}'}" />
+                <DataGrid
+                    Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="2"
+                    AutoGenerateColumns="False"
+                    CanUserAddRows="False"
+                    dragDrop:DragDrop.IsDragSource="True"
+                    dragDrop:DragDrop.IsDropTarget="True"
+                    dragDrop:DragDrop.DropHandler="{Binding Path=DropHandler}"
+                    SelectedItem="{Binding Path=SelectedTask}"
+                    ItemsSource="{Binding Path=CurrentTasksGrouped}">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Move one week forward" Command="{Binding Path=MoveTaskOneWeekFormardCommand}" />
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    <DataGrid.GroupStyle>
+                        <GroupStyle ContainerStyle="{StaticResource GroupedStyle}">
+                            <GroupStyle.Panel>
+                                <ItemsPanelTemplate>
+                                    <DataGridRowsPresenter />
+                                </ItemsPanelTemplate>
+                            </GroupStyle.Panel>
+                        </GroupStyle>
+                    </DataGrid.GroupStyle>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Topic">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Rectangle Width="17" Height="17" Margin="1" Fill="{Binding Path=Topic.TopicColor,Converter={StaticResource ColorToSolidColorBrush_ValueConverter}}" />
+                                        <TextBlock Text="{Binding Path=Topic.Title}" Margin="2" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Status">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Image Width="17" Height="17" Margin="1">
+                                            <Image.Style>
+                                                <Style TargetType="{x:Type Image}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=IsASAP}" Value="True">
+                                                            <Setter Property="Source" Value="{StaticResource ASAPIconDrawingImage}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=IsDelegated}" Value="True">
+                                                            <Setter Property="Source" Value="{StaticResource DelegatedIconDrawingImage}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=IsInactive}" Value="True">
+                                                            <Setter Property="Source" Value="{StaticResource InactiveIconDrawingImage}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=IsScheduled}" Value="True">
+                                                            <Setter Property="Source" Value="{StaticResource ScheduledIconDrawingImage}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Binding="{Binding Path=Title}" Header="Title" Width="*" />
+                        <DataGridTextColumn Binding="{Binding Path=ProjectTitle}" IsReadOnly="True" Header="Project" Width="*" />
+                        <DataGridTemplateColumn Header="Duration">
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <xctk:TimeSpanUpDown Text="{Binding Path=Duration}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Margin="2" Visibility="{Binding Path=IsTask,Converter={StaticResource Bool2VisConv}}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="5,0">
+                                        <TextBlock Text="{Binding Path=Duration}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Due">
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <DatePicker SelectedDate="{Binding Path=DateDue}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="5,0">
+                                        <TextBlock Text="{Binding Path=DateDue,StringFormat='{}{0:dd-MM-yy}'}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridCheckBoxColumn Binding="{Binding Path=Done}" Header="Done" />
+                        
+                    </DataGrid.Columns>
+                </DataGrid>
+                <local:MiniTaskNoteCollectionView Grid.Row="2" Grid.ColumnSpan="2" Margin="2" DataContext="{Binding SelectedTask}" />
+            </Grid>
+        </TabItem>
+        <TabItem Header="Calendar">
+            <ListView ItemsSource="{Binding Path=DisplayWeeks}"
+                      Name="WeeksView">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="viewModels:DisplayWeek">
+                        <StackPanel Orientation="Vertical" Background="Beige">
+                            <TextBlock Text="{Binding Path=FirstDay}" />
+                            <ListView ItemsSource="{Binding Path=Days}"
+                                      Width="{Binding ElementName=WeeksView,Path=ActualWidth}">
+                                <ListView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Columns="7" />
+                                    </ItemsPanelTemplate>
+                                </ListView.ItemsPanel>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate DataType="viewModels:DisplayDay">
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="{Binding Path=Date}" />
+                                            <ListView ItemsSource="{Binding Path=Tasks}">
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate DataType="viewModels:MiniTaskViewModel">
+                                                        <TextBlock Text="{Binding Path=Title}"/>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </TabItem>
+    </TabControl>
 </UserControl>

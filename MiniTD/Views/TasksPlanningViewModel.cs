@@ -23,6 +23,7 @@ DEALINGS IN THE SOFTWARE.
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Timers;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -109,6 +110,69 @@ namespace MiniTD.ViewModels
         #endregion // Private methods
 
         #region Public methods
+        
+        public List<DisplayWeek> DisplayWeeks { get; set; }
+        
+        private void UpdateWeeklySchedule()
+        {
+            var tasks = new List<MiniTaskViewModel>();
+            
+            foreach(var tvm in _organizerVM.AllTasks
+                .Where(x => !x.Done && x.Status != MiniTaskStatus.Inactive))
+            {
+                if (tvm.Type == MiniTaskType.Task && !tvm.Done && tvm.IsCurrent)
+                {
+                    tasks.Add(tvm);
+                }
+                foreach (var ttvm in GetAllCurrentProjectTasks(tvm)
+                    .Where(x => !x.Done && x.Status != MiniTaskStatus.Inactive && x.Type == MiniTaskType.Task))
+                {
+                    tasks.Add(ttvm);
+                }
+            }
+            
+            tasks.Sort((x, y) => x.DateDue.CompareTo(y.DateDue));
+            
+            var now = DateTime.Now;
+            var dayNo = (int) DateTime.Now.DayOfWeek;
+            dayNo = dayNo == 0 ? 6 : --dayNo;
+            var firstWeekDate = DateTime.Now.Date.AddDays(-1 * dayNo);
+            var weeks = new List<DisplayWeek>();
+            var lastWeekDate = tasks.Max(x => x.DateDue);
+            dayNo = (int) lastWeekDate.DayOfWeek;
+            dayNo = dayNo == 0 ? 6 : --dayNo;
+            lastWeekDate = lastWeekDate.AddDays(-1 * dayNo).Date;
+
+            var cTask = 0;
+
+            while (firstWeekDate <= lastWeekDate)
+            {
+                var week = new DisplayWeek
+                {
+                    FirstDay = firstWeekDate
+                };
+                for (int day = 0; day < 7; day++)
+                {
+                    var nDay = new DisplayDay
+                    {
+                        Date = firstWeekDate.AddDays(day)
+                    };
+                    week.Days.Add(nDay);
+                    while (tasks.Count > cTask && tasks[cTask].DateDue.Date <= nDay.Date)
+                    {
+                        nDay.Tasks.Add(tasks[cTask]);
+                        ++cTask;
+                    }
+                }
+
+                weeks.Add(week);
+                firstWeekDate = firstWeekDate.AddDays(7);
+            }
+
+            DisplayWeeks = weeks;
+            OnPropertyChanged(nameof(DisplayWeeks));
+
+        }
 
         #endregion // Public methods
 
@@ -116,6 +180,8 @@ namespace MiniTD.ViewModels
 
         private void _OrganizerVM_TasksChanged(object sender, EventArgs e)
         {
+            UpdateWeeklySchedule();
+            
             var sel = SelectedTask; 
             CurrentTasks.Clear();
             foreach(var tvm in _organizerVM.AllTasks)
@@ -192,5 +258,19 @@ namespace MiniTD.ViewModels
         }
 
         #endregion // Constructor
+    }
+    
+    public class DisplayWeek
+    {
+        public DateTime FirstDay { get; set; }
+
+        public List<DisplayDay> Days { get; } = new List<DisplayDay>();
+    }
+
+    public class DisplayDay
+    {
+        public DateTime Date { get; set; }
+
+        public ObservableCollection<MiniTaskViewModel> Tasks { get; } = new ObservableCollection<MiniTaskViewModel>();
     }
 }
