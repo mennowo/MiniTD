@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using JetBrains.Annotations;
 
 namespace MiniTD.ViewModels
 {
@@ -38,39 +37,31 @@ namespace MiniTD.ViewModels
         private readonly MiniOrganizerViewModel _organizerVM;
         private string _newProjectTitle;
         private long _newProjectTopicID;
+        private RelayCommand _processCurrentTaskCommand;
         
         #endregion // Fields
 
         #region Properties
 
-        [UsedImplicitly]
         public MiniTaskViewModel CurrentTask => _organizerVM.GatheredTasks.Count > 0 ? _organizerVM.GatheredTasks[0] : null;
 
-        [UsedImplicitly]
         public bool HasUnprocessedTasks => _organizerVM.GatheredTasks.Count > 0;
 
-        [UsedImplicitly]
         public int GatheredTaskCount => _organizerVM.GatheredTasks.Count == 0 ? 0 : _organizerVM.GatheredTasks.Count;
 
-        [UsedImplicitly]
         public ObservableCollection<MiniTopicViewModel> Topics => _organizerVM.Topics;
 
-        [UsedImplicitly]
         public ObservableCollection<MiniTaskViewModel> AllTasks => _organizerVM.AllTasks;
 
-        [UsedImplicitly]
         public IEnumerable<MiniTaskViewModel> AllProjects
         {
             get { return AllTasks.Where(x => x.Type == MiniTaskType.Project && x.Done == false).SelectMany(x => x.GetAllProjects()); }
         }
 
-        [UsedImplicitly]
         public bool IsAddedToNewProject => !string.IsNullOrWhiteSpace(NewProjectTitle);
 
-        [UsedImplicitly]
         public bool IsAddedToExistingProject => string.IsNullOrWhiteSpace(NewProjectTitle);
 
-        [UsedImplicitly]
         public MiniTaskStatus CurrentTaskStatus
         {
             get => CurrentTask?.Status ?? MiniTaskStatus.ASAP;
@@ -81,7 +72,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public bool CurrentTaskDone
         {
             get => CurrentTask != null && CurrentTask.Done;
@@ -92,10 +82,8 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public bool CurrentTaskStatusHasDelegatedTo => CurrentTask?.Status == MiniTaskStatus.Delegated;
 
-        [UsedImplicitly]
         public bool CurrentTaskStatusHasDueDate
         {
             get
@@ -106,7 +94,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public string NewProjectTitle
         {
             get => _newProjectTitle;
@@ -117,7 +104,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-	    [UsedImplicitly]
 	    public long NewProjectTopicID
 	    {
 		    get => _newProjectTopicID;
@@ -132,10 +118,7 @@ namespace MiniTD.ViewModels
 
 		#region Commands
 
-		RelayCommand _processCurrentTaskCommand;
-        [UsedImplicitly]
-        public ICommand ProcessCurrentTaskCommand => _processCurrentTaskCommand ?? (_processCurrentTaskCommand =
-                                                         new RelayCommand(ProcessCurrentTaskCommand_Executed, ProcessCurrentTaskCommand_CanExecute));
+        public ICommand ProcessCurrentTaskCommand => _processCurrentTaskCommand ??= new RelayCommand(ProcessCurrentTaskCommand_Executed, ProcessCurrentTaskCommand_CanExecute);
 
         #endregion // Commands
 

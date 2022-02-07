@@ -23,12 +23,13 @@ DEALINGS IN THE SOFTWARE.
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
 using System.Timers;
 using System.Windows.Data;
 using System.Windows.Input;
 using GongSolutions.Wpf.DragDrop;
-using JetBrains.Annotations;
 using MiniTD.DataTypes;
 using MiniTD.Helpers;
 
@@ -49,10 +50,8 @@ namespace MiniTD.ViewModels
 
         #region Properties
 
-        [UsedImplicitly]
         public ListCollectionView CurrentTasksGrouped => _currentTasksGrouped ?? (_currentTasksGrouped = new ListCollectionView(CurrentTasks));
 
-        [UsedImplicitly]
         public ObservableCollection<MiniTaskViewModel> CurrentTasks
         {
             get
@@ -64,10 +63,8 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public DateTime CurrentTime => DateTime.Now;
 
-        [UsedImplicitly]
         public MiniTaskViewModel SelectedTask
         {
             get => _selectedTask;
@@ -132,8 +129,7 @@ namespace MiniTD.ViewModels
             }
             
             tasks.Sort((x, y) => x.DateDue.CompareTo(y.DateDue));
-            
-            var now = DateTime.Now;
+
             var dayNo = (int) DateTime.Now.DayOfWeek;
             dayNo = dayNo == 0 ? 6 : --dayNo;
             var firstWeekDate = DateTime.Now.Date.AddDays(-1 * dayNo);
@@ -186,7 +182,7 @@ namespace MiniTD.ViewModels
             CurrentTasks.Clear();
             foreach(var tvm in _organizerVM.AllTasks)
             {
-                if (tvm.Type == DataTypes.MiniTaskType.Task && !tvm.Done && tvm.IsCurrent)
+                if (tvm.Type == MiniTaskType.Task && !tvm.Done && tvm.IsCurrent)
                 {
                     CurrentTasks.Add(tvm);
                 }
@@ -203,7 +199,7 @@ namespace MiniTD.ViewModels
             var currentTasks = new List<MiniTaskViewModel>();
             
             // if the project has tasks
-            if (tvm.AllTasks != null && tvm.AllTasks.Count > 0)
+            if (tvm.AllTasks is { Count: > 0 })
             {
                 // loop all tasks
                 foreach (var ttvm in tvm.AllTasks)
@@ -212,13 +208,13 @@ namespace MiniTD.ViewModels
                     if (!ttvm.Done && !ttvm.IsInactive)
                     {
                         // if type is task, add it
-                        if (ttvm.Type == DataTypes.MiniTaskType.Task)
+                        if (ttvm.Type == MiniTaskType.Task)
                         {
                             currentTasks.Add(ttvm);
                         }
                     }
                     // if it has tasks, add them all
-                    if (ttvm.AllTasks != null && ttvm.AllTasks.Count > 0)
+                    if (ttvm.AllTasks is { Count: > 0 })
                     {
                         foreach (var tttvm in GetAllCurrentProjectTasks(ttvm))
                         {
@@ -264,13 +260,75 @@ namespace MiniTD.ViewModels
     {
         public DateTime FirstDay { get; set; }
 
-        public List<DisplayDay> Days { get; } = new List<DisplayDay>();
+        public string FriendlyFirstDay => FirstDay.ToLongDateString();
+
+        public string WeekNumber => "Week " + GetIso8601WeekOfYear(FirstDay); 
+
+        public List<DisplayDay> Days { get; } = new();
+        
+        public static int GetIso8601WeekOfYear(DateTime time)
+        {
+            // Seriously cheat. If its Monday, Tuesday or Wednesday, then it'll 
+            // be the same week# as whatever Thursday, Friday or Saturday are,
+            // and we always get those right
+            var day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(time);
+            if (day is >= DayOfWeek.Monday and <= DayOfWeek.Wednesday)
+            {
+                time = time.AddDays(3);
+            }
+
+            // Return the week of our adjusted day
+            return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        }
     }
 
-    public class DisplayDay
+    public class DisplayDay : ViewModelBase
     {
-        public DateTime Date { get; set; }
+        private string _timeNeededDescription;
+        private TimeSpan _timeNeeded;
+        private CalendarPlanningDropTarget _dropTarget;
 
-        public ObservableCollection<MiniTaskViewModel> Tasks { get; } = new ObservableCollection<MiniTaskViewModel>();
+        public DateTime Date { get; set; }
+        
+        public IDropTarget DropHandler => _dropTarget ??= new CalendarPlanningDropTarget();
+
+        public string FriendlyDate => Date.ToShortDateString();
+
+        public TimeSpan TimeNeeded
+        {
+            get => _timeNeeded;
+            private set
+            {
+                _timeNeeded = value; 
+                OnPropertyChanged(nameof(TimeNeeded));
+            }
+        }
+
+        public string TimeNeededDescription => _timeNeededDescription;
+
+        private void UpdateTimeNeeded()
+        {
+            var total = TimeSpan.Zero;
+            foreach (var task in Tasks)
+            {
+                total = total.Add(task.Duration);
+            }
+
+            TimeNeeded = total;
+            _timeNeededDescription = "Time: " + total.ToString(@"hh\:mm");
+        }
+
+        public ObservableCollection<MiniTaskViewModel> Tasks { get; }
+
+        public DisplayDay()
+        {
+            Tasks = new ObservableCollection<MiniTaskViewModel>();
+            Tasks.CollectionChanged += TasksOnCollectionChanged;
+        }
+
+        private void TasksOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            UpdateTimeNeeded();
+        }
     }
 }

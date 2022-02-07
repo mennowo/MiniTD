@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Timers;
 using System.Windows.Data;
-using JetBrains.Annotations;
 using MiniTD.Helpers;
 
 namespace MiniTD.ViewModels
@@ -43,10 +42,8 @@ namespace MiniTD.ViewModels
 
         #region Properties
 
-        [UsedImplicitly]
         public ListCollectionView CurrentTasksGrouped => _currentTasksGrouped ?? (_currentTasksGrouped = new ListCollectionView(CurrentTasks));
 
-        [UsedImplicitly]
         public ObservableCollection<MiniTaskViewModel> CurrentTasks
         {
             get
@@ -58,10 +55,8 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public DateTime CurrentTime => DateTime.Now;
 
-        [UsedImplicitly]
         public MiniTaskViewModel SelectedTask
         {
             get => _selectedTask;

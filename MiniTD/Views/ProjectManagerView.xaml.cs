@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interactivity;
 using System.Windows.Media;
-using JetBrains.Annotations;
 
 namespace MiniTD.Views
 {
@@ -74,8 +73,6 @@ namespace MiniTD.Views
                     yield return match;
                 }
             }
-
-            yield break;
         }
     }
 
@@ -102,7 +99,7 @@ namespace MiniTD.Views
         /// </summary>
         public object SelectedItem
         {
-            [UsedImplicitly] get => GetValue(SelectedItemProperty);
+            get => GetValue(SelectedItemProperty);
 	        set => SetValue(SelectedItemProperty, value);
         }
 
@@ -182,7 +179,7 @@ namespace MiniTD.Views
                 var selected = false;
 	            if(container is TreeViewItem viewItem)
                     selected = viewItem.IsExpanded;
-	            if (container is TreeViewItem treeViewItem && !treeViewItem.IsExpanded)
+	            if (container is TreeViewItem { IsExpanded: false } treeViewItem)
                 {
                     treeViewItem.SetValue(TreeViewItem.IsExpandedProperty, true);
                 }

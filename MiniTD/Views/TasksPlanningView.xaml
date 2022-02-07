@@ -25,9 +25,9 @@ DEALINGS IN THE SOFTWARE.
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MiniTD.Views"
-             xmlns:dragDrop="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:viewModels="clr-namespace:MiniTD.ViewModels"
+             xmlns:dd="urn:gong-wpf-dragdrop"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance viewModels:TasksPlanningViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -53,7 +53,7 @@ DEALINGS IN THE SOFTWARE.
                                                 <StackPanel Orientation="Horizontal" Grid.Column="1">
                                                     <TextBlock Text="Time needed:" Margin="5" />
                                                     <TextBlock Text="{Binding Path=Items, Converter={StaticResource GroupsConverter}}" Margin="5" 
-                                                               Foreground="{Binding Path=Items, Converter={StaticResource GroupsConverter2}}"/>
+                                                               Foreground="{Binding Path=Items, Converter={StaticResource GroupsConverter2}}" />
                                                 </StackPanel>
                                             </Grid>
                                         </Expander.Header>
@@ -84,9 +84,9 @@ DEALINGS IN THE SOFTWARE.
                     Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="2"
                     AutoGenerateColumns="False"
                     CanUserAddRows="False"
-                    dragDrop:DragDrop.IsDragSource="True"
-                    dragDrop:DragDrop.IsDropTarget="True"
-                    dragDrop:DragDrop.DropHandler="{Binding Path=DropHandler}"
+                    dd:DragDrop.IsDragSource="True"
+                    dd:DragDrop.IsDropTarget="True"
+                    dd:DragDrop.DropHandler="{Binding Path=DropHandler}"
                     SelectedItem="{Binding Path=SelectedTask}"
                     ItemsSource="{Binding Path=CurrentTasksGrouped}">
                     <DataGrid.ContextMenu>
@@ -180,43 +180,29 @@ DEALINGS IN THE SOFTWARE.
             </Grid>
         </TabItem>
         <TabItem Header="Calendar">
-            <ListView ItemsSource="{Binding Path=DisplayWeeks}"
-                      Name="WeeksView">
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    </Style>
-                </ListBox.ItemContainerStyle>
-                <ListView.ItemTemplate>
-                    <DataTemplate DataType="viewModels:DisplayWeek">
-                        <StackPanel Orientation="Vertical" Background="Beige">
-                            <TextBlock Text="{Binding Path=FirstDay}" />
-                            <ListView ItemsSource="{Binding Path=Days}"
-                                      Width="{Binding ElementName=WeeksView,Path=ActualWidth}">
-                                <ListView.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <UniformGrid Columns="7" />
-                                    </ItemsPanelTemplate>
-                                </ListView.ItemsPanel>
-                                <ListView.ItemTemplate>
-                                    <DataTemplate DataType="viewModels:DisplayDay">
-                                        <StackPanel Orientation="Vertical">
-                                            <TextBlock Text="{Binding Path=Date}" />
-                                            <ListView ItemsSource="{Binding Path=Tasks}">
-                                                <ListView.ItemTemplate>
-                                                    <DataTemplate DataType="viewModels:MiniTaskViewModel">
-                                                        <TextBlock Text="{Binding Path=Title}"/>
-                                                    </DataTemplate>
-                                                </ListView.ItemTemplate>
-                                            </ListView>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Path=DisplayWeeks}"
+                              Name="WeeksView">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="viewModels:DisplayWeek">
+                            <Border Margin="1" Name="DisplayWeekBorder" Background="#181818">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding Path=WeekNumber}" FontSize="12" FontWeight="Bold" />
+                                    <UniformGrid Columns="7" Width="{Binding ElementName=WeeksView,Path=ActualWidth}">
+                                        <local:DisplayDayView DataContext="{Binding Path=Days[0]}" Background="Beige" />
+                                        <local:DisplayDayView DataContext="{Binding Path=Days[1]}" Background="Bisque" />
+                                        <local:DisplayDayView DataContext="{Binding Path=Days[2]}" Background="Beige" />
+                                        <local:DisplayDayView DataContext="{Binding Path=Days[3]}" Background="Bisque" />
+                                        <local:DisplayDayView DataContext="{Binding Path=Days[4]}" Background="Beige" />
+                                        <local:DisplayDayView DataContext="{Binding Path=Days[5]}" Background="Bisque" />
+                                        <local:DisplayDayView DataContext="{Binding Path=Days[6]}" Background="Beige" />
+                                    </UniformGrid>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
         </TabItem>
     </TabControl>
 </UserControl>

@@ -25,7 +25,6 @@ using MiniTD.DataTypes;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using JetBrains.Annotations;
 
 namespace MiniTD.ViewModels
 {
@@ -51,7 +50,6 @@ namespace MiniTD.ViewModels
 
         #region Properties
 
-        [UsedImplicitly]
         public MiniOrganizer Organizer => _organizer;
 
         public bool HasChanged
@@ -75,7 +73,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public ObservableCollection<MiniTopicViewModel> Topics
         {
             get
@@ -92,7 +89,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public ObservableCollection<MiniTaskViewModel> AllTasks
         {
             get
@@ -109,7 +105,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public TaskGatherViewModel TasksGatherVM
         {
             get => _tasksGatherVM;
@@ -120,7 +115,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public TaskProcessViewModel TasksProcessVM
         {
             get => _tasksProcessVM;
@@ -131,7 +125,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public TopicsListViewModel TopicsListVM
         {
             get => _topicsListVM;
@@ -142,7 +135,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public ProjectManagerViewModel ProjectManagerVM
         {
             get => _projectManagerVM;
@@ -153,7 +145,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public CurrentTasksViewModel CurrentTasksVM
         {
             get => _currentTasksVM;
@@ -164,7 +155,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public TasksPlanningViewModel TasksPlanningVM
         {
             get => _tasksPlanningVM;
