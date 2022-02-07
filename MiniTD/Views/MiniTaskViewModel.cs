@@ -28,7 +28,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
-using JetBrains.Annotations;
 
 namespace MiniTD.ViewModels
 {
@@ -43,6 +42,11 @@ namespace MiniTD.ViewModels
 
         private bool _isExpanded;
         private bool _isSelected;
+        
+        private RelayCommand _addNewProjectCommand;
+        private RelayCommand _addNewTaskCommand;
+        private RelayCommand _removeMeCommand;
+        private RelayCommand _postponeCommand;
 
         #endregion // Fields
 
@@ -124,7 +128,6 @@ namespace MiniTD.ViewModels
             }
         }
 
-        [UsedImplicitly]
         public DateTime DateDue
         {
             get => Task.DateDue;
@@ -394,23 +397,13 @@ namespace MiniTD.ViewModels
 
         #region Commands
 
-        private RelayCommand _addNewProjectCommand;
-        public ICommand AddNewProjectCommand => _addNewProjectCommand ?? (_addNewProjectCommand =
-                                                    new RelayCommand(AddNewProjectCommand_Executed, AddNewProjectCommand_CanExecute));
+        public ICommand AddNewProjectCommand => _addNewProjectCommand ??= new RelayCommand(AddNewProjectCommand_Executed, AddNewProjectCommand_CanExecute);
 
-        private RelayCommand _addNewTaskCommand;
-        public ICommand AddNewTaskCommand => _addNewTaskCommand ?? (_addNewTaskCommand =
-                                                 new RelayCommand(AddNewTaskCommand_Executed, AddNewTaskCommand_CanExecute));
+        public ICommand AddNewTaskCommand => _addNewTaskCommand ??= new RelayCommand(AddNewTaskCommand_Executed, AddNewTaskCommand_CanExecute);
 
-        private RelayCommand _removeMeCommand;
-        public ICommand RemoveMeCommand => _removeMeCommand ?? (_removeMeCommand =
-                                               new RelayCommand(RemoveMeCommand_Executed, RemoveMeCommand_CanExecute));
-
-
-        private RelayCommand _postponeCommand;
-        [UsedImplicitly]
-        public ICommand PostponeCommand => _postponeCommand ?? (_postponeCommand =
-                                               new RelayCommand(PostponeCommand_Executed, PostponeCommand_CanExecute));
+        public ICommand RemoveMeCommand => _removeMeCommand ??= new RelayCommand(RemoveMeCommand_Executed, RemoveMeCommand_CanExecute);
+        
+        public ICommand PostponeCommand => _postponeCommand ??= new RelayCommand(PostponeCommand_Executed, PostponeCommand_CanExecute);
 
         #endregion // Commands
 

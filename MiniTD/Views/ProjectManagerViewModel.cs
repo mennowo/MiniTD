@@ -29,7 +29,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using JetBrains.Annotations;
 
 namespace MiniTD.ViewModels
 {
@@ -41,18 +40,16 @@ namespace MiniTD.ViewModels
         
         private object _selectedItem;
         private bool _showDone;
-
+        private RelayCommand _addProjectCommand;
+        
         #endregion // Fields
 
         #region Properties
 
-        [UsedImplicitly]
         public CurrentTasksViewModel CurrentTasksVM => _organizerVM.CurrentTasksVM;
         
-        [UsedImplicitly]
         public ObservableCollection<MiniTaskViewModel> AllTasks => _organizerVM.AllTasks;
 
-        [UsedImplicitly]
         public object SelectedItem
         {
             get => _selectedItem;
@@ -79,10 +76,7 @@ namespace MiniTD.ViewModels
 
         #region Commands
 
-        private RelayCommand _addProjectCommand;
-        [UsedImplicitly]
-        public ICommand AddProjectCommand => _addProjectCommand ?? (_addProjectCommand =
-                                                 new RelayCommand(AddProjectCommand_Executed, AddProjectCommand_CanExecute));
+        public ICommand AddProjectCommand => _addProjectCommand ??= new RelayCommand(AddProjectCommand_Executed, AddProjectCommand_CanExecute);
 
         #endregion // Commands
 
