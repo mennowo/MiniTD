@@ -1,0 +1,5 @@
+{
+  "$schema": "./build.schema.json",
+  "Solution": "src/MiniTD.sln",
+  "CertificatePassword": "v1:t56IvA+lJAQ12POzs9/fC4G3NuZ30PJ5k1VQf+mH3ko="
+}

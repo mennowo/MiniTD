@@ -218,3 +218,5 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 .paket/paket.exe
+
+parameters.json

@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTD", "MiniTD\MiniTD.csproj", "{6873BEC7-9DB6-4F23-9441-65FF70E7B2B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTDSetup", "MiniTDSetup\MiniTDSetup.wixproj", "{04FEC536-1A27-4F25-86F3-882666257FE2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "..\build\_build.csproj", "{D0E3134A-2920-4256-A9DE-E2F6F6D3AAD4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{22C952C6-FCB3-449B-B50E-46F32DE25D2C}"
+	ProjectSection(SolutionItems) = preProject
+		..\LICENCE.md = ..\LICENCE.md
+		..\paket.dependencies = ..\paket.dependencies
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D0E3134A-2920-4256-A9DE-E2F6F6D3AAD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0E3134A-2920-4256-A9DE-E2F6F6D3AAD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6873BEC7-9DB6-4F23-9441-65FF70E7B2B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6873BEC7-9DB6-4F23-9441-65FF70E7B2B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6873BEC7-9DB6-4F23-9441-65FF70E7B2B2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6873BEC7-9DB6-4F23-9441-65FF70E7B2B2}.Debug|x86.Build.0 = Debug|Any CPU
+		{6873BEC7-9DB6-4F23-9441-65FF70E7B2B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6873BEC7-9DB6-4F23-9441-65FF70E7B2B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6873BEC7-9DB6-4F23-9441-65FF70E7B2B2}.Release|x86.ActiveCfg = Release|Any CPU
+		{6873BEC7-9DB6-4F23-9441-65FF70E7B2B2}.Release|x86.Build.0 = Release|Any CPU
+		{04FEC536-1A27-4F25-86F3-882666257FE2}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{04FEC536-1A27-4F25-86F3-882666257FE2}.Debug|Any CPU.Build.0 = Debug|x86
+		{04FEC536-1A27-4F25-86F3-882666257FE2}.Debug|x86.ActiveCfg = Debug|x86
+		{04FEC536-1A27-4F25-86F3-882666257FE2}.Debug|x86.Build.0 = Debug|x86
+		{04FEC536-1A27-4F25-86F3-882666257FE2}.Release|Any CPU.ActiveCfg = Release|x86
+		{04FEC536-1A27-4F25-86F3-882666257FE2}.Release|Any CPU.Build.0 = Release|x86
+		{04FEC536-1A27-4F25-86F3-882666257FE2}.Release|x86.ActiveCfg = Release|x86
+		{04FEC536-1A27-4F25-86F3-882666257FE2}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

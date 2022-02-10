@@ -1,4 +1,6 @@
-Copyright(c) 2016 Menno van der Woude
+Copyright(c) 2016-2022 Menno van der Woude, CodingConnected e.U.
+
+MIT license
 
 Permission is hereby granted, free of charge, to any person obtaining a 
 copy of this software and associated documentation files (the "Software"), 
