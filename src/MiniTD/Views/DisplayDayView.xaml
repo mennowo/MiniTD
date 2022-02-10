@@ -56,10 +56,10 @@
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="vm:MiniTaskViewModel">
-                    <StackPanel Orientation="Vertical" ToolTip="{Binding Path=Title}" Name="MainStackPanel" HorizontalAlignment="Stretch">
-                        <DockPanel HorizontalAlignment="Stretch">
-                            <Rectangle DockPanel.Dock="Left" Width="17" Height="17" Margin="1" Fill="{Binding Path=Topic.TopicColor,Converter={StaticResource ColorToSolidColorBrush_ValueConverter}}" />
-                            <Image DockPanel.Dock="Left" Width="17" Height="17" Margin="1">
+                    <StackPanel Orientation="Vertical" ToolTip="{Binding Path=Title}" Name="MainStackPanel">
+                        <StackPanel Orientation="Horizontal">
+                            <Rectangle Width="17" Height="17" Margin="1" Fill="{Binding Path=Topic.TopicColor,Converter={StaticResource ColorToSolidColorBrush_ValueConverter}}" />
+                            <Image Width="17" Height="17" Margin="1">
                                 <Image.Style>
                                     <Style TargetType="{x:Type Image}">
                                         <Style.Triggers>
@@ -79,8 +79,8 @@
                                     </Style>
                                 </Image.Style>
                             </Image>
-                            <TextBlock  DockPanel.Dock="Left" Text="{Binding Path=Title}" TextWrapping="Wrap" Margin="2,0" MaxHeight="70"/>
-                        </DockPanel>
+                            <TextBlock Text="{Binding Path=Title}" Margin="2,0"/>
+                        </StackPanel>
                         <TextBlock Text="{Binding Path=ProjectTitle}" FontStyle="Italic" FontSize="10" Foreground="Gray" />
                     </StackPanel>
                     <DataTemplate.Triggers>

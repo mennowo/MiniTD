@@ -32,7 +32,7 @@
                                                 <StackPanel Orientation="Horizontal" Grid.Column="1">
                                                     <TextBlock Text="Time needed:" Margin="5" />
                                                     <TextBlock Text="{Binding Path=Items, Converter={StaticResource GroupsConverter}}" Margin="5" 
-                                                               Foreground="{Binding Path=Items, Converter={StaticResource GroupsConverter2}}" />
+                                                               Foreground="{Binding Path=Items, Converter={StaticResource GroupsConverter2}}"/>
                                                 </StackPanel>
                                             </Grid>
                                         </Expander.Header>
@@ -155,7 +155,7 @@
                         
                     </DataGrid.Columns>
                 </DataGrid>
-                <local:MiniTaskNoteCollectionView Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Margin="2" DataContext="{Binding SelectedTask}" />
+                <local:MiniTaskNoteCollectionView Grid.Row="2" Grid.ColumnSpan="2" Margin="2" DataContext="{Binding SelectedTask}" />
             </Grid>
         </TabItem>
         <TabItem Header="Calendar">
