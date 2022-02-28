@@ -396,6 +396,7 @@ namespace MiniTD.ViewModels
             };
             var tvm = new MiniTaskViewModel(t, OrganizerVM, this);
             AllTasks.Add(tvm);
+            _organizerVM.CurrentTasksVM.SelectedTask = tvm;
         }
 
         private void AddNewProjectCommand_Executed(object prm)
@@ -408,6 +409,7 @@ namespace MiniTD.ViewModels
             };
             var tvm = new MiniTaskViewModel(t, OrganizerVM, this);
             AllTasks.Add(tvm);
+            _organizerVM.CurrentTasksVM.SelectedTask = tvm;
         }
 
         private bool AddNewProjectCommand_CanExecute(object prm)
@@ -519,7 +521,7 @@ namespace MiniTD.ViewModels
         private void Notes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             // Propagate to Model
-            if (e.NewItems != null && e.NewItems.Count > 0)
+            if (e.NewItems is { Count: > 0 })
             {
                 foreach (MiniTaskNoteViewModel tvm in e.NewItems)
                 {
@@ -528,7 +530,7 @@ namespace MiniTD.ViewModels
                     Task.Notes.Add(n);
                 }
             }
-            if (e.OldItems != null && e.OldItems.Count > 0)
+            if (e.OldItems is { Count: > 0 })
             {
                 foreach (MiniTaskNoteViewModel tvm in e.OldItems)
                 {
@@ -540,7 +542,7 @@ namespace MiniTD.ViewModels
 
         private void AllTasks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (e.NewItems != null && e.NewItems.Count > 0)
+            if (e.NewItems is { Count: > 0 })
             {
                 foreach (MiniTaskViewModel tvm in e.NewItems)
                 {
@@ -548,7 +550,7 @@ namespace MiniTD.ViewModels
                     tvm.DoneChanged += OnTaskDoneChanged;
                 }
             }
-            if (e.OldItems != null && e.OldItems.Count > 0)
+            if (e.OldItems is { Count: > 0 })
             {
                 foreach (MiniTaskViewModel tvm in e.OldItems)
                 {

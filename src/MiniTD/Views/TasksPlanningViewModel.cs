@@ -29,7 +29,7 @@ namespace MiniTD.ViewModels
 
         #region Properties
 
-        public ListCollectionView CurrentTasksGrouped => _currentTasksGrouped ?? (_currentTasksGrouped = new ListCollectionView(CurrentTasks));
+        public ListCollectionView CurrentTasksGrouped => _currentTasksGrouped ??= new ListCollectionView(CurrentTasks);
 
         public ObservableCollection<MiniTaskViewModel> CurrentTasks
         {
@@ -141,7 +141,7 @@ namespace MiniTD.ViewModels
                 };
                 for (int day = 0; day < 7; day++)
                 {
-                    var nDay = new DisplayDay
+                    var nDay = new DisplayDay(_organizerVM)
                     {
                         Date = firstWeekDate.AddDays(day)
                     };
@@ -279,6 +279,8 @@ namespace MiniTD.ViewModels
         private string _timeNeededDescription;
         private TimeSpan _timeNeeded;
         private CalendarPlanningDropTarget _dropTarget;
+        private MiniTaskViewModel _selectedTask;
+        private readonly MiniOrganizerViewModel _organizerVM;
 
         public DateTime Date { get; set; }
         
@@ -312,8 +314,20 @@ namespace MiniTD.ViewModels
 
         public ObservableCollection<MiniTaskViewModel> Tasks { get; }
 
-        public DisplayDay()
+        public MiniTaskViewModel SelectedTask
         {
+            get => _selectedTask;
+            set
+            {
+                _selectedTask = value;
+                _organizerVM.CurrentTasksVM.SelectedTask = value;
+                OnPropertyChanged(nameof(SelectedTask));
+            }
+        }
+
+        public DisplayDay(MiniOrganizerViewModel organizerVM)
+        {
+            _organizerVM = organizerVM;
             Tasks = new ObservableCollection<MiniTaskViewModel>();
             Tasks.CollectionChanged += TasksOnCollectionChanged;
         }

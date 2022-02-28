@@ -47,7 +47,7 @@
                        FontSize="10" />
         </Canvas>
         <ListBox Grid.Row="2" ItemsSource="{Binding Path=Tasks}" VerticalAlignment="Stretch"
-                 dd:DragDrop.IsDragSource="True"
+                 dd:DragDrop.IsDragSource="True" SelectedItem="{Binding Path=SelectedTask,UpdateSourceTrigger=PropertyChanged}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">

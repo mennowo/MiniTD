@@ -7,9 +7,32 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using GongSolutions.Wpf.DragDrop;
 
 namespace MiniTD.ViewModels
 {
+    public class MiniTaskDropHandler : DefaultDropHandler
+    {
+        public override void Drop(IDropInfo dropInfo)
+        {
+            if (dropInfo.TargetCollection is ObservableCollection<MiniTaskViewModel> target &&
+                dropInfo.DragInfo.SourceCollection is ObservableCollection<MiniTaskViewModel> source &&
+                dropInfo.Data is MiniTaskViewModel vm)
+            {
+                source.Remove(vm);
+                var index = dropInfo.InsertIndex;
+                if (ReferenceEquals(source, target) && index > dropInfo.DragInfo.SourceIndex) index--;
+                var i = 0;
+                var j = 0;
+                for (; j < index && i < target.Count; ++i)
+                {
+                    if (!target[i].Done) ++j;
+                }
+                target.Insert(i, vm);
+            }
+        }
+    }
+    
     public class ProjectManagerViewModel : ViewModelBase
     {
         #region Fields
@@ -23,6 +46,8 @@ namespace MiniTD.ViewModels
         #endregion // Fields
 
         #region Properties
+        
+        public MiniTaskDropHandler MiniTaskDropHandler { get; } = new();
 
         public CurrentTasksViewModel CurrentTasksVM => _organizerVM.CurrentTasksVM;
         
