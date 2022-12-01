@@ -23,9 +23,9 @@
             <TextBlock TextWrapping="Wrap">
                 <Span FontWeight="Bold">MiniTD</Span>
                 <LineBreak />
-                Versie: 2.0.0
+                Versie: 2.1.0
                 <LineBreak />
-                Datum: 10th of February 2022
+                Datum: 1st of December 2022
                 <LineBreak />
                 Info: <Hyperlink Click="InfoHyperlink_Click">menno@codingconnected.eu</Hyperlink>
                 <LineBreak />

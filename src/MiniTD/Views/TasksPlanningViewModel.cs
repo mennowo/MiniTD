@@ -141,10 +141,13 @@ namespace MiniTD.ViewModels
                 };
                 for (int day = 0; day < 7; day++)
                 {
+                    var date = firstWeekDate.AddDays(day).Date;
                     var nDay = new DisplayDay(_organizerVM)
                     {
-                        Date = firstWeekDate.AddDays(day)
+                        Date = date,
+                        IsFree = _organizerVM.Organizer.FreeDays.Any(x => x.Date.Date == date)
                     };
+                    nDay.IsFreeChanged += DisplayDay_IsFreeChanged;
                     week.Days.Add(nDay);
                     while (tasks.Count > cTask && tasks[cTask].DateDue.Date <= nDay.Date)
                     {
@@ -157,9 +160,38 @@ namespace MiniTD.ViewModels
                 firstWeekDate = firstWeekDate.AddDays(7);
             }
 
+            if (DisplayWeeks != null && DisplayWeeks.Count > 0)
+            {
+                foreach (var week in DisplayWeeks)
+                {
+                    foreach (var day in week.Days)
+                    {
+                        day.IsFreeChanged -= DisplayDay_IsFreeChanged;
+                    }
+                }
+            }
+
             DisplayWeeks = weeks;
             OnPropertyChanged(nameof(DisplayWeeks));
+        }
 
+        private void DisplayDay_IsFreeChanged(object sender, EventArgs e)
+        {
+            if (sender is DisplayDay day)
+            {
+                if (day.IsFree)
+                {
+                    _organizerVM.Organizer.FreeDays.Add(new MiniFreeDay { Date = day.Date });
+                }
+                else
+                {
+                    var r = _organizerVM.Organizer.FreeDays.FirstOrDefault(x => x.Date.Date == day.Date.Date);
+                    if (r != null)
+                    {
+                        _organizerVM.Organizer.FreeDays.Remove(r);
+                    }
+                }
+            }
         }
 
         #endregion // Public methods
@@ -280,20 +312,34 @@ namespace MiniTD.ViewModels
         private TimeSpan _timeNeeded;
         private CalendarPlanningDropTarget _dropTarget;
         private MiniTaskViewModel _selectedTask;
+        private bool _isFree;
         private readonly MiniOrganizerViewModel _organizerVM;
 
+        public event EventHandler IsFreeChanged;
+
         public DateTime Date { get; set; }
-        
+
         public IDropTarget DropHandler => _dropTarget ??= new CalendarPlanningDropTarget();
 
         public string FriendlyDate => Date.ToShortDateString();
+
+        public bool IsFree
+        {
+            get => _isFree; 
+            set
+            {
+                _isFree = value;
+                IsFreeChanged?.Invoke(this, EventArgs.Empty);
+                OnPropertyChanged(nameof(IsFree));
+            }
+        }
 
         public TimeSpan TimeNeeded
         {
             get => _timeNeeded;
             private set
             {
-                _timeNeeded = value; 
+                _timeNeeded = value;
                 OnPropertyChanged(nameof(TimeNeeded));
             }
         }

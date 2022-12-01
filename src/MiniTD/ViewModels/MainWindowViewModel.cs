@@ -3,6 +3,7 @@ using MiniTD.DataAccess;
 using MiniTD.Helpers;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 
@@ -294,10 +295,22 @@ namespace MiniTD.ViewModels
 
             Application.Current.MainWindow.Closing += new CancelEventHandler(MainWindow_Closing);
 
+            if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.LastOpenFile) &&
+                File.Exists(Properties.Settings.Default.LastOpenFile))
+            {
+                DataProvider.FileName = Properties.Settings.Default.LastOpenFile;
+                DataProvider.LoadOrganizer();
+                OrganizerVM = new MiniOrganizerViewModel(DataProvider);
+            }
         }
 
         void MainWindow_Closing(object sender, CancelEventArgs e)
         {
+            if (!string.IsNullOrWhiteSpace(DataProvider.FileName))
+            {
+                Properties.Settings.Default.LastOpenFile = DataProvider.FileName;
+                Properties.Settings.Default.Save();
+            }
             if(OrganizerHasChanged())
             {
                 e.Cancel = true;

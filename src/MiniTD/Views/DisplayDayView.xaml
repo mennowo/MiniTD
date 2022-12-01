@@ -28,7 +28,23 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock Text="{Binding Path=FriendlyDate}" Margin="1" />
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding Path=FriendlyDate}" Margin="1" />
+            <CheckBox IsChecked="{Binding Path=IsFree,UpdateSourceTrigger=PropertyChanged}" Margin="2" Content="Vrijhouden">
+                <CheckBox.Style>
+                    <Style TargetType="CheckBox">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="1" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter Property="Opacity" Value="0" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </CheckBox.Style>
+            </CheckBox>
+        </StackPanel>
         <Canvas Grid.Row="1" Height="{Binding ElementName=TimeTextBlock,Path=ActualHeight}">
             <Line Y1="5" X1="1" Y2="5"
                   Stroke="{Binding Path=TimeNeeded,Converter={StaticResource TimeSpanToColorConverter2}}" StrokeThickness="{Binding ElementName=TimeTextBlock,Path=ActualHeight}" StrokeEndLineCap="Flat">
@@ -49,6 +65,15 @@
         <ListBox Grid.Row="2" ItemsSource="{Binding Path=Tasks}" VerticalAlignment="Stretch"
                  dd:DragDrop.IsDragSource="True" SelectedItem="{Binding Path=SelectedTask,UpdateSourceTrigger=PropertyChanged}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.Style>
+                <Style TargetType="ListBox">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=IsFree}" Value="True">
+                            <Setter Property="Background" Value="LightGray" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.Style>
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="Focusable" Value="False"/>

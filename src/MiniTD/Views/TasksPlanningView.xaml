@@ -47,6 +47,40 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <TabControl>
+        <TabItem Header="Calendar">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <CheckBox IsChecked="{Binding Path=DisplayWeekends,UpdateSourceTrigger=PropertyChanged}" Margin="2" Content="Show weekends" HorizontalAlignment="Right" />
+                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Path=DisplayWeeks}"
+                                  Name="WeeksView">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="viewModels:DisplayWeek">
+                                <Border Margin="1" Name="DisplayWeekBorder" Background="#EEEEEE">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding Path=WeekNumber}" FontSize="12" FontWeight="Bold" Margin="1" />
+                                        <UniformGrid Columns="{Binding ElementName=WeeksView,Path=DataContext.DayColumns}" Width="{Binding ElementName=WeeksView,Path=ActualWidth}">
+                                            <local:DisplayDayView DataContext="{Binding Path=Days[0]}" Background="Beige" />
+                                            <local:DisplayDayView DataContext="{Binding Path=Days[1]}" Background="Bisque" />
+                                            <local:DisplayDayView DataContext="{Binding Path=Days[2]}" Background="Beige" />
+                                            <local:DisplayDayView DataContext="{Binding Path=Days[3]}" Background="Bisque" />
+                                            <local:DisplayDayView DataContext="{Binding Path=Days[4]}" Background="Beige" />
+                                            <local:DisplayDayView DataContext="{Binding Path=Days[5]}" Background="Bisque"
+                                                                  Visibility="{Binding ElementName=WeeksView,Path=DataContext.DisplayWeekends,Converter={StaticResource Bool2VisConv}}" />
+                                            <local:DisplayDayView DataContext="{Binding Path=Days[6]}" Background="Beige"
+                                                                  Visibility="{Binding ElementName=WeeksView,Path=DataContext.DisplayWeekends,Converter={StaticResource Bool2VisConv}}" />
+                                        </UniformGrid>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </TabItem>
         <TabItem Header="List">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -152,44 +186,10 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridCheckBoxColumn Binding="{Binding Path=Done}" Header="Done" />
-                        
+
                     </DataGrid.Columns>
                 </DataGrid>
                 <local:MiniTaskNoteCollectionView Grid.Row="2" Grid.ColumnSpan="2" Margin="2" DataContext="{Binding SelectedTask}" />
-            </Grid>
-        </TabItem>
-        <TabItem Header="Calendar">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <CheckBox IsChecked="{Binding Path=DisplayWeekends,UpdateSourceTrigger=PropertyChanged}" />
-                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                    <ItemsControl ItemsSource="{Binding Path=DisplayWeeks}"
-                                  Name="WeeksView">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="viewModels:DisplayWeek">
-                                <Border Margin="1" Name="DisplayWeekBorder" Background="#EEEEEE">
-                                    <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{Binding Path=WeekNumber}" FontSize="12" FontWeight="Bold" Margin="1" />
-                                        <UniformGrid Columns="{Binding ElementName=WeeksView,Path=DataContext.DayColumns}" Width="{Binding ElementName=WeeksView,Path=ActualWidth}">
-                                            <local:DisplayDayView DataContext="{Binding Path=Days[0]}" Background="Beige" />
-                                            <local:DisplayDayView DataContext="{Binding Path=Days[1]}" Background="Bisque" />
-                                            <local:DisplayDayView DataContext="{Binding Path=Days[2]}" Background="Beige" />
-                                            <local:DisplayDayView DataContext="{Binding Path=Days[3]}" Background="Bisque" />
-                                            <local:DisplayDayView DataContext="{Binding Path=Days[4]}" Background="Beige" />
-                                            <local:DisplayDayView DataContext="{Binding Path=Days[5]}" Background="Bisque"
-                                                                  Visibility="{Binding ElementName=WeeksView,Path=DataContext.DisplayWeekends,Converter={StaticResource Bool2VisConv}}" />
-                                            <local:DisplayDayView DataContext="{Binding Path=Days[6]}" Background="Beige"
-                                                                  Visibility="{Binding ElementName=WeeksView,Path=DataContext.DisplayWeekends,Converter={StaticResource Bool2VisConv}}" />
-                                        </UniformGrid>
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
             </Grid>
         </TabItem>
     </TabControl>
