@@ -8,6 +8,8 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using GongSolutions.Wpf.DragDrop;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace MiniTD.ViewModels
 {
@@ -59,7 +61,17 @@ namespace MiniTD.ViewModels
             set
             {
                 _selectedItem = value;
-                _organizerVM.CurrentTasksVM.SelectedTask = (MiniTaskViewModel)value;
+                _organizerVM.SetSelectedTask(this, (MiniTaskViewModel)value);
+                OnPropertyChanged("SelectedItem");
+            }
+        }
+
+        public object SelectedItemJustSet
+        {
+            get => _selectedItem;
+            set
+            {
+                _selectedItem = value;
                 OnPropertyChanged("SelectedItem");
             }
         }
@@ -150,6 +162,12 @@ namespace MiniTD.ViewModels
         private void AllTasks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             _organizerVM.OnTasksChanged();
+        }
+
+        internal void SetSelectedTask(object sender, MiniTaskViewModel task)
+        {
+            if (ReferenceEquals(this, sender)) return;
+            SelectedItemJustSet = task == null ? null : AllTasks?.FirstOrDefault(x => x.ID == task.ID);
         }
 
         #endregion // Constructor

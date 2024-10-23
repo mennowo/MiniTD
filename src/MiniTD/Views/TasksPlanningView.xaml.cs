@@ -46,7 +46,7 @@ namespace MiniTD.Views
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            var v = (double)values[1] / 8.0 * ((TimeSpan)values[0]).TotalHours;
+            var v = (double)values[1] / (double)values[2] * ((TimeSpan)values[0]).TotalHours;
             return v > 0 ? v : 0;
         }
 

@@ -5,7 +5,7 @@
     Name="MiniTD" 
     Manufacturer="CodingConnected e.U."
     Language="1033" 
-    Version="2.1.0"
+    Version="2.2.0"
     UpgradeCode="82DD19E5-1617-4DB7-9160-034E6E916210">
       
     <Package 
@@ -31,7 +31,7 @@
       
     <MediaTemplate EmbedCab="yes" />
 
-    <Icon Id="MiniTD.exe" SourceFile="../MiniTD/bin/Debug/MiniTD.exe" />
+    <Icon Id="MiniTD.exe" SourceFile="../MiniTD/bin/Release/MiniTD.exe" />
 
     <UIRef Id="WixUI_InstallDir" />
     <UIRef Id="WixUI_ErrorProgressText" />

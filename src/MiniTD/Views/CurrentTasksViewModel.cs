@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Timers;
 using System.Windows.Data;
 using MiniTD.Helpers;
+using Xceed.Wpf.Toolkit.Primitives;
 
 namespace MiniTD.ViewModels
 {
@@ -132,6 +134,12 @@ namespace MiniTD.ViewModels
                 }
             }
             return currentTasks;
+        }
+
+        internal void SetSelectedTask(object sender, MiniTaskViewModel task)
+        {
+            if (ReferenceEquals(this, sender)) return;
+            SelectedTask = task == null ? null : CurrentTasks?.FirstOrDefault(x => x.ID == task.ID);
         }
 
         #endregion Tasks Changed

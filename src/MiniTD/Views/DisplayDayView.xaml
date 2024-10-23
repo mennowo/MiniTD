@@ -30,9 +30,9 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="{Binding Path=FriendlyDate}" Margin="1" />
-            <CheckBox IsChecked="{Binding Path=IsFree,UpdateSourceTrigger=PropertyChanged}" Margin="2" Content="Vrijhouden">
-                <CheckBox.Style>
-                    <Style TargetType="CheckBox">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Opacity" Value="1" />
@@ -42,8 +42,12 @@
                             </Trigger>
                         </Style.Triggers>
                     </Style>
-                </CheckBox.Style>
-            </CheckBox>
+                </StackPanel.Style>
+                <CheckBox IsChecked="{Binding Path=IsFree,UpdateSourceTrigger=PropertyChanged}" Margin="2" Content="Vrijhouden" />
+                <CheckBox IsChecked="{Binding Path=ManualNumberOfHours,UpdateSourceTrigger=PropertyChanged}" Margin="2" Content="Uren opgeven" />
+                <TextBox Visibility="{Binding Path=ManualNumberOfHours,Converter={StaticResource Bool2VisConv}}" MinWidth="40"
+                         Text="{Binding Path=AvailableHours,UpdateSourceTrigger=PropertyChanged}" Margin="2" />
+            </StackPanel>
         </StackPanel>
         <Canvas Grid.Row="1" Height="{Binding ElementName=TimeTextBlock,Path=ActualHeight}">
             <Line Y1="5" X1="1" Y2="5"
@@ -56,6 +60,7 @@
                                 <RelativeSource Mode="FindAncestor" AncestorType="Canvas" />
                             </Binding.RelativeSource>
                         </Binding>
+                        <Binding Path="AvailableHours" />
                     </MultiBinding>
                 </Line.X2>
             </Line>
@@ -63,7 +68,8 @@
                        FontSize="10" />
         </Canvas>
         <ListBox Grid.Row="2" ItemsSource="{Binding Path=Tasks}" VerticalAlignment="Stretch"
-                 dd:DragDrop.IsDragSource="True" SelectedItem="{Binding Path=SelectedTask,UpdateSourceTrigger=PropertyChanged}"
+                 dd:DragDrop.IsDragSource="True" 
+                 SelectedItem="{Binding Path=SelectedTask,UpdateSourceTrigger=PropertyChanged}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.Style>
                 <Style TargetType="ListBox">
@@ -76,14 +82,31 @@
             </ListBox.Style>
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
-                    <Setter Property="Focusable" Value="False"/>
+                    <Setter Property="Focusable" Value="True"/>
                 </Style>
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="vm:MiniTaskViewModel">
+                    <Grid>
                     <StackPanel Orientation="Vertical" ToolTip="{Binding Path=Title}" Name="MainStackPanel">
                         <StackPanel Orientation="Horizontal">
-                            <Rectangle Width="17" Height="17" Margin="1" Fill="{Binding Path=Topic.TopicColor,Converter={StaticResource ColorToSolidColorBrush_ValueConverter}}" />
+                            <Grid>
+                                <Rectangle Width="17" Height="17" Margin="1" Fill="{Binding Path=Topic.TopicColor,Converter={StaticResource ColorToSolidColorBrush_ValueConverter}}" />
+                                    <CheckBox IsChecked="{Binding Path=Done}" Name="DoneCheckbox" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <CheckBox.Style>
+                                            <Style TargetType="CheckBox">
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Opacity" Value="1" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsMouseOver" Value="False">
+                                                        <Setter Property="Opacity" Value="0" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </CheckBox.Style>
+                                    </CheckBox>
+                                </Grid>
                             <Image Width="17" Height="17" Margin="1">
                                 <Image.Style>
                                     <Style TargetType="{x:Type Image}">
@@ -108,6 +131,7 @@
                         </StackPanel>
                         <TextBlock Text="{Binding Path=ProjectTitle}" FontStyle="Italic" FontSize="10" Foreground="Gray" />
                     </StackPanel>
+                    </Grid>
                     <DataTemplate.Triggers>
                         <Trigger Property="ItemsControl.AlternationIndex" Value="0">
                             <Setter Property="Background" Value="White" TargetName="MainStackPanel"/>

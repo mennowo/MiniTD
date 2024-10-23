@@ -284,19 +284,17 @@ namespace MiniTD.ViewModels
         {
             _DataProvider = new MiniDataProvider();
 
-            var args = Environment.GetCommandLineArgs();
+            Application.Current.MainWindow.Closing += new CancelEventHandler(MainWindow_Closing);
 
+            var args = Environment.GetCommandLineArgs();
             if (args.Length > 1)
             {
                 _DataProvider.FileName = args[1];
                 _DataProvider.LoadOrganizer();
                 OrganizerVM = new MiniOrganizerViewModel(DataProvider);
             }
-
-            Application.Current.MainWindow.Closing += new CancelEventHandler(MainWindow_Closing);
-
-            if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.LastOpenFile) &&
-                File.Exists(Properties.Settings.Default.LastOpenFile))
+            else if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.LastOpenFile) &&
+                     File.Exists(Properties.Settings.Default.LastOpenFile))
             {
                 DataProvider.FileName = Properties.Settings.Default.LastOpenFile;
                 DataProvider.LoadOrganizer();

@@ -180,6 +180,13 @@ namespace MiniTD.ViewModels
             return Topics.FirstOrDefault(tvm => tvm.ID == topicid);
         }
 
+        public void SetSelectedTask(object sender, MiniTaskViewModel task)
+        {
+            TasksPlanningVM.SetSelectedTask(sender, task);
+            ProjectManagerVM.SetSelectedTask(sender, task);
+            CurrentTasksVM.SetSelectedTask(sender, task);
+        }
+
         #endregion // Public methods
 
         #region Collection Changed

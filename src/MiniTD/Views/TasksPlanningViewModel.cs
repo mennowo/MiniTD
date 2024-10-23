@@ -44,7 +44,26 @@ namespace MiniTD.ViewModels
 
         public DateTime CurrentTime => DateTime.Now;
 
+        public bool ShowNotesForSelectedTask => SelectedTask != null;
+
         public MiniTaskViewModel SelectedTask
+        {
+            get => _selectedTask;
+            set
+            {
+                _selectedTask = value;
+                if (value != null)
+                {
+                    _selectedTask.IsSelected = true;
+                    _selectedTask.IsExpanded = true;
+                }
+                _organizerVM.SetSelectedTask(this, (MiniTaskViewModel)value);
+                OnPropertyChanged("SelectedTask");
+                OnPropertyChanged("ShowNotesForSelectedTask");
+            }
+        }
+
+        public MiniTaskViewModel SelectedTaskJustSet
         {
             get => _selectedTask;
             set
@@ -59,7 +78,7 @@ namespace MiniTD.ViewModels
             }
         }
 
-	    public IDropTarget DropHandler => _dropTarget ??= new TaskPlanningDropTarget();
+        public IDropTarget DropHandler => _dropTarget ??= new TaskPlanningDropTarget();
 
         public bool DisplayWeekends
         {
@@ -144,10 +163,16 @@ namespace MiniTD.ViewModels
                     var date = firstWeekDate.AddDays(day).Date;
                     var nDay = new DisplayDay(_organizerVM)
                     {
-                        Date = date,
-                        IsFree = _organizerVM.Organizer.FreeDays.Any(x => x.Date.Date == date)
+                        Date = date
                     };
-                    nDay.IsFreeChanged += DisplayDay_IsFreeChanged;
+                    var details = _organizerVM.Organizer.DaysDetails.FirstOrDefault(x => x.Date.Date == date);
+                    if (details != null)
+                    {
+                        nDay.IsFree = details.IsFree;
+                        nDay.ManualNumberOfHours = details.ManualNumberOfHours;
+                        nDay.AvailableHours = details.AvailableHours;
+                    }
+                    nDay.DayDetailsChanged += DisplayDay_DetailsChanged;
                     week.Days.Add(nDay);
                     while (tasks.Count > cTask && tasks[cTask].DateDue.Date <= nDay.Date)
                     {
@@ -166,7 +191,7 @@ namespace MiniTD.ViewModels
                 {
                     foreach (var day in week.Days)
                     {
-                        day.IsFreeChanged -= DisplayDay_IsFreeChanged;
+                        day.DayDetailsChanged -= DisplayDay_DetailsChanged;
                     }
                 }
             }
@@ -175,22 +200,25 @@ namespace MiniTD.ViewModels
             OnPropertyChanged(nameof(DisplayWeeks));
         }
 
-        private void DisplayDay_IsFreeChanged(object sender, EventArgs e)
+        private void DisplayDay_DetailsChanged(object sender, EventArgs e)
         {
             if (sender is DisplayDay day)
             {
-                if (day.IsFree)
+                var details = _organizerVM.Organizer.DaysDetails.FirstOrDefault(x => x.Date.Date == day.Date.Date);
+                if (!day.IsFree && !day.ManualNumberOfHours)
                 {
-                    _organizerVM.Organizer.FreeDays.Add(new MiniFreeDay { Date = day.Date });
+                    if (details != null) _organizerVM.Organizer.DaysDetails.Remove(details);
+                    return;
                 }
-                else
+
+                if (details == null)
                 {
-                    var r = _organizerVM.Organizer.FreeDays.FirstOrDefault(x => x.Date.Date == day.Date.Date);
-                    if (r != null)
-                    {
-                        _organizerVM.Organizer.FreeDays.Remove(r);
-                    }
+                    details = new MiniDayDetails { Date = day.Date };
+                    _organizerVM.Organizer.DaysDetails.Add(details);
                 }
+                details.IsFree = day.IsFree;
+                details.ManualNumberOfHours = day.ManualNumberOfHours;
+                details.AvailableHours = day.AvailableHours;
             }
         }
 
@@ -277,6 +305,13 @@ namespace MiniTD.ViewModels
             OnPropertyChanged("CurrentTime");
         }
 
+        internal void SetSelectedTask(object sender, MiniTaskViewModel task)
+        {
+            if (ReferenceEquals(this, sender)) return;
+            SelectedTaskJustSet = task == null ? null : CurrentTasks?.FirstOrDefault(x => x.ID == task.ID);
+            foreach (var w in DisplayWeeks) w.SetSelectedTask(sender, task);
+        }
+
         #endregion // Constructor
     }
     
@@ -289,6 +324,18 @@ namespace MiniTD.ViewModels
         public string WeekNumber => "Week " + GetIso8601WeekOfYear(FirstDay); 
 
         public List<DisplayDay> Days { get; } = new();
+
+        public void SetSelectedTask(object sender, MiniTaskViewModel task)
+        {
+            if (ReferenceEquals(this, sender)) return;
+            if (sender is not DisplayDay)
+            {
+                foreach (var d in Days)
+                {
+                    d.SetSelectedTask(sender, task);
+                }
+            }
+        }
         
         public static int GetIso8601WeekOfYear(DateTime time)
         {
@@ -313,9 +360,11 @@ namespace MiniTD.ViewModels
         private CalendarPlanningDropTarget _dropTarget;
         private MiniTaskViewModel _selectedTask;
         private bool _isFree;
+        private bool _manualNumberOfHours;
+        private double _availableHours = 8;
         private readonly MiniOrganizerViewModel _organizerVM;
 
-        public event EventHandler IsFreeChanged;
+        public event EventHandler DayDetailsChanged;
 
         public DateTime Date { get; set; }
 
@@ -329,8 +378,30 @@ namespace MiniTD.ViewModels
             set
             {
                 _isFree = value;
-                IsFreeChanged?.Invoke(this, EventArgs.Empty);
+                DayDetailsChanged?.Invoke(this, EventArgs.Empty);
                 OnPropertyChanged(nameof(IsFree));
+            }
+        }
+
+        public double AvailableHours
+        {
+            get => _availableHours;
+            set
+            {
+                _availableHours = value;
+                DayDetailsChanged?.Invoke(this, EventArgs.Empty);
+                OnPropertyChanged(nameof(AvailableHours));
+            }
+        }
+
+        public bool ManualNumberOfHours
+        {
+            get => _manualNumberOfHours;
+            set
+            {
+                _manualNumberOfHours = value;
+                DayDetailsChanged?.Invoke(this, EventArgs.Empty);
+                OnPropertyChanged(nameof(ManualNumberOfHours));
             }
         }
 
@@ -366,9 +437,25 @@ namespace MiniTD.ViewModels
             set
             {
                 _selectedTask = value;
-                _organizerVM.CurrentTasksVM.SelectedTask = value;
+                _organizerVM.SetSelectedTask(this, value);
                 OnPropertyChanged(nameof(SelectedTask));
             }
+        }
+
+        public MiniTaskViewModel SelectedTaskJustSet
+        {
+            get => _selectedTask;
+            set
+            {
+                _selectedTask = value;
+                OnPropertyChanged(nameof(SelectedTask));
+            }
+        }
+
+        public void SetSelectedTask(object sender, MiniTaskViewModel task)
+        {
+            if (ReferenceEquals(this, sender)) return;
+            SelectedTaskJustSet = task == null ? null : Tasks?.FirstOrDefault(x => x.ID == task.ID);
         }
 
         public DisplayDay(MiniOrganizerViewModel organizerVM)
